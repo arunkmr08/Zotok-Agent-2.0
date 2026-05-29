@@ -1,26 +1,291 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Inter as primary font — var(--font-inter) is injected by next/font on <html> */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: calc(var(--radius) * 0.75);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.5);
+  --radius-2xl: calc(var(--radius) * 2);
+  --radius-3xl: calc(var(--radius) * 2.5);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  /* Warm off-white palette matching original #f4f3ef / #111111 design */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.13 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.13 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.13 0 0);
+  /* Primary: #0067ff brand blue */
+  --primary: oklch(0.544 0.246 261);
+  --primary-foreground: oklch(1 0 0);
+  /* Secondary/surface: warm #f4f3ef */
+  --secondary: oklch(0.962 0.005 91);
+  --secondary-foreground: oklch(0.13 0 0);
+  --muted: oklch(0.962 0.005 91);
+  --muted-foreground: oklch(0.48 0 0);
+  --accent: oklch(0.962 0.005 91);
+  --accent-foreground: oklch(0.13 0 0);
+  --destructive: oklch(0.577 0.22 28);
+  /* Border: rgba(17,17,17,0.08) */
+  --border: oklch(0.13 0 0 / 8%);
+  --input: oklch(0.13 0 0 / 8%);
+  --ring: oklch(0.544 0.246 261 / 30%);
+  --chart-1: oklch(0.544 0.246 261);
+  --chart-2: oklch(0.6 0.18 160);
+  --chart-3: oklch(0.65 0.19 30);
+  --chart-4: oklch(0.7 0.16 290);
+  --chart-5: oklch(0.55 0.2 90);
+  --radius: 0.625rem;
+  /* Sidebar: #EBEBEB warm gray */
+  --sidebar: oklch(0.921 0 0);
+  --sidebar-foreground: oklch(0.22 0.01 60);
+  --sidebar-primary: oklch(0.544 0.246 261);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.13 0 0 / 6%);
+  --sidebar-accent-foreground: oklch(0.13 0 0);
+  --sidebar-border: oklch(0.13 0 0 / 6%);
+  --sidebar-ring: oklch(0.544 0.246 261 / 30%);
+}
+
+.dark {
+  --background: oklch(0.118 0 0);
+  --foreground: oklch(0.856 0 0);
+  --card: oklch(0.155 0 0);
+  --card-foreground: oklch(0.856 0 0);
+  --popover: oklch(0.155 0 0);
+  --popover-foreground: oklch(0.856 0 0);
+  --primary: oklch(0.544 0.246 261);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.185 0 0);
+  --secondary-foreground: oklch(0.856 0 0);
+  --muted: oklch(0.185 0 0);
+  --muted-foreground: oklch(0.5 0 0);
+  --accent: oklch(0.185 0 0);
+  --accent-foreground: oklch(0.856 0 0);
+  --destructive: oklch(0.65 0.2 28);
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 10%);
+  --ring: oklch(0.544 0.246 261 / 40%);
+  --chart-1: oklch(0.544 0.246 261);
+  --chart-2: oklch(0.6 0.18 160);
+  --chart-3: oklch(0.65 0.19 30);
+  --chart-4: oklch(0.7 0.16 290);
+  --chart-5: oklch(0.55 0.2 90);
+  /* Sidebar dark: #1f1f1f */
+  --sidebar: oklch(0.155 0 0);
+  --sidebar-foreground: oklch(0.856 0 0);
+  --sidebar-primary: oklch(0.544 0.246 261);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(1 0 0 / 6%);
+  --sidebar-accent-foreground: oklch(0.856 0 0);
+  --sidebar-border: oklch(1 0 0 / 6%);
+  --sidebar-ring: oklch(0.544 0.246 261 / 40%);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    box-sizing: border-box;
+  }
+
+  html {
+    @apply font-sans;
+    height: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    height: 100%;
+    font-size: 14px;
+    line-height: 1.3;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Heading scale + negative tracking matching original */
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-weight: 600;
+    line-height: 1.1;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  h3 {
+    font-size: 20px;
+  }
+
+  h4 {
+    font-size: 16px;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button {
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  input,
+  textarea,
+  select {
+    font-family: inherit;
+    font-size: 14px;
+  }
+
+  /* Warm placeholder — #858481 */
+  ::placeholder {
+    color: #858481 !important;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: #858481 !important;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ── Page entrance animation (matches original chatScaleUp) ── */
+@keyframes pageEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ── Login card slide-up entrance ── */
+@keyframes cardSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Login step fade-in from right ── */
+@keyframes fadeStep {
+  from {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ── Login numbered steps with dark circle badges ── */
+.login-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.login-steps li {
+  counter-increment: step;
+  display: flex;
+  gap: 10px;
+  font-size: 13px;
+  color: #6d6c6b;
+  line-height: 1.5;
+}
+
+.login-steps li::before {
+  content: counter(step);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #111111;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  display: grid;
+  place-items: center;
+  flex: none;
+  margin-top: 1px;
+}
+
+.dark .login-steps li {
+  color: #adadad;
+}
+
+.dark .login-steps li::before {
+  background: #dadada;
+  color: #111111;
+}
+
+/* ── Theme transition (applied via JS on dark toggle) ── */
+.theme-transitioning,
+.theme-transitioning * {
+  transition:
+    background-color 0.4s ease,
+    border-color 0.4s ease,
+    color 0.4s ease,
+    box-shadow 0.4s ease !important;
 }

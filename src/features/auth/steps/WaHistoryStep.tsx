@@ -1,0 +1,63 @@
+"use client";
+
+import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
+import { FormField } from "@/components/ui/form-field";
+import { PrimaryBtn } from "@/features/auth/components/PrimaryBtn";
+import { HISTORY_OPTIONS } from "@/features/auth/constants";
+import type { LoginFlowState } from "@/features/auth/hooks/useLoginFlow";
+
+type Props = Pick<LoginFlowState,
+  "waPhone" | "selectedHistory" | "setSelectedHistory" |
+  "historyFrom" | "setHistoryFrom" | "historyTo" | "setHistoryTo" |
+  "selectedGroups" | "setSyncText" | "setStep"
+>;
+
+export function WaHistoryStep({ waPhone, selectedHistory, setSelectedHistory, historyFrom, setHistoryFrom, historyTo, setHistoryTo, selectedGroups, setSyncText, setStep }: Props) {
+  return (
+    <div key="wa-history" style={{ animation: "fadeStep 0.4s cubic-bezier(0.16, 1, 0.3, 1)" }}>
+      <h1 className="text-[22px] font-semibold text-[#111] dark:text-white mb-[6px]">Fetch WhatsApp Chat History</h1>
+      <p className="text-sm text-[#6d6c6b] mb-[28px]">Import past messages so Zotok can start with context.</p>
+      <div className="flex items-center gap-2 h-10 px-3 mb-6 bg-[#d5ffde] border border-black/[0.12] rounded-lg text-[#004a10] text-sm font-medium tracking-[-0.09px] flex-shrink-0">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style={{ flexShrink: 0 }}>
+          <circle cx="9" cy="9" r="8" stroke="#004a10" strokeWidth="1.5" />
+          <path d="M5.5 9.5l2.5 2.5 4.5-5" stroke="#004a10" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        WhatsApp Connected to <strong>+91 {waPhone || "98765 43210"}</strong> Successfully!
+      </div>
+      <p className="text-sm font-semibold text-[#34322d] dark:text-[#dadada] tracking-[-0.09px] leading-5">How far back should we fetch?</p>
+      <p className="text-[12px] text-[#858481] tracking-[-0.09px] leading-4 mt-0.5 mb-4">Messages older than 90 days may not be available depending on your WhatsApp backup settings.</p>
+      <div className="bg-white dark:bg-[#1a1a1a] border border-black/[0.06] dark:border-white/[0.06] rounded-lg overflow-hidden py-2 mb-5">
+        {HISTORY_OPTIONS.map((opt, idx) => (
+          <div
+            key={opt.days}
+            className={cn(
+              "flex items-center gap-[10px] px-3 py-3 cursor-pointer transition-colors",
+              idx < HISTORY_OPTIONS.length - 1 ? "border-b border-black/[0.06] dark:border-white/[0.06]" : "",
+              selectedHistory === opt.days ? "bg-[#37352f0a] dark:bg-white/[0.04]" : "hover:bg-[#37352f0a] dark:hover:bg-white/[0.04]"
+            )}
+            onClick={() => setSelectedHistory(opt.days as number | "custom")}
+          >
+            <span className="flex-1 text-sm font-medium text-[#34322d] dark:text-[#dadada] tracking-[-0.09px] leading-[18px]">{opt.label}</span>
+            <div className={cn(
+              "w-4 h-4 rounded-full border-2 transition-colors flex-shrink-0",
+              selectedHistory === opt.days ? "border-[#0067ff] bg-[#0067ff]" : "border-black/[0.12] dark:border-white/[0.2]"
+            )} />
+          </div>
+        ))}
+      </div>
+      {selectedHistory === "custom" && (
+        <div className="flex gap-4 mb-5">
+          <FormField label="From" className="flex-1"><Input type="date" value={historyFrom} onChange={(e) => setHistoryFrom(e.target.value)} /></FormField>
+          <FormField label="To" className="flex-1"><Input type="date" value={historyTo} onChange={(e) => setHistoryTo(e.target.value)} /></FormField>
+        </div>
+      )}
+      <PrimaryBtn onClick={() => {
+        setSyncText(`We are syncing messages from last ${selectedHistory === "custom" ? "custom range" : `${selectedHistory} Days`} from ${selectedGroups.length || 0} groups. You can continue exploring the app while your messages sync in the background.`);
+        setStep("wa-groups");
+      }}>
+        Fetch History
+      </PrimaryBtn>
+    </div>
+  );
+}
