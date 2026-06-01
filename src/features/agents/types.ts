@@ -6,6 +6,8 @@ export interface Agent {
   title: string;
   desc: string;
   schedule: string;
+  capabilities: string[];
+  previewImage: string;
 }
 
 export interface Category {

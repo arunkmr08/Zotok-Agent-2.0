@@ -6,18 +6,24 @@ export const AGENTS: Agent[] = [
     title: "Categorise Messages",
     desc: "Create custom categories to organize WhatsApp conversations across orders, payments, dispatch, support, inventory, and internal operations.",
     schedule: "Every 20 mins",
+    capabilities: ["Intent detection", "Smart Routing", "Auto Tagging", "Priority Detection"],
+    previewImage: "/assets/images/preview-categorise.png",
   },
   {
     key: "leads",
     title: "Collect New Leads",
     desc: "Capture and organize potential customer enquiries from WhatsApp groups automatically. Identify interested buyers, track follow-ups, and streamline lead conversion workflows.",
     schedule: "Realtime",
+    capabilities: ["Intent detection", "Auto Capture Details", "Lead Sourcing", "Follow-up Reminders"],
+    previewImage: "/assets/images/preview-leads.png",
   },
   {
     key: "sheets",
     title: "Groups To Sheets",
     desc: "Sync WhatsApp group conversations into structured spreadsheets for reporting, tracking, analytics, and operational management across sales, inventory, payments, and support.",
     schedule: "Per message",
+    capabilities: ["Data Extraction", "Auto Structuring", "Sheet Sync", "Real-time Update"],
+    previewImage: "/assets/images/preview-sheets.png",
   },
 ];
 

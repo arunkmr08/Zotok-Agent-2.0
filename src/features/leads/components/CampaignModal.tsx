@@ -14,7 +14,11 @@ interface Props {
 export function CampaignModal({ lead, onClose }: Props) {
   const [view, setView] = useState<CampaignView>("connect");
   const [selected, setSelected] = useState<string | null>(null);
-  const zotokConnected = typeof window !== "undefined" && localStorage.getItem("zotok_atc_connected") === "true";
+  const [zotokConnected, setZotokConnected] = useState(false);
+
+  useEffect(() => {
+    setZotokConnected(localStorage.getItem("zotok_atc_connected") === "true");
+  }, []);
 
   useEffect(() => {
     if (lead) setView(zotokConnected ? "select" : "connect");

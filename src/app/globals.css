@@ -302,15 +302,26 @@
   color: #111111;
 }
 
-/* ── Chat: blob pulse ── */
+/* ── Chat: send arrow nudge ── */
+@keyframes arrow-nudge {
+  0%, 100% { transform: translateY(0); }
+  40%       { transform: translateY(-3px); }
+  60%       { transform: translateY(-1.5px); }
+}
+
+.arrow-nudge {
+  animation: arrow-nudge 1.2s ease-in-out infinite;
+}
+
+/* ── Chat: blob pulse — scale only, no translate conflict ── */
 @keyframes blob-pulse {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); }
-  50%       { transform: translate(-50%, -50%) scale(1.08); }
+  0%, 100% { scale: 1; }
+  50%       { scale: 1.08; }
 }
 
 .blob-pulse {
   animation: blob-pulse 6s ease-in-out infinite;
-  will-change: transform;
+  will-change: scale;
 }
 
 /* ── Theme transition (applied via JS on dark toggle) ── */

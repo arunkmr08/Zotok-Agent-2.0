@@ -10,12 +10,12 @@ import type { ChatState } from "@/features/chat/hooks/useChat";
 
 type Props = Pick<ChatState,
   "input" | "setInput" | "textareaRef" | "autoResize" | "handleKeyDown" | "sendMessage" |
-  "showSetupCard" | "dismissSetupCard" | "isMultiline" | "syncState"
+  "showSetupCard" | "dismissSetupCard" | "isMultiline" | "syncState" | "setInputFocused"
 >;
 
 export function ChatHero({
   input, setInput, textareaRef, autoResize, handleKeyDown, sendMessage,
-  showSetupCard, dismissSetupCard, isMultiline, syncState
+  showSetupCard, dismissSetupCard, isMultiline, syncState, setInputFocused
 }: Props) {
   const hasInput = input.trim().length > 0;
   const [mounted, setMounted] = useState(false);
@@ -121,6 +121,8 @@ export function ChatHero({
                   placeholder="Ask Copilot"
                   value={input}
                   onChange={(e) => { setInput(e.target.value); autoResize(); }}
+                  onFocus={() => setInputFocused(true)}
+                  onBlur={() => setInputFocused(false)}
                   onKeyDown={handleKeyDown}
                   className="flex-1 min-w-0 text-[16px] font-medium bg-transparent outline-none resize-none text-black dark:text-[#f0f0f0] placeholder:text-[#8c8c8c] tracking-[-0.18px] leading-normal"
                   style={{ height: "24px", maxHeight: "24px" }}
@@ -133,33 +135,34 @@ export function ChatHero({
                   <button
                     disabled={syncState !== 'hidden' || !hasInput}
                     onClick={() => sendMessage()}
-                    className="w-[36px] h-[36px] rounded-[50px] flex items-center justify-center flex-shrink-0 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="w-[36px] h-[36px] rounded-[50px] flex items-center justify-center flex-shrink-0 transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed"
                     style={{
                       background: hasInput && syncState === 'hidden' ? "#0067ff" : "rgba(55,53,47,0.08)",
                       border: hasInput && syncState === 'hidden' ? "none" : "1px solid rgba(229,231,235,0.06)",
+                      boxShadow: hasInput && syncState === 'hidden' ? "0 4px 14px rgba(0,103,255,0.45), 0 2px 6px rgba(0,103,255,0.25)" : "none",
                     }}
                   >
                     <Image src="/assets/icons/icon-chevron-up.svg" alt="" width={20} height={20}
-                      className={hasInput && syncState === 'hidden' ? "" : "dark:brightness-0 dark:invert opacity-50"}
+                      className={hasInput && syncState === 'hidden' ? "brightness-0 invert arrow-nudge" : "dark:brightness-0 dark:invert opacity-50"}
                     />
                   </button>
                 </div>
               </div>
             ) : (
               <div className="w-full bg-white dark:bg-[#1a1a1a] rounded-[24px] drop-shadow-[0px_3px_5px_rgba(0,0,0,0.08)] flex flex-col px-[16px] py-[12px]">
-                {/* Textarea */}
                 <div className="px-1 pt-1 pb-2">
                   <textarea
                     ref={textareaRef}
                     placeholder="Ask Copilot"
                     value={input}
                     onChange={(e) => { setInput(e.target.value); autoResize(); }}
+                    onFocus={() => setInputFocused(true)}
+                    onBlur={() => setInputFocused(false)}
                     onKeyDown={handleKeyDown}
                     className="w-full text-[16px] font-normal bg-transparent outline-none resize-none text-black dark:text-[#f0f0f0] placeholder:text-[#8c8c8c] tracking-[-0.18px] leading-[24px]"
                     style={{ minHeight: "72px", maxHeight: "160px" }}
                   />
                 </div>
-                {/* Bottom bar */}
                 <div className="flex items-center justify-between">
                   <div className="w-[26px] h-[26px] flex items-center justify-center">
                     <Image src="/assets/icons/icon-minus.svg" alt="" width={20} height={20} className="dark:brightness-0 dark:invert opacity-50" />
@@ -172,10 +175,10 @@ export function ChatHero({
                     <button
                       disabled={syncState !== 'hidden' || !hasInput}
                       onClick={() => sendMessage()}
-                      className="w-[36px] h-[36px] rounded-[50px] bg-[#0067ff] flex items-center justify-center flex-shrink-0 hover:bg-[#0055d4] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                      style={{ boxShadow: "0px 10px 7.5px rgba(0,0,0,0.1), 0px 4px 3px rgba(0,0,0,0.05)" }}
+                      className="w-[36px] h-[36px] rounded-[50px] bg-[#0067ff] flex items-center justify-center flex-shrink-0 hover:bg-[#0055d4] disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300"
+                      style={{ boxShadow: hasInput && syncState === 'hidden' ? "0 4px 14px rgba(0,103,255,0.45), 0 2px 6px rgba(0,103,255,0.25)" : "none" }}
                     >
-                      <Image src="/assets/icons/icon-chevron-up.svg" alt="" width={20} height={20} />
+                      <Image src="/assets/icons/icon-chevron-up.svg" alt="" width={20} height={20} className={hasInput && syncState === 'hidden' ? "brightness-0 invert arrow-nudge" : "brightness-0 invert"} />
                     </button>
                   </div>
                 </div>

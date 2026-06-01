@@ -1,10 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { AGENT_COLORS, AGENT_ICONS } from "@/features/agents/constants";
 import type { Agent, AgentState } from "@/features/agents/types";
 
 interface Props {
@@ -15,50 +11,97 @@ interface Props {
   onRemove: () => void;
 }
 
-export function AgentCard({ agent, state, onDeploy, onConfigure, onRemove }: Props) {
+function CheckIcon() {
   return (
-    <article className="flex flex-col bg-white dark:bg-[#1a1a1a] rounded-2xl border border-black/[0.08] dark:border-white/[0.06] overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-      <div className={cn("aspect-[1595/700] bg-gradient-to-br flex items-center justify-center", AGENT_COLORS[agent.key])}>
+    <svg className="w-[14px] h-[14px] flex-shrink-0 text-[#595959]" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M2.5 7l3 3 6-6" />
+    </svg>
+  );
+}
+
+export function AgentCard({ agent, state, onDeploy, onConfigure, onRemove }: Props) {
+  const isActive = state === "active";
+
+  return (
+    <article className="bg-white dark:bg-[#1a1a1a] border border-black/[0.12] dark:border-white/[0.08] rounded-[18px] drop-shadow-[0px_8px_16px_rgba(0,0,0,0.06)] flex flex-col gap-[24px] pt-[5px] px-[5px] pb-[21px]">
+
+      {/* Preview image */}
+      <div className="bg-[#f8f8f7] dark:bg-[#262626] rounded-[14px] overflow-hidden w-full aspect-[1595/986]">
         <Image
-          src={`/assets/icons/${AGENT_ICONS[agent.key]}`}
-          alt={agent.title} width={64} height={64}
-          className="opacity-60"
-          onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+          src={agent.previewImage}
+          alt={agent.title}
+          width={1595} height={986}
+          className="w-full h-full object-cover"
+          unoptimized
         />
       </div>
-      <div className="p-4 flex flex-col flex-1">
-        <div className="flex items-start justify-between gap-2 mb-2">
-          <h3 className="font-semibold text-[#111] dark:text-white">{agent.title}</h3>
-          {state === "active" && (
-            <Badge variant="secondary" className="text-xs bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300 flex-shrink-0">Active</Badge>
-          )}
+
+      {/* Body */}
+      <div className="flex flex-col gap-[16px] px-[16px]">
+
+        {/* Title + description */}
+        <div className="flex flex-col gap-[4px]">
+          <div className="flex items-center gap-2">
+            <h3 className="font-semibold text-[16px] text-[#141414] dark:text-white tracking-[-0.18px] leading-normal">{agent.title}</h3>
+            {isActive && (
+              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400 flex-shrink-0">Active</span>
+            )}
+          </div>
+          <p className="font-normal text-[14px] text-[#595959] dark:text-[#8c8c8c] tracking-[-0.09px] leading-[22px]">{agent.desc}</p>
         </div>
-        <p className="text-sm text-[#6d6c6b] dark:text-[#7f7f7f] mb-1 flex-1">{agent.desc}</p>
-        <p className="text-xs text-[#858481] mb-4">Runs: {agent.schedule}</p>
-        <div className="flex items-center justify-between gap-2 mt-auto">
-          {state === "active" ? (
-            <>
-              <Button size="sm" variant="outline" onClick={onConfigure}>
-                <svg className="w-4 h-4 mr-1.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
-                Configure
-              </Button>
-              <Button size="sm" variant="destructive" onClick={onRemove}>Remove</Button>
-            </>
-          ) : (
-            <>
-              <Button size="sm" variant="ghost" onClick={onConfigure}>Know More</Button>
-              <Button size="sm" onClick={onDeploy}>
-                <svg className="w-4 h-4 mr-1.5" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M9 12.75V2.25" /><path d="M4.5 8.25 9 12.75l4.5-4.5" /><path d="M14.25 15.75H3.75" />
-                </svg>
-                Deploy
-              </Button>
-            </>
-          )}
+
+        {/* Capabilities */}
+        <div className="flex flex-col gap-[6px]">
+          <p className="font-medium text-[14px] text-[#595959] dark:text-[#8c8c8c] tracking-[-0.09px] leading-[20px]">Capabilities</p>
+          <div className="flex flex-wrap gap-[6px]">
+            {agent.capabilities.map((cap) => (
+              <span key={cap} className="flex items-center gap-[4px] bg-[#f5f5f5] dark:bg-[#262626] border border-black/[0.06] dark:border-white/[0.06] rounded-[999px] pl-[7px] pr-[11px] py-[5px]">
+                <CheckIcon />
+                <span className="font-normal text-[12px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.18px] whitespace-nowrap">{cap}</span>
+              </span>
+            ))}
+          </div>
         </div>
+      </div>
+
+      {/* Buttons */}
+      <div className="flex items-center justify-between px-[16px]">
+        {isActive ? (
+          <>
+            <button
+              onClick={onConfigure}
+              className="flex items-center gap-[6px] pl-[12px] pr-[14px] py-[8px] rounded-[8px] font-semibold text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[18px] hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors"
+            >
+              Configure
+            </button>
+            <button
+              onClick={onRemove}
+              className="flex items-center gap-[6px] pl-[12px] pr-[14px] py-[8px] rounded-[8px] bg-red-500 hover:bg-red-600 transition-colors font-semibold text-[14px] text-white tracking-[-0.09px] leading-[18px]"
+            >
+              Remove
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              onClick={onConfigure}
+              className="flex items-center gap-[6px] pl-[12px] pr-[14px] py-[8px] rounded-[8px] font-semibold text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[18px] hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors"
+            >
+              Know More
+            </button>
+            <button
+              onClick={onDeploy}
+              className="flex items-center gap-[6px] pl-[12px] pr-[14px] py-[8px] rounded-[8px] bg-[#0067ff] hover:bg-[#0055d4] transition-colors font-semibold text-[14px] text-white tracking-[-0.09px] leading-[18px]"
+            >
+              <svg className="w-[18px] h-[18px]" viewBox="0 0 18 18" fill="none">
+                <path d="M9.75 2.25C9.75 2.25 13.5 3 14.25 6.75C15 10.5 12.75 13.5 9 15C5.25 13.5 3 10.5 3.75 6.75C4.5 3 8.25 2.25 8.25 2.25" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <circle cx="9" cy="8.25" r="1.5" fill="white"/>
+                <path d="M9 9.75V12.75" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+              </svg>
+              Deploy Karamchari
+            </button>
+          </>
+        )}
       </div>
     </article>
   );

@@ -2,18 +2,52 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { DEFAULT_COLUMNS, MOCK_GROUPS, SHEET_OPTIONS_LEADS } from "@/features/agents/constants";
 import type { LeadsView } from "@/features/agents/types";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Checkbox } from "@/components/ui/checkbox";
+import { SHEET_PREVIEW_B64, SHEETS_ICON_B64 } from "@/features/agents/constants.images";
 
 interface Props {
   open: boolean;
   onClose: () => void;
   onDeploy: () => void;
+}
+
+function ModalHeader({ title, desc, onClose, onBack }: { title: string; desc?: string; onClose: () => void; onBack?: () => void }) {
+  return (
+    <div className="flex gap-[12px] items-start w-full">
+      <div className="flex flex-1 flex-col gap-[4px] min-w-0">
+        <div className="flex items-center gap-[8px]">
+          {onBack && (
+            <Tooltip>
+              <TooltipTrigger render={
+                <button onClick={onBack} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors flex-shrink-0">
+                  <svg className="w-[18px] h-[18px] text-[#34322d] dark:text-[#d9d9d9]" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M11.25 4.5 6.75 9l4.5 4.5" />
+                  </svg>
+                </button>
+              } />
+              <TooltipContent side="top" sideOffset={4}>Back</TooltipContent>
+            </Tooltip>
+          )}
+          <h2 className="font-semibold text-[20px] text-[#34322d] dark:text-white tracking-[-0.33px] leading-normal">{title}</h2>
+        </div>
+        {desc && <p className="font-normal text-[14px] text-[#858481] dark:text-[#8c8c8c] tracking-[-0.09px] leading-[22px]">{desc}</p>}
+      </div>
+      <Tooltip>
+        <TooltipTrigger render={
+          <button onClick={onClose} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors flex-shrink-0">
+            <svg className="w-[18px] h-[18px] text-[#34322d] dark:text-[#d9d9d9]" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round">
+              <path d="M4 4l10 10M14 4 4 14" />
+            </svg>
+          </button>
+        } />
+        <TooltipContent side="top" sideOffset={4}>Close</TooltipContent>
+      </Tooltip>
+    </div>
+  );
 }
 
 export function LeadsModal({ open, onClose, onDeploy }: Props) {
@@ -34,163 +68,260 @@ export function LeadsModal({ open, onClose, onDeploy }: Props) {
 
   const filteredGroups = MOCK_GROUPS.filter((g) => g.name.toLowerCase().includes(groupSearch.toLowerCase()));
 
+  if (!open) return null;
+
   return (
-    <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-lg">
-        {(view === "connect" || view === "loading") && (
-          <>
-            <DialogHeader>
-              <DialogTitle>Configure Collect New Leads</DialogTitle>
-              <p className="text-sm text-[#6d6c6b]">Detect unknown contacts and extract lead information.</p>
-            </DialogHeader>
-            <div className="flex items-center gap-4 p-4 rounded-xl border border-black/[0.08] dark:border-white/[0.08] bg-[#f4f3ef] dark:bg-[#242424] my-2">
-              <div className="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900 flex items-center justify-center flex-shrink-0">
-                <Image src="/assets/icons/zotok-logo-36.svg" alt="Zotok" width={24} height={24} />
-              </div>
-              <Image src="/assets/icons/icon-arrow-right.svg" alt="" width={20} height={20} onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
-              <div className="w-10 h-10 rounded-lg bg-green-100 dark:bg-green-900 flex items-center justify-center flex-shrink-0">
-                <Image src="/assets/icons/icon-google-sheets-sm.png" alt="Sheets" width={24} height={24} onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-[#34322d] dark:text-[#dadada]">Continue to Setup Google Sheets</p>
-                <p className="text-xs text-[#858481]">Approve this connection in Google</p>
-              </div>
-            </div>
-            <div className="flex gap-2">
-              <Button variant="outline" className="flex-1" onClick={handleClose}>Cancel</Button>
-              <Button className="flex-1" onClick={handleConnect} disabled={view === "loading"}>
-                {view === "loading"
-                  ? <span className="flex items-center gap-2"><span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />Connecting…</span>
-                  : "Continue In Google"}
-              </Button>
-            </div>
-          </>
-        )}
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+      <TooltipProvider delay={300}>
+        <div className="bg-[#f8f8f7] dark:bg-[#1a1a1a] border border-black/[0.12] dark:border-white/[0.08] rounded-[18px] drop-shadow-[0px_8px_16px_rgba(0,0,0,0.06)] w-full max-w-[720px] flex flex-col gap-[20px] p-[21px]">
 
-        {view === "picker" && (
-          <>
-            <DialogHeader><DialogTitle>Configure Collect New Leads</DialogTitle></DialogHeader>
-            <div className="mb-2">
-              <p className="text-sm font-medium text-[#34322d] dark:text-[#adadad] mb-0.5">Select Your Preferred Sheet</p>
-              <p className="text-xs text-[#858481]">Connected to: jktraders223@gmail.com</p>
-            </div>
-            <div className="grid grid-cols-3 gap-3">
-              {SHEET_OPTIONS_LEADS.map((s) => (
-                <div
-                  key={s.id}
-                  onClick={() => setSelectedSheet(s.id)}
-                  className={cn("flex flex-col items-center gap-2 p-3 rounded-xl border cursor-pointer transition-colors text-center", selectedSheet === s.id ? "border-blue-500 bg-blue-50 dark:bg-blue-950" : "border-black/[0.08] dark:border-white/[0.08] hover:border-black/[0.12]")}
-                >
-                  <div className="w-10 h-10 rounded bg-[#ecebea] dark:bg-[#242424] flex items-center justify-center">
-                    {s.id === "blank"
-                      ? <svg className="w-5 h-5 text-[#858481]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
-                      : <Image src="/assets/icons/icon-google-sheets-sm.png" alt="" width={20} height={20} onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />}
+          {/* ── Connect view ── */}
+          {(view === "connect" || view === "loading") && (
+            <>
+              <ModalHeader
+                title="Configure Collect New Leads"
+                desc="Detect unknown contacts and extract lead information. Configure the columns below."
+                onClose={handleClose}
+              />
+
+              {/* Connection card */}
+              <div className="bg-white dark:bg-[#262626] border border-black/[0.06] dark:border-white/[0.06] rounded-[18px] flex flex-col items-center justify-center gap-[20px] py-[48px] px-[80px]">
+                <div className="flex items-center gap-[22px]">
+                  <div className="bg-white dark:bg-[#1a1a1a] border border-black/[0.12] dark:border-white/[0.1] rounded-[10px] shadow-[0px_8px_32px_rgba(0,0,0,0.06)] w-[60px] h-[60px] flex items-center justify-center p-[1px] overflow-hidden">
+                    <Image src="/assets/icons/zotok-logo-36.svg" alt="Zotok" width={38} height={38} />
                   </div>
-                  <p className="text-xs text-[#34322d] dark:text-[#adadad] line-clamp-2">{s.label}</p>
+                  <svg className="w-[20px] h-[20px] text-[#8c8c8c]" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M4 7h12M13 4l3 3-3 3M16 13H4M7 16l-3-3 3-3" />
+                  </svg>
+                  <div className="bg-white dark:bg-[#1a1a1a] border border-black/[0.12] dark:border-white/[0.1] rounded-[10px] shadow-[0px_8px_32px_rgba(0,0,0,0.06)] w-[60px] h-[60px] flex items-center justify-center p-[1px] overflow-hidden">
+                    <Image src="/assets/icons/icon-google-sheets-sm.png" alt="Google Sheets" width={36} height={36} onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                  </div>
                 </div>
-              ))}
-            </div>
-            <Button className="w-full mt-2" disabled={!selectedSheet} onClick={() => setView("columns")}>Continue</Button>
-          </>
-        )}
-
-        {view === "columns" && (
-          <>
-            <DialogHeader>
-              <div className="flex items-center gap-2">
-                <TooltipProvider delay={300}>
-                  <Tooltip>
-                    <TooltipTrigger render={<button onClick={() => setView("picker")} className="p-1 rounded hover:bg-[#ecebea] dark:hover:bg-[#242424]" />}>
-                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-                    </TooltipTrigger>
-                    <TooltipContent side="top" sideOffset={6}>Back</TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                <DialogTitle>Configure the Sheet Columns</DialogTitle>
+                <div className="flex flex-col items-center gap-[2px] text-center">
+                  <p className="font-semibold text-[16px] text-[#34322d] dark:text-white tracking-[-0.18px] leading-[20px]">Continue to Setup Google Sheets</p>
+                  <p className="font-normal text-[14px] text-[#858481] dark:text-[#8c8c8c] tracking-[-0.09px] leading-[22px]">Approve this connection in Google</p>
+                </div>
               </div>
-              <p className="text-sm text-[#6d6c6b]">Add, edit, or remove columns based on your requirement.</p>
-            </DialogHeader>
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-[#6d6c6b] dark:text-[#7f7f7f]">{columns.length} Columns</span>
-              <Button size="sm" variant="outline" onClick={() => { if (newCol.trim()) { setColumns((p) => [...p, { name: newCol.trim() }]); setNewCol(""); } }}>+ Add Column</Button>
-            </div>
-            <div className="flex gap-2 mb-3">
-              <Input placeholder="New column name" value={newCol} onChange={(e) => setNewCol(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && newCol.trim()) { setColumns((p) => [...p, { name: newCol.trim() }]); setNewCol(""); }}} />
-            </div>
-            <TooltipProvider delay={300}>
-              <div className="space-y-2 max-h-44 overflow-y-auto">
+
+              {/* Footer buttons */}
+              <div className="flex gap-[12px]">
+                <button
+                  onClick={handleClose}
+                  className="flex-1 bg-white dark:bg-[#262626] border border-[#e8e6e0] dark:border-white/[0.1] rounded-[8px] py-[9px] font-semibold text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[18px] text-center hover:bg-[#f4f3ef] dark:hover:bg-[#303030] transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleConnect}
+                  disabled={view === "loading"}
+                  className="flex-1 bg-[#0067ff] hover:bg-[#0055d4] disabled:opacity-70 transition-colors rounded-[8px] py-[9px] font-semibold text-[14px] text-white tracking-[-0.09px] leading-[18px] text-center flex items-center justify-center gap-[8px]"
+                >
+                  {view === "loading" && <span className="w-[14px] h-[14px] border-2 border-white border-t-transparent rounded-full animate-spin flex-shrink-0" />}
+                  {view === "loading" ? "Connecting…" : "Continue in Google"}
+                </button>
+              </div>
+            </>
+          )}
+
+          {/* ── Picker view ── */}
+          {view === "picker" && (
+            <>
+              <ModalHeader
+                title="Configure Collect New Leads"
+                desc="Detect unknown contacts and extract lead information. Configure the columns below."
+                onClose={handleClose}
+              />
+
+              {/* Sheet selector card */}
+              <div className="bg-white dark:bg-[#262626] border border-black/[0.06] dark:border-white/[0.06] rounded-[12px] flex flex-col gap-[24px] px-[20px] py-[16px]">
+                {/* Sub-header */}
+                <div className="flex items-center justify-between gap-[12px]">
+                  <p className="font-semibold text-[14px] text-[#34322d] dark:text-white tracking-[-0.09px] leading-[20px] whitespace-nowrap">Select Your Preferred Sheet to Insert the Leads</p>
+                  <p className="font-normal text-[14px] text-[#858481] dark:text-[#8c8c8c] tracking-[-0.09px] leading-[22px] whitespace-nowrap">Connected to: jktraders223@gmail.com</p>
+                </div>
+
+                {/* Sheet options */}
+                <div className="grid grid-cols-3 gap-[16px] max-h-[420px] overflow-y-auto pr-1">
+                  {/* Blank sheet option */}
+                  <button
+                    onClick={() => setSelectedSheet("blank")}
+                    className={cn(
+                      "flex flex-col items-center justify-center gap-[8px] rounded-[8px] border-dashed border-2 py-[40px] transition-colors",
+                      selectedSheet === "blank"
+                        ? "border-[#0067ff] bg-[#e6f0ff] dark:bg-[#0f2040]"
+                        : "border-black/[0.12] dark:border-white/[0.12] bg-[#f8f8f7] dark:bg-[#1f1f1f] hover:border-black/[0.2]"
+                    )}
+                  >
+                    <div className="bg-white dark:bg-[#262626] border border-black/[0.12] dark:border-white/[0.1] rounded-[10px] w-[60px] h-[60px] flex items-center justify-center shadow-[0px_8px_32px_rgba(0,0,0,0.06)]">
+                      <svg className="w-[24px] h-[24px] text-[#595959] dark:text-[#8c8c8c]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M12 5v14M5 12h14" />
+                      </svg>
+                    </div>
+                    <span className="font-medium text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[20px] whitespace-nowrap">Start from blank sheet</span>
+                  </button>
+
+                  {/* Existing sheet options */}
+                  {[
+                    { id: "feb",  label: "New leads February 2026.xlsx" },
+                    { id: "mar",  label: "New Enquiries 2026.xlsx" },
+                    { id: "apr",  label: "Leads April 2026.xlsx" },
+                    { id: "q1",   label: "Q1 Lead Report 2026.xlsx" },
+                    { id: "whatsapp", label: "WhatsApp Leads Master.xlsx" },
+                    { id: "crm",  label: "CRM Import Ready 2026.xlsx" },
+                    { id: "jun",  label: "June Leads Pipeline.xlsx" },
+                  ].map((s) => (
+                    <button
+                      key={s.id}
+                      onClick={() => setSelectedSheet(s.id)}
+                      className={cn(
+                        "flex flex-col items-start rounded-[8px] border overflow-hidden transition-all",
+                        selectedSheet === s.id
+                          ? "border-[#0067ff] shadow-[0px_8px_32px_rgba(0,103,255,0.15)]"
+                          : "border-black/[0.12] dark:border-white/[0.1] shadow-[0px_8px_32px_rgba(0,0,0,0.06)] hover:border-black/[0.2]"
+                      )}
+                    >
+                      {/* Preview image */}
+                      <div className="w-full border-b border-black/[0.06] dark:border-white/[0.06] bg-[#f8f8f7] dark:bg-[#1f1f1f]">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={SHEET_PREVIEW_B64}
+                          alt="Sheet preview"
+                          className="w-full aspect-[640/360] object-cover pointer-events-none"
+                        />
+                      </div>
+                      {/* Label */}
+                      <div className="flex items-center gap-[8px] p-[12px] bg-white dark:bg-[#262626] w-full">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={SHEETS_ICON_B64} alt="" className="w-[24px] h-[24px] flex-shrink-0" />
+                        <span className="font-medium text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[20px] truncate">{s.label}</span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <button
+                onClick={() => setView("columns")}
+                disabled={!selectedSheet}
+                className="w-full bg-[#0067ff] hover:bg-[#0055d4] disabled:opacity-40 disabled:cursor-not-allowed transition-colors rounded-[8px] py-[10px] font-semibold text-[14px] text-white tracking-[-0.09px] leading-[18px] text-center"
+              >
+                Continue
+              </button>
+            </>
+          )}
+
+          {/* ── Columns view ── */}
+          {view === "columns" && (
+            <>
+              <ModalHeader title="Configure Sheet Columns" desc="Add, edit, or remove columns based on your requirement." onClose={handleClose} onBack={() => setView("picker")} />
+
+              <div className="flex items-center justify-between">
+                <span className="font-medium text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px]">{columns.length} Columns</span>
+                <button
+                  onClick={() => { if (newCol.trim()) { setColumns((p) => [...p, { name: newCol.trim() }]); setNewCol(""); } }}
+                  className="flex items-center gap-[6px] bg-white dark:bg-[#262626] border border-[#e8e6e0] dark:border-white/[0.1] pl-[13px] pr-[15px] py-[9px] rounded-[8px] font-semibold text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[18px] hover:bg-[#f4f3ef] dark:hover:bg-[#303030] transition-colors"
+                >
+                  <svg className="w-[18px] h-[18px]" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="9" r="7.5"/><path d="M6 9h6M9 6v6"/></svg>
+                  Add Column
+                </button>
+              </div>
+
+              <input
+                type="text"
+                placeholder="New column name"
+                value={newCol}
+                onChange={(e) => setNewCol(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter" && newCol.trim()) { setColumns((p) => [...p, { name: newCol.trim() }]); setNewCol(""); } }}
+                className="w-full bg-white dark:bg-[#262626] border border-black/[0.08] dark:border-white/[0.08] rounded-[8px] px-[12px] py-[10px] text-[14px] text-[#34322d] dark:text-[#d9d9d9] placeholder:text-[#858481] outline-none focus:border-[#0067ff] transition-colors"
+              />
+
+              <div className="bg-white dark:bg-[#262626] border border-black/[0.06] dark:border-white/[0.06] rounded-[12px] overflow-hidden max-h-[240px] overflow-y-auto">
                 {columns.map((col, i) => (
-                  <div key={i} className="flex items-center gap-3 px-3 py-2 rounded-lg border border-black/[0.08] dark:border-white/[0.08] bg-white dark:bg-[#1a1a1a]">
-                    <svg className="w-4 h-4 text-[#adadad] flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 6h6M9 12h6M9 18h6"/></svg>
-                    <span className="flex-1 text-sm text-[#34322d] dark:text-[#adadad]">{col.name}</span>
+                  <div key={i} className={`flex items-center gap-[10px] px-[16px] py-[12px] ${i < columns.length - 1 ? "border-b border-black/[0.06] dark:border-white/[0.06]" : ""}`}>
+                    <svg className="w-[16px] h-[16px] text-[#c0bfbd] flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M9 6h6M9 12h6M9 18h6"/></svg>
+                    <span className="flex-1 min-w-0 font-medium text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[18px]">{col.name}</span>
                     <Tooltip>
-                      <TooltipTrigger render={<button onClick={() => setColumns((p) => p.filter((_, j) => j !== i))} className="text-[#858481] hover:text-red-500" />}>
-                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                      </TooltipTrigger>
-                      <TooltipContent side="top" sideOffset={6}>Remove column</TooltipContent>
+                      <TooltipTrigger render={
+                        <button onClick={() => setColumns((p) => p.filter((_, j) => j !== i))} className="w-[28px] h-[28px] flex items-center justify-center rounded-[6px] text-[#8c8c8c] hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                          <svg className="w-[14px] h-[14px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                        </button>
+                      } />
+                      <TooltipContent side="top" sideOffset={4}>Remove</TooltipContent>
                     </Tooltip>
                   </div>
                 ))}
               </div>
-            </TooltipProvider>
-            <Button className="w-full mt-3" onClick={() => setView("groups")}>Continue</Button>
-          </>
-        )}
 
-        {view === "groups" && (
-          <>
-            <DialogHeader>
-              <div className="flex items-center gap-2">
-                <TooltipProvider delay={300}>
-                  <Tooltip>
-                    <TooltipTrigger render={<button onClick={() => setView("columns")} className="p-1 rounded hover:bg-[#ecebea] dark:hover:bg-[#242424]" />}>
-                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-                    </TooltipTrigger>
-                    <TooltipContent side="top" sideOffset={6}>Back</TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                <DialogTitle>Select the Groups</DialogTitle>
+              <button
+                onClick={() => setView("groups")}
+                className="w-full bg-[#0067ff] hover:bg-[#0055d4] transition-colors rounded-[8px] py-[10px] font-semibold text-[14px] text-white tracking-[-0.09px] leading-[18px] text-center"
+              >
+                Continue
+              </button>
+            </>
+          )}
+
+          {/* ── Groups view ── */}
+          {view === "groups" && (
+            <>
+              <ModalHeader title="Select WhatsApp Groups" desc="Select groups to fetch conversations and customer enquiries from." onClose={handleClose} onBack={() => setView("columns")} />
+
+              <div className="flex items-center gap-[8px] bg-white dark:bg-[#262626] border border-black/[0.08] dark:border-white/[0.08] rounded-[8px] px-[12px] py-[10px]">
+                <Image src="/assets/icons/icon-search.svg" alt="" width={14} height={14} className="opacity-50 dark:brightness-0 dark:invert dark:opacity-40" />
+                <input type="text" placeholder="Search groups" value={groupSearch} onChange={(e) => setGroupSearch(e.target.value)} className="flex-1 bg-transparent outline-none text-[14px] text-[#34322d] dark:text-[#d9d9d9] placeholder:text-[#858481]" />
               </div>
-              <p className="text-sm text-[#6d6c6b]">Select WhatsApp groups to fetch conversations and customer enquiries from.</p>
-            </DialogHeader>
-            <div className="flex items-center gap-2 bg-[#f4f3ef] dark:bg-[#242424] border border-black/[0.08] dark:border-white/[0.08] rounded-lg px-3 py-2 mb-3">
-              <Image src="/assets/icons/icon-search.svg" alt="" width={14} height={14} />
-              <input type="text" placeholder="Search Group" value={groupSearch} onChange={(e) => setGroupSearch(e.target.value)} className="flex-1 bg-transparent outline-none text-sm" />
-            </div>
-            <div className="space-y-1.5 max-h-52 overflow-y-auto mb-3">
-              {filteredGroups.map((g) => (
-                <div
-                  key={g.name}
-                  onClick={() => setSelectedGroups((p) => { const n = new Set(p); n.has(g.name) ? n.delete(g.name) : n.add(g.name); return n; })}
-                  className={cn("flex items-center gap-3 px-3 py-2 rounded-lg border cursor-pointer transition-colors", selectedGroups.has(g.name) ? "border-blue-500 bg-blue-50 dark:bg-blue-950" : "border-black/[0.08] dark:border-white/[0.08] hover:border-black/[0.12]")}
-                >
-                  <Image src={`/assets/icons/${g.avatar}`} alt="" width={28} height={28} className="rounded-full flex-shrink-0" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-[#34322d] dark:text-[#dadada] truncate">{g.name}</p>
-                    <p className="text-xs text-[#858481]">{g.members}</p>
-                  </div>
-                  <div className={cn("w-4 h-4 rounded border-2 flex-shrink-0", selectedGroups.has(g.name) ? "border-blue-500 bg-blue-500" : "border-black/[0.12]")} />
-                </div>
-              ))}
-            </div>
-            <Button className="w-full" disabled={selectedGroups.size === 0} onClick={() => setView("success")}>Save &amp; Deploy</Button>
-          </>
-        )}
 
-        {view === "success" && (
-          <div className="flex flex-col items-center gap-3 py-6 text-center">
-            <div className="w-24 h-24 rounded-full bg-emerald-50 dark:bg-emerald-950 flex items-center justify-center">
-              <svg className="w-12 h-12 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
-                <path d="m9 12 2 2 4-4"/>
-              </svg>
+              <div className="bg-white dark:bg-[#262626] border border-black/[0.06] dark:border-white/[0.06] rounded-[12px] overflow-hidden max-h-[260px] overflow-y-auto">
+                {filteredGroups.map((g, i) => (
+                  <button
+                    key={g.name}
+                    onClick={() => setSelectedGroups((p) => { const n = new Set(p); n.has(g.name) ? n.delete(g.name) : n.add(g.name); return n; })}
+                    className={`flex items-center gap-[12px] px-[16px] py-[12px] w-full text-left transition-colors hover:bg-[#f8f8f7] dark:hover:bg-[#2f2f2f] ${i < filteredGroups.length - 1 ? "border-b border-black/[0.06] dark:border-white/[0.06]" : ""}`}
+                  >
+                    <Image src={`/assets/icons/${g.avatar}`} alt="" width={28} height={28} className="rounded-full flex-shrink-0" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] truncate">{g.name}</p>
+                      <p className="font-normal text-[12px] text-[#858481] tracking-[0.01px]">{g.members}</p>
+                    </div>
+                    <Checkbox checked={selectedGroups.has(g.name)} onCheckedChange={() => setSelectedGroups((p) => { const n = new Set(p); n.has(g.name) ? n.delete(g.name) : n.add(g.name); return n; })} className="flex-shrink-0" />
+                  </button>
+                ))}
+              </div>
+
+              <button
+                onClick={() => setView("success")}
+                disabled={selectedGroups.size === 0}
+                className="w-full bg-[#0067ff] hover:bg-[#0055d4] disabled:opacity-40 disabled:cursor-not-allowed transition-colors rounded-[8px] py-[10px] font-semibold text-[14px] text-white tracking-[-0.09px] leading-[18px] text-center"
+              >
+                Save &amp; Deploy
+              </button>
+            </>
+          )}
+
+          {/* ── Success view ── */}
+          {view === "success" && (
+            <div className="flex flex-col items-center gap-[16px] py-[24px] text-center">
+              <div className="w-[72px] h-[72px] rounded-full bg-[#e6f0ff] dark:bg-[#0f2040] flex items-center justify-center">
+                <svg className="w-[36px] h-[36px] text-[#0067ff]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+                  <path d="m9 12 2 2 4-4" />
+                </svg>
+              </div>
+              <div className="flex flex-col gap-[4px]">
+                <p className="font-semibold text-[18px] text-[#34322d] dark:text-white tracking-[-0.33px]">Karamchari Deployed!</p>
+                <p className="font-normal text-[14px] text-[#858481] dark:text-[#8c8c8c] tracking-[-0.09px] leading-[22px]">Collect New Leads is now active and monitoring your selected WhatsApp groups.</p>
+              </div>
+              <button
+                onClick={handleDone}
+                className="w-full bg-[#0067ff] hover:bg-[#0055d4] transition-colors rounded-[8px] py-[10px] font-semibold text-[14px] text-white tracking-[-0.09px] leading-[18px] text-center"
+              >
+                Done
+              </button>
             </div>
-            <p className="text-lg font-semibold text-[#34322d] dark:text-[#dadada]">Karamchari deployed successfully!</p>
-            <p className="text-sm text-[#6d6c6b]">Collect New Leads is now active and monitoring your selected WhatsApp groups.</p>
-            <Button className="mt-2 w-full" onClick={handleDone}>Done</Button>
-          </div>
-        )}
-      </DialogContent>
-    </Dialog>
+          )}
+
+        </div>
+      </TooltipProvider>
+    </div>
   );
 }

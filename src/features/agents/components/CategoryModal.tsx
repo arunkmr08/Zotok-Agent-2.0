@@ -1,19 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DEFAULT_CATEGORIES } from "@/features/agents/constants";
 import type { Category, CatView } from "@/features/agents/types";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface Props {
   open: boolean;
   onClose: () => void;
   onDeploy: () => void;
 }
+
 
 export function CategoryModal({ open, onClose, onDeploy }: Props) {
   const [view, setView] = useState<CatView>("list");
@@ -23,10 +21,7 @@ export function CategoryModal({ open, onClose, onDeploy }: Props) {
   const [error, setError] = useState("");
 
   function handleDeploy() {
-    const names = categories.map((c) => c.name.trim().toLowerCase());
-    if (names.some((n) => !n)) return setError("All categories must have a name.");
-    if (new Set(names).size !== names.length) return setError("Category names must be unique.");
-    if (categories.length === 0) return setError("At least 1 category is required.");
+    if (categories.filter(c => c.checked).length === 0) return setError("Select at least 1 category.");
     setError("");
     setView("success");
   }
@@ -41,102 +36,172 @@ export function CategoryModal({ open, onClose, onDeploy }: Props) {
   function handleClose() { setView("list"); onClose(); }
   function handleDone() { onDeploy(); handleClose(); }
 
+  if (!open) return null;
+
   return (
-    <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-lg">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+      <TooltipProvider delay={300}>
+      <div className="bg-[#f8f8f7] dark:bg-[#1a1a1a] border border-black/[0.12] dark:border-white/[0.08] rounded-[18px] drop-shadow-[0px_8px_16px_rgba(0,0,0,0.06)] w-full max-w-[520px] flex flex-col gap-[20px] p-[21px]">
+
+        {/* ── List view ── */}
         {view === "list" && (
           <>
-            <DialogHeader>
-              <DialogTitle>Configure Category Messages</DialogTitle>
-              <p className="text-sm text-[#6d6c6b]">Select the categories you want this worker to organize messages into.</p>
-            </DialogHeader>
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-[#6d6c6b] dark:text-[#7f7f7f]">{categories.filter(c => c.checked).length} Selected</span>
-              <Button size="sm" variant="outline" onClick={() => setView("create")}>
-                <svg className="w-4 h-4 mr-1" viewBox="0 0 18 18" fill="none">
-                  <path d="M9 16.5A7.5 7.5 0 1 0 9 1.5a7.5 7.5 0 0 0 0 15Z" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M6 9h6M9 6v6" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+            {/* Header */}
+            <div className="flex gap-[12px] items-start w-full">
+              <div className="flex flex-1 flex-col gap-[4px] min-w-0">
+                <div className="flex items-center gap-[8px]">
+                  <h2 className="font-semibold text-[20px] text-[#34322d] dark:text-white tracking-[-0.33px] leading-normal">Configure Category Messages</h2>
+                </div>
+                <p className="font-normal text-[14px] text-[#858481] dark:text-[#8c8c8c] tracking-[-0.09px] leading-[22px]">
+                  Select the categories you want this worker to organize messages into. You can use the default business categories or create custom categories based on your workflow.
+                </p>
+              </div>
+              <Tooltip>
+                <TooltipTrigger render={
+                  <button onClick={handleClose} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors flex-shrink-0">
+                    <svg className="w-[18px] h-[18px] text-[#34322d] dark:text-[#d9d9d9]" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round">
+                      <path d="M4 4l10 10M14 4 4 14" />
+                    </svg>
+                  </button>
+                } />
+                <TooltipContent side="top" sideOffset={4}>Close</TooltipContent>
+              </Tooltip>
+            </div>
+
+            {/* Selected count + Add button */}
+            <div className="flex items-center justify-between">
+              <span className="font-medium text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[20px]">
+                {categories.filter(c => c.checked).length} Selected
+              </span>
+              <button
+                onClick={() => setView("create")}
+                className="flex items-center gap-[6px] bg-white dark:bg-[#262626] border border-[#e8e6e0] dark:border-white/[0.1] pl-[13px] pr-[15px] py-[9px] rounded-[8px] font-semibold text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[18px] hover:bg-[#f4f3ef] dark:hover:bg-[#303030] transition-colors"
+              >
+                <svg className="w-[18px] h-[18px]" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="9" cy="9" r="7.5" />
+                  <path d="M6 9h6M9 6v6" />
                 </svg>
                 Add Category
-              </Button>
+              </button>
             </div>
-            <TooltipProvider delay={300}>
-              <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
-                {categories.map((cat, i) => (
-                  <div key={i} className="flex items-start gap-3 p-3 rounded-lg border border-black/[0.08] dark:border-white/[0.08] bg-white dark:bg-[#1a1a1a]">
-                    <input
-                      type="checkbox" checked={!!cat.checked}
-                      onChange={() => setCategories((prev) => prev.map((c, j) => j === i ? { ...c, checked: !c.checked } : c))}
-                      className="mt-0.5 h-4 w-4 rounded accent-blue-600"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-[#34322d] dark:text-[#dadada]">{cat.name}</p>
-                      {cat.prompt && <p className="text-xs text-[#858481] mt-0.5 line-clamp-2">{cat.prompt}</p>}
-                    </div>
-                    <Tooltip>
-                      <TooltipTrigger render={<button onClick={() => setCategories((prev) => prev.length > 1 ? prev.filter((_, j) => j !== i) : (setError("At least 1 category is required."), prev))} className="text-[#858481] hover:text-red-500 transition-colors flex-shrink-0" />}>
-                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                        </svg>
-                      </TooltipTrigger>
-                      <TooltipContent side="top" sideOffset={6}>Delete category</TooltipContent>
-                    </Tooltip>
-                  </div>
-                ))}
-              </div>
-            </TooltipProvider>
-            {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
-            <Button className="w-full mt-2" onClick={handleDeploy}>Save &amp; Deploy</Button>
+
+            {/* Category list */}
+            <div className="bg-white dark:bg-[#262626] border border-black/[0.06] dark:border-white/[0.06] rounded-[12px] overflow-hidden max-h-[320px] overflow-y-auto">
+              {categories.map((cat, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCategories((prev) => prev.map((c, j) => j === i ? { ...c, checked: !c.checked } : c))}
+                  className={`flex gap-[10px] items-center px-[16px] py-[12px] w-full text-left transition-colors hover:bg-[#f8f8f7] dark:hover:bg-[#2f2f2f] ${i < categories.length - 1 ? "border-b border-black/[0.06] dark:border-white/[0.06]" : ""}`}
+                >
+                  <Checkbox checked={!!cat.checked} onCheckedChange={() => setCategories((prev) => prev.map((c, j) => j === i ? { ...c, checked: !c.checked } : c))} className="flex-shrink-0" />
+                  <span className="flex-1 min-w-0 font-medium text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[18px]">{cat.name}</span>
+                </button>
+              ))}
+            </div>
+
+            {error && <p className="text-[12px] text-red-500">{error}</p>}
+
+            {/* CTA */}
+            <button
+              onClick={handleDeploy}
+              className="w-full bg-[#0067ff] hover:bg-[#0055d4] transition-colors rounded-[8px] py-[10px] font-semibold text-[14px] text-white tracking-[-0.09px] leading-[18px] text-center"
+            >
+              Save &amp; Deploy Karamchari
+            </button>
           </>
         )}
 
+        {/* ── Create view ── */}
         {view === "create" && (
           <>
-            <DialogHeader>
-              <div className="flex items-center gap-2">
-                <TooltipProvider delay={300}>
+            {/* Header */}
+            <div className="flex gap-[12px] items-start w-full">
+              <div className="flex flex-1 flex-col gap-[4px] min-w-0">
+                <div className="flex items-center gap-[8px]">
                   <Tooltip>
-                    <TooltipTrigger render={<button onClick={() => setView("list")} className="p-1 rounded hover:bg-[#ecebea] dark:hover:bg-[#242424]" />}>
-                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-                    </TooltipTrigger>
-                    <TooltipContent side="top" sideOffset={6}>Back</TooltipContent>
+                    <TooltipTrigger render={
+                      <button onClick={() => setView("list")} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors flex-shrink-0">
+                        <svg className="w-[18px] h-[18px] text-[#34322d] dark:text-[#d9d9d9]" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M11.25 4.5 6.75 9l4.5 4.5" />
+                        </svg>
+                      </button>
+                    } />
+                    <TooltipContent side="top" sideOffset={4}>Back</TooltipContent>
                   </Tooltip>
-                </TooltipProvider>
-                <DialogTitle>Create Category</DialogTitle>
+                  <h2 className="font-semibold text-[20px] text-[#34322d] dark:text-white tracking-[-0.33px] leading-normal">Add Category</h2>
+                </div>
+                <p className="font-normal text-[14px] text-[#858481] dark:text-[#8c8c8c] tracking-[-0.09px] leading-[22px]">
+                  Create a custom category to help the AI organize your messages.
+                </p>
               </div>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div><Label className="mb-1.5 block">Category Name</Label><Input placeholder="Ex: Orders & Dispatch" value={newName} onChange={(e) => setNewName(e.target.value)} /></div>
-              <div>
-                <Label className="mb-1.5 block">AI Classification Instructions (Prompt)</Label>
+              <Tooltip>
+                <TooltipTrigger render={
+                  <button onClick={handleClose} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors flex-shrink-0">
+                    <svg className="w-[18px] h-[18px] text-[#34322d] dark:text-[#d9d9d9]" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round">
+                      <path d="M4 4l10 10M14 4 4 14" />
+                    </svg>
+                  </button>
+                } />
+                <TooltipContent side="top" sideOffset={4}>Close</TooltipContent>
+              </Tooltip>
+            </div>
+
+            <div className="flex flex-col gap-[12px]">
+              <div className="flex flex-col gap-[6px]">
+                <label className="font-medium text-[13px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px]">Category Name</label>
+                <input
+                  type="text"
+                  placeholder="Ex: Orders & Dispatch"
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                  className="w-full bg-white dark:bg-[#262626] border border-black/[0.08] dark:border-white/[0.08] rounded-[8px] px-[12px] py-[10px] text-[14px] text-[#34322d] dark:text-[#d9d9d9] placeholder:text-[#858481] outline-none focus:border-[#0067ff] transition-colors"
+                />
+              </div>
+              <div className="flex flex-col gap-[6px]">
+                <label className="font-medium text-[13px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px]">AI Classification Instructions</label>
                 <textarea
-                  className="w-full min-h-24 rounded-md border border-black/[0.08] dark:border-white/[0.08] bg-transparent px-3 py-2 text-sm outline-none resize-vertical focus:ring-1 focus:ring-blue-500"
-                  placeholder="Enter prompt to filter the messages relevant to this category"
-                  value={newPrompt} onChange={(e) => setNewPrompt(e.target.value)}
+                  placeholder="Enter prompt to filter messages relevant to this category"
+                  value={newPrompt}
+                  onChange={(e) => setNewPrompt(e.target.value)}
+                  rows={4}
+                  className="w-full bg-white dark:bg-[#262626] border border-black/[0.08] dark:border-white/[0.08] rounded-[8px] px-[12px] py-[10px] text-[14px] text-[#34322d] dark:text-[#d9d9d9] placeholder:text-[#858481] outline-none focus:border-[#0067ff] transition-colors resize-none"
                 />
               </div>
             </div>
-            <div className="flex gap-2 mt-2">
-              <Button variant="outline" className="flex-1" onClick={() => setView("list")}>Cancel</Button>
-              <Button className="flex-1" onClick={handleSaveNew}>Save</Button>
-            </div>
+
+            <button
+              onClick={handleSaveNew}
+              className="w-full bg-[#0067ff] hover:bg-[#0055d4] transition-colors rounded-[8px] py-[10px] font-semibold text-[14px] text-white tracking-[-0.09px] leading-[18px] text-center"
+            >
+              Save Category
+            </button>
           </>
         )}
 
+        {/* ── Success view ── */}
         {view === "success" && (
-          <div className="flex flex-col items-center gap-3 py-6 text-center">
-            <div className="w-24 h-24 rounded-full bg-blue-50 dark:bg-blue-950 flex items-center justify-center">
-              <svg className="w-12 h-12 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
-                <path d="m9 12 2 2 4-4"/>
+          <div className="flex flex-col items-center gap-[16px] py-[24px] text-center">
+            <div className="w-[72px] h-[72px] rounded-full bg-[#e6f0ff] dark:bg-[#0f2040] flex items-center justify-center">
+              <svg className="w-[36px] h-[36px] text-[#0067ff]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+                <path d="m9 12 2 2 4-4" />
               </svg>
             </div>
-            <p className="text-lg font-semibold text-[#34322d] dark:text-[#dadada]">Karamchari deployed successfully!</p>
-            <p className="text-sm text-[#6d6c6b]">Category Messages is now active and organizing your WhatsApp messages.</p>
-            <Button className="mt-2 w-full" onClick={handleDone}>Done</Button>
+            <div className="flex flex-col gap-[4px]">
+              <p className="font-semibold text-[18px] text-[#34322d] dark:text-white tracking-[-0.33px]">Karamchari Deployed!</p>
+              <p className="font-normal text-[14px] text-[#858481] dark:text-[#8c8c8c] tracking-[-0.09px] leading-[22px]">Category Messages is now active and organizing your WhatsApp messages.</p>
+            </div>
+            <button
+              onClick={handleDone}
+              className="w-full bg-[#0067ff] hover:bg-[#0055d4] transition-colors rounded-[8px] py-[10px] font-semibold text-[14px] text-white tracking-[-0.09px] leading-[18px] text-center"
+            >
+              Done
+            </button>
           </div>
         )}
-      </DialogContent>
-    </Dialog>
+
+      </div>
+      </TooltipProvider>
+    </div>
   );
 }

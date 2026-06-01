@@ -126,15 +126,28 @@ export function AppSidebar() {
       {/* Header */}
       <div className="flex items-center justify-between p-[8px]">
         {collapsed ? (
-          <button
-            type="button"
-            onClick={() => handleCollapse(false)}
-            className="w-[36px] h-[36px] flex items-center justify-center mx-auto"
-          >
-            <div className="bg-[#589981] dark:bg-[#043a26] rounded-[6px] w-[22px] h-[22px] flex items-center justify-center overflow-hidden">
-              <Image src="/assets/icons/zotok-logo-20.svg" alt="Zotok" width={14} height={14} />
-            </div>
-          </button>
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <button
+                  type="button"
+                  onClick={() => handleCollapse(false)}
+                  className="group w-[36px] h-[36px] flex items-center justify-center mx-auto rounded-[6px] hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors"
+                >
+                  <div className="group-hover:hidden bg-[#589981] dark:bg-[#043a26] rounded-[6px] w-[22px] h-[22px] flex items-center justify-center overflow-hidden">
+                    <Image src="/assets/icons/zotok-logo-20.svg" alt="Zotok" width={14} height={14} />
+                  </div>
+                  <Image
+                    src="/assets/icons/nav-toggle.svg"
+                    alt="Expand"
+                    width={18} height={18}
+                    className="hidden group-hover:block dark:brightness-0 dark:invert rotate-180"
+                  />
+                </button>
+              }
+            />
+            <TooltipContent side="right" sideOffset={8}>Expand</TooltipContent>
+          </Tooltip>
         ) : (
           <>
             <div className="flex items-center gap-[10px]">
@@ -143,13 +156,20 @@ export function AppSidebar() {
               </div>
               <span className="text-[18px] font-semibold text-[#1f1f1f] dark:text-[#f0f0f0] tracking-[-0.26px]">Zotok</span>
             </div>
-            <button
-              type="button"
-              onClick={() => handleCollapse(true)}
-              className="w-[36px] h-[36px] flex items-center justify-center rounded-[6px] hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
-            >
-              <Image src="/assets/icons/nav-toggle.svg" alt="Collapse" width={18} height={18} className="dark:brightness-0 dark:invert" />
-            </button>
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <button
+                    type="button"
+                    onClick={() => handleCollapse(true)}
+                    className="w-[36px] h-[36px] flex items-center justify-center rounded-[6px] hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
+                  >
+                    <Image src="/assets/icons/nav-toggle.svg" alt="Collapse" width={18} height={18} className="dark:brightness-0 dark:invert" />
+                  </button>
+                }
+              />
+              <TooltipContent side="bottom" sideOffset={4}>Collapse</TooltipContent>
+            </Tooltip>
           </>
         )}
       </div>
@@ -211,20 +231,34 @@ export function AppSidebar() {
               <p className="text-[12px] text-[#858481] dark:text-[#8c8c8c] tracking-[0.01px] truncate">+91 93883 22332</p>
             </div>
             <div className="flex items-center flex-shrink-0">
-              <button
-                onClick={toggleDark}
-                className="w-[36px] h-[36px] flex items-center justify-center rounded-[6px] hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
-                aria-label="Toggle dark mode"
-              >
-                <Image src="/assets/icons/nav-theme.svg" alt="" width={18} height={18} className="dark:brightness-0 dark:invert" />
-              </button>
-              <button
-                onClick={() => router.push("/login")}
-                className="w-[36px] h-[36px] flex items-center justify-center rounded-[6px] hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
-                aria-label="Log out"
-              >
-                <Image src="/assets/icons/nav-logout.svg" alt="" width={18} height={18} className="dark:brightness-0 dark:invert" />
-              </button>
+              <Tooltip>
+                <TooltipTrigger
+                  render={
+                    <button
+                      onClick={toggleDark}
+                      className="w-[36px] h-[36px] flex items-center justify-center rounded-[6px] hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
+                      aria-label="Toggle dark mode"
+                    >
+                      <Image src="/assets/icons/nav-theme.svg" alt="" width={18} height={18} className="dark:brightness-0 dark:invert" />
+                    </button>
+                  }
+                />
+                <TooltipContent side="top" sideOffset={4}>Toggle theme</TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger
+                  render={
+                    <button
+                      onClick={() => router.push("/login")}
+                      className="w-[36px] h-[36px] flex items-center justify-center rounded-[6px] hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
+                      aria-label="Log out"
+                    >
+                      <Image src="/assets/icons/nav-logout.svg" alt="" width={18} height={18} className="dark:brightness-0 dark:invert" />
+                    </button>
+                  }
+                />
+                <TooltipContent side="top" sideOffset={4}>Log out</TooltipContent>
+              </Tooltip>
             </div>
           </>
         )}

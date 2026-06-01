@@ -19,6 +19,7 @@ export function useChat() {
   const [selectedGroups, setSelectedGroups] = useState<Set<string>>(new Set());
   const [syncing, setSyncing] = useState(false);
   const [syncState, setSyncState] = useState<'syncing' | 'success' | 'hidden'>('syncing');
+  const [inputFocused, setInputFocused] = useState(false);
   const [waConnected, setWaConnected] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const threadRef = useRef<HTMLDivElement>(null);
@@ -112,6 +113,7 @@ export function useChat() {
     selectedGroups,
     syncing, setSyncing,
     syncState, setSyncState,
+    inputFocused, setInputFocused,
     waConnected,
     textareaRef,
     threadRef,
