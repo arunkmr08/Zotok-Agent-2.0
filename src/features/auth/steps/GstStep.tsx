@@ -1,22 +1,69 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import { FormField } from "@/components/ui/form-field";
 import { PrimaryBtn } from "@/features/auth/components/PrimaryBtn";
 import { ArrowIcon } from "@/features/auth/components/ArrowIcon";
 import type { LoginFlowState } from "@/features/auth/hooks/useLoginFlow";
 
-type Props = Pick<LoginFlowState, "gst" | "setGst" | "setStep">;
+// 2 digit state + 5 letter PAN + 4 digit PAN + 1 letter + 1 alphanumeric + Z + 1 alphanumeric
+const GST_REGEX = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
 
-export function GstStep({ gst, setGst, setStep }: Props) {
+function validateGst(value: string): string {
+  if (!value) return "GST number is required";
+  if (value.length < 15) return "GST number must be 15 characters";
+  if (!GST_REGEX.test(value)) return "Invalid GST format (e.g. 36AABCU9603R1ZM)";
+  return "";
+}
+
+type Props = Pick<LoginFlowState, "gst" | "setGst" | "gstError" | "setGstError" | "setStep">;
+
+export function GstStep({ gst, setGst, gstError, setGstError, setStep }: Props) {
   return (
     <div key="gst" style={{ animation: "fadeStep 0.4s cubic-bezier(0.16, 1, 0.3, 1)" }}>
       <h1 className="text-[22px] font-semibold text-[#111] dark:text-white mb-[6px]">Enter GST Number</h1>
-      <p className="text-sm text-[#6d6c6b] mb-[28px]">Enter GST Number to verify your business</p>
-      <FormField label="GST Number" htmlFor="gst-input" className="mb-4">
-        <Input id="gst-input" placeholder="Enter GST number" value={gst} onChange={(e) => setGst(e.target.value)} />
+      <p className="text-sm text-[#6d6c6b] mb-[28px]">Enter your 15-digit GST number to verify your business</p>
+
+      <FormField label="GST Number" htmlFor="gst-input" error={gstError} className="mb-4">
+        <div className="relative">
+          <input
+            id="gst-input"
+            placeholder="e.g. 36AABCU9603R1ZM"
+            maxLength={15}
+            value={gst}
+            aria-invalid={!!gstError}
+            onChange={(e) => {
+              const val = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 15);
+              setGst(val);
+              if (gstError) setGstError(validateGst(val));
+            }}
+            onBlur={() => setGstError(validateGst(gst))}
+            className={cn(
+              "w-full h-[40px] px-3 py-[9px] pr-[72px] rounded-lg border bg-transparent text-base outline-none transition-[border-color,box-shadow] md:text-sm",
+              "placeholder:text-muted-foreground",
+              "disabled:pointer-events-none disabled:opacity-50",
+              gstError
+                ? "border-destructive focus:border-destructive focus:shadow-[0_0_0_3px_rgba(239,68,68,0.12)]"
+                : "border-input focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+            )}
+          />
+          <span className={cn(
+            "absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium tabular-nums",
+            gst.length === 15 ? "text-muted-foreground" : gstError ? "text-destructive" : "text-muted-foreground"
+          )}>
+            {gst.length}/15
+          </span>
+        </div>
       </FormField>
-      <PrimaryBtn onClick={() => setStep("gst-otp")}>
+
+      <PrimaryBtn
+        disabled={!gst || !!validateGst(gst)}
+        onClick={() => {
+          const err = validateGst(gst);
+          if (err) { setGstError(err); return; }
+          setStep("gst-otp");
+        }}
+      >
         Verify GST <ArrowIcon />
       </PrimaryBtn>
     </div>

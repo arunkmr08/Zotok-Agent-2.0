@@ -7,6 +7,8 @@ import type { Message } from "@/features/chat/types";
 export function useChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
+  const [showSetupCard, setShowSetupCard] = useState(true);
+  const [isMultiline, setIsMultiline] = useState(false);
   const [connectModal, setConnectModal] = useState(false);
   const [historyModal, setHistoryModal] = useState(false);
   const [groupsModal, setGroupsModal] = useState(false);
@@ -16,6 +18,7 @@ export function useChat() {
   const [groupSearch, setGroupSearch] = useState("");
   const [selectedGroups, setSelectedGroups] = useState<Set<string>>(new Set());
   const [syncing, setSyncing] = useState(false);
+  const [syncState, setSyncState] = useState<'syncing' | 'success' | 'hidden'>('syncing');
   const [waConnected, setWaConnected] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const threadRef = useRef<HTMLDivElement>(null);
@@ -25,6 +28,20 @@ export function useChat() {
   }, [waConnected]);
 
   useEffect(() => {
+    if (syncState === 'syncing') {
+      const timer = setTimeout(() => {
+        setSyncState('success');
+      }, 3000);
+      return () => clearTimeout(timer);
+    } else if (syncState === 'success') {
+      const timer = setTimeout(() => {
+        setSyncState('hidden');
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [syncState]);
+
+  useEffect(() => {
     if (threadRef.current) threadRef.current.scrollTop = threadRef.current.scrollHeight;
   }, [messages]);
 
@@ -32,7 +49,17 @@ export function useChat() {
     const el = textareaRef.current;
     if (!el) return;
     el.style.height = "auto";
-    el.style.height = Math.min(el.scrollHeight, 160) + "px";
+    const multi = el.scrollHeight > 44;
+    setIsMultiline(multi);
+    if (multi) {
+      el.style.height = Math.min(el.scrollHeight, 160) + "px";
+    } else {
+      el.style.height = "24px";
+    }
+  }
+
+  function dismissSetupCard() {
+    setShowSetupCard(false);
   }
 
   function sendMessage(text?: string) {
@@ -40,6 +67,7 @@ export function useChat() {
     if (!msg) return;
     setMessages((prev) => [...prev, { role: "user", text: msg }]);
     setInput("");
+    setIsMultiline(false);
     if (textareaRef.current) textareaRef.current.style.height = "auto";
     setTimeout(() => {
       setMessages((prev) => [...prev, { role: "assistant", text: "I'm analysing your synced WhatsApp groups. Here's what I found…" }]);
@@ -72,6 +100,8 @@ export function useChat() {
   return {
     messages,
     input, setInput,
+    showSetupCard, dismissSetupCard,
+    isMultiline,
     connectModal, setConnectModal,
     historyModal, setHistoryModal,
     groupsModal, setGroupsModal,
@@ -81,6 +111,7 @@ export function useChat() {
     groupSearch, setGroupSearch,
     selectedGroups,
     syncing, setSyncing,
+    syncState, setSyncState,
     waConnected,
     textareaRef,
     threadRef,

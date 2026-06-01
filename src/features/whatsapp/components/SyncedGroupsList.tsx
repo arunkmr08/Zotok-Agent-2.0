@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { GROUP_AVATARS, MAX_FREE } from "@/features/whatsapp/constants";
 import type { WhatsappState } from "@/features/whatsapp/hooks/useWhatsapp";
 
@@ -56,13 +57,14 @@ export function SyncedGroupsList({ syncedGroups, slotsUsed, slotsLeft, allGroups
                 <p className="text-sm font-medium text-[#34322d] dark:text-[#dadada] truncate">{name}</p>
                 <p className="text-xs text-[#858481]">{group?.members ?? ""}</p>
               </div>
-              <button
-                onClick={() => removeGroup(name)}
-                className="text-[#adadad] hover:text-red-500 transition-colors flex-shrink-0 p-1"
-                aria-label="Remove group"
-              >
-                <TrashIcon />
-              </button>
+              <TooltipProvider delay={300}>
+                <Tooltip>
+                  <TooltipTrigger render={<button onClick={() => removeGroup(name)} className="text-[#adadad] hover:text-red-500 transition-colors flex-shrink-0 p-1" aria-label="Remove group" />}>
+                    <TrashIcon />
+                  </TooltipTrigger>
+                  <TooltipContent side="top" sideOffset={6}>Remove group</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           );
         })}

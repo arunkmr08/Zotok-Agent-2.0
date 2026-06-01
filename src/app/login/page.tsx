@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { cn, toggleDark } from "@/lib/utils";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useLoginFlow } from "@/features/auth/hooks/useLoginFlow";
 import { PhoneStep } from "@/features/auth/steps/PhoneStep";
 import { OtpStep } from "@/features/auth/steps/OtpStep";
@@ -33,14 +34,14 @@ export default function LoginPage() {
         style={{ transform: "scale(1.15)", backdropFilter: "blur(80px)", WebkitBackdropFilter: "blur(80px)" }}
       />
 
-      <button
-        onClick={toggleDark}
-        className="absolute top-6 right-6 z-20 w-10 h-10 rounded-full bg-white dark:bg-[#1f1f1f] border border-black/[0.08] dark:border-white/[0.08] flex items-center justify-center hover:bg-[#f4f3ef] dark:hover:bg-[#2a2a2a] transition-colors"
-        style={{ boxShadow: "rgba(17,17,17,0.02) 0px -6px 6px 0px, rgba(17,17,17,0.01) 0px -23px 9px 0px" }}
-        aria-label="Toggle dark mode"
-      >
-        <Image src="/assets/icons/nav-theme.svg" alt="" width={18} height={18} />
-      </button>
+      <TooltipProvider delay={300}>
+        <Tooltip>
+          <TooltipTrigger render={<button onClick={toggleDark} className="absolute top-6 right-6 z-20 w-10 h-10 rounded-full bg-white dark:bg-[#1f1f1f] border border-black/[0.08] dark:border-white/[0.08] flex items-center justify-center hover:bg-[#f4f3ef] dark:hover:bg-[#2a2a2a] transition-colors" style={{ boxShadow: "rgba(17,17,17,0.02) 0px -6px 6px 0px, rgba(17,17,17,0.01) 0px -23px 9px 0px" }} aria-label="Toggle dark mode" />}>
+            <Image src="/assets/icons/nav-theme.svg" alt="" width={18} height={18} />
+          </TooltipTrigger>
+          <TooltipContent side="bottom" sideOffset={6}>Toggle theme</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
 
       <main
         className={cn(

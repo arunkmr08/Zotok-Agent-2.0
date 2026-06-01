@@ -1,6 +1,5 @@
 "use client";
 
-import { AppLayout } from "@/components/layout/app-layout";
 import { useWhatsapp } from "@/features/whatsapp/hooks/useWhatsapp";
 import { PageHeader } from "@/features/whatsapp/components/PageHeader";
 import { ConnectionCard } from "@/features/whatsapp/components/ConnectionCard";
@@ -14,7 +13,7 @@ export default function WhatsAppPage() {
   const s = useWhatsapp();
 
   return (
-    <AppLayout>
+    <>
       <div className="h-full overflow-y-auto">
         <div className="max-w-2xl mx-auto px-6 py-12">
           <PageHeader />
@@ -42,6 +41,6 @@ export default function WhatsAppPage() {
         togglePending={s.togglePending} handleSyncGroups={s.handleSyncGroups} />
       <DisconnectDialog disconnectModal={s.disconnectModal} setDisconnectModal={s.setDisconnectModal}
         handleDisconnect={s.handleDisconnect} />
-    </AppLayout>
+    </>
   );
 }

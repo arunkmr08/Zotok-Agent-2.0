@@ -1,7 +1,6 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { AppLayout } from "@/components/layout/app-layout";
 import { useCategoryView } from "@/features/category/hooks/useCategoryView";
 import { CategorySidebar } from "@/features/category/components/CategorySidebar";
 import { CategoryTable } from "@/features/category/components/CategoryTable";
@@ -11,7 +10,7 @@ export default function CategoryViewPage() {
   const state = useCategoryView();
 
   return (
-    <AppLayout>
+    <>
       <div className={cn("h-full flex overflow-hidden", state.flyoutMsg && "pr-[380px]")}>
         <CategorySidebar
           categories={state.categories}
@@ -28,6 +27,6 @@ export default function CategoryViewPage() {
       {state.flyoutMsg && (
         <ChatFlyout msg={state.flyoutMsg} onClose={() => state.setFlyoutMsg(null)} />
       )}
-    </AppLayout>
+    </>
   );
 }

@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DEFAULT_CATEGORIES } from "@/features/agents/constants";
 import type { Category, CatView } from "@/features/agents/types";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface Props {
   open: boolean;
@@ -59,29 +60,31 @@ export function CategoryModal({ open, onClose, onDeploy }: Props) {
                 Add Category
               </Button>
             </div>
-            <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
-              {categories.map((cat, i) => (
-                <div key={i} className="flex items-start gap-3 p-3 rounded-lg border border-black/[0.08] dark:border-white/[0.08] bg-white dark:bg-[#1a1a1a]">
-                  <input
-                    type="checkbox" checked={!!cat.checked}
-                    onChange={() => setCategories((prev) => prev.map((c, j) => j === i ? { ...c, checked: !c.checked } : c))}
-                    className="mt-0.5 h-4 w-4 rounded accent-blue-600"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-[#34322d] dark:text-[#dadada]">{cat.name}</p>
-                    {cat.prompt && <p className="text-xs text-[#858481] mt-0.5 line-clamp-2">{cat.prompt}</p>}
+            <TooltipProvider delay={300}>
+              <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
+                {categories.map((cat, i) => (
+                  <div key={i} className="flex items-start gap-3 p-3 rounded-lg border border-black/[0.08] dark:border-white/[0.08] bg-white dark:bg-[#1a1a1a]">
+                    <input
+                      type="checkbox" checked={!!cat.checked}
+                      onChange={() => setCategories((prev) => prev.map((c, j) => j === i ? { ...c, checked: !c.checked } : c))}
+                      className="mt-0.5 h-4 w-4 rounded accent-blue-600"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-[#34322d] dark:text-[#dadada]">{cat.name}</p>
+                      {cat.prompt && <p className="text-xs text-[#858481] mt-0.5 line-clamp-2">{cat.prompt}</p>}
+                    </div>
+                    <Tooltip>
+                      <TooltipTrigger render={<button onClick={() => setCategories((prev) => prev.length > 1 ? prev.filter((_, j) => j !== i) : (setError("At least 1 category is required."), prev))} className="text-[#858481] hover:text-red-500 transition-colors flex-shrink-0" />}>
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                        </svg>
+                      </TooltipTrigger>
+                      <TooltipContent side="top" sideOffset={6}>Delete category</TooltipContent>
+                    </Tooltip>
                   </div>
-                  <button
-                    onClick={() => setCategories((prev) => prev.length > 1 ? prev.filter((_, j) => j !== i) : (setError("At least 1 category is required."), prev))}
-                    className="text-[#858481] hover:text-red-500 transition-colors flex-shrink-0"
-                  >
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                    </svg>
-                  </button>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            </TooltipProvider>
             {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
             <Button className="w-full mt-2" onClick={handleDeploy}>Save &amp; Deploy</Button>
           </>
@@ -91,9 +94,14 @@ export function CategoryModal({ open, onClose, onDeploy }: Props) {
           <>
             <DialogHeader>
               <div className="flex items-center gap-2">
-                <button onClick={() => setView("list")} className="p-1 rounded hover:bg-[#ecebea] dark:hover:bg-[#242424]">
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-                </button>
+                <TooltipProvider delay={300}>
+                  <Tooltip>
+                    <TooltipTrigger render={<button onClick={() => setView("list")} className="p-1 rounded hover:bg-[#ecebea] dark:hover:bg-[#242424]" />}>
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" sideOffset={6}>Back</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
                 <DialogTitle>Create Category</DialogTitle>
               </div>
             </DialogHeader>

@@ -22,7 +22,8 @@ export function useLoginFlow() {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // GST step
-  const [gst, setGst] = useState("");
+  const [gst, setGst] = useState("36LVWLK3103B5ZM");
+  const [gstError, setGstError] = useState("");
   const [gstOtp, setGstOtp] = useState("");
 
   // WhatsApp steps
@@ -87,7 +88,7 @@ export function useLoginFlow() {
     phone, setPhone, phoneError, setPhoneError, dialCode, setDialCode,
     otpValues, otpError, setOtpError, otpResend, otpRefs, timerRef,
     handleOtpInput, handleOtpKeyDown,
-    gst, setGst, gstOtp, setGstOtp,
+    gst, setGst, gstError, setGstError, gstOtp, setGstOtp,
     waPhone, setWaPhone, waPhoneError, setWaPhoneError, waDialCode, setWaDialCode,
     selectedHistory, setSelectedHistory, historyFrom, setHistoryFrom, historyTo, setHistoryTo,
     selectedGroups, groupSearch, setGroupSearch, filteredGroups, toggleGroup,

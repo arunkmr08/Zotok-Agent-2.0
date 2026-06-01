@@ -1,7 +1,6 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { AppLayout } from "@/components/layout/app-layout";
 import { useLeads } from "@/features/leads/hooks/useLeads";
 import { LeadsHeader } from "@/features/leads/components/LeadsHeader";
 import { BulkBar } from "@/features/leads/components/BulkBar";
@@ -13,7 +12,7 @@ export default function LeadsViewPage() {
   const state = useLeads();
 
   return (
-    <AppLayout>
+    <>
       <div className={cn("h-full flex flex-col overflow-hidden", state.flyoutLead && "pr-[380px]")}>
         <LeadsHeader
           group={state.group}
@@ -39,6 +38,6 @@ export default function LeadsViewPage() {
 
       {state.flyoutLead && <ChatFlyout lead={state.flyoutLead} onClose={() => state.setFlyoutLead(null)} />}
       <CampaignModal lead={state.campaignLead} onClose={() => state.setCampaignLead(null)} />
-    </AppLayout>
+    </>
   );
 }

@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import type { Lead } from "@/features/leads/types";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface Props {
   lead: Lead;
@@ -27,11 +28,16 @@ export function ChatFlyout({ lead, onClose }: Props) {
           <p className="text-sm font-semibold text-[#111] dark:text-white truncate">{lead.name}</p>
           <p className="text-xs text-[#858481] truncate">{lead.mobile}</p>
         </div>
-        <button onClick={onClose} className="p-1.5 rounded-md hover:bg-[#ecebea] dark:hover:bg-[#242424] text-[#858481]">
-          <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-            <path d="M4 4l8 8M12 4l-8 8" />
-          </svg>
-        </button>
+        <TooltipProvider delay={300}>
+          <Tooltip>
+            <TooltipTrigger render={<button onClick={onClose} className="p-1.5 rounded-md hover:bg-[#ecebea] dark:hover:bg-[#242424] text-[#858481]" />}>
+              <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                <path d="M4 4l8 8M12 4l-8 8" />
+              </svg>
+            </TooltipTrigger>
+            <TooltipContent side="top" sideOffset={6}>Close</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
@@ -52,14 +58,19 @@ export function ChatFlyout({ lead, onClose }: Props) {
       <div className="px-4 py-3 border-t border-black/[0.06] dark:border-white/[0.06]">
         <div className="flex gap-2">
           <input
-            className="flex-1 px-3 py-2 text-sm rounded-xl border border-black/[0.08] dark:border-white/[0.08] bg-[#f4f3ef] dark:bg-[#242424] text-[#34322d] dark:text-[#dadada] placeholder:text-[#858481] outline-none focus:border-blue-400"
+            className="flex-1 px-3 h-[40px] text-sm rounded-xl border border-black/[0.08] dark:border-white/[0.08] bg-[#f4f3ef] dark:bg-[#242424] text-[#34322d] dark:text-[#dadada] placeholder:text-[#858481] outline-none focus:border-blue-400"
             placeholder="Type a message…"
           />
-          <button className="p-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600 transition-colors">
-            <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M14 2L2 7l5 3 3 5 4-13zM7 9l3-3" />
-            </svg>
-          </button>
+          <TooltipProvider delay={300}>
+            <Tooltip>
+              <TooltipTrigger render={<button className="p-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600 transition-colors" />}>
+                <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M14 2L2 7l5 3 3 5 4-13zM7 9l3-3" />
+                </svg>
+              </TooltipTrigger>
+              <TooltipContent side="top" sideOffset={6}>Send</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
     </div>

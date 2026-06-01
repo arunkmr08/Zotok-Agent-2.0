@@ -13,13 +13,13 @@ interface FormFieldProps {
 
 export function FormField({ label, htmlFor, error, className, children }: FormFieldProps) {
   return (
-    <Field data-invalid={!!error} className={className}>
-      <FieldLabel htmlFor={htmlFor}>{label}</FieldLabel>
+    <Field data-invalid={!!error} className={cn("gap-0", className)}>
+      <FieldLabel htmlFor={htmlFor} className="mb-[6px]">{label}</FieldLabel>
       {children}
       <div
         className={cn(
           "overflow-hidden transition-all duration-300 ease-out",
-          error ? "max-h-10 opacity-100" : "max-h-0 opacity-0"
+          error ? "max-h-10 opacity-100 mt-[6px]" : "max-h-0 opacity-0"
         )}
       >
         <FieldDescription>{error}</FieldDescription>

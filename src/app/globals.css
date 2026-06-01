@@ -197,6 +197,28 @@
   }
 }
 
+/* ── Shine border (chat composer) ── */
+:root {
+  --primary-brand: #0067ff;
+  --shine-gradient: radial-gradient(100% 100% at right, white 0%, white 5%, var(--primary-brand) 35%, transparent 70%);
+  --shine-glow-gradient: radial-gradient(circle, white 0%, var(--primary-brand) 40%, transparent 70%);
+  --shine-speed: 20s;
+  --shine-thickness: 0.0625rem;
+}
+
+@keyframes shine-sweep {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+.shine-border {
+  padding: var(--shine-thickness);
+  background: var(--shine-gradient);
+  background-size: 300% 100%;
+  animation: shine-sweep var(--shine-speed) linear infinite;
+  border-radius: 1rem;
+}
+
 /* ── Page entrance animation (matches original chatScaleUp) ── */
 @keyframes pageEntrance {
   from {
@@ -278,6 +300,17 @@
 .dark .login-steps li::before {
   background: #dadada;
   color: #111111;
+}
+
+/* ── Chat: blob pulse ── */
+@keyframes blob-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50%       { transform: translate(-50%, -50%) scale(1.08); }
+}
+
+.blob-pulse {
+  animation: blob-pulse 6s ease-in-out infinite;
+  will-change: transform;
 }
 
 /* ── Theme transition (applied via JS on dark toggle) ── */

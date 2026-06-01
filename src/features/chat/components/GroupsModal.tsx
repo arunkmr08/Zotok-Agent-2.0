@@ -27,7 +27,7 @@ export function GroupsModal({
               <DialogTitle>Choose Groups to Sync</DialogTitle>
               <p className="text-xs text-[#6d6c6b]">On the Free plan you can sync up to 10 groups. Locked groups unlock with Pro.</p>
             </DialogHeader>
-            <div className="flex items-center gap-2 bg-[#f4f3ef] dark:bg-[#242424] border border-black/[0.08] dark:border-white/[0.08] rounded-lg px-3 py-2 mb-2">
+            <div className="flex items-center gap-2 h-[40px] bg-[#f4f3ef] dark:bg-[#242424] border border-black/[0.08] dark:border-white/[0.08] rounded-lg px-3 mb-2">
               <Image src="/assets/icons/icon-search.svg" alt="" width={14} height={14} />
               <input
                 type="text" placeholder="Search Group" value={groupSearch}

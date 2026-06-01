@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { cn } from "@/lib/utils";
 import { DEFAULT_COLUMNS, SHEET_OPTIONS_SHEETS } from "@/features/agents/constants";
 import type { SheetsView } from "@/features/agents/types";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface Props {
   open: boolean;
@@ -91,9 +92,14 @@ export function SheetsModal({ open, onClose, onDeploy }: Props) {
           <>
             <DialogHeader>
               <div className="flex items-center gap-2">
-                <button onClick={() => setView("picker")} className="p-1 rounded hover:bg-[#ecebea] dark:hover:bg-[#242424]">
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-                </button>
+                <TooltipProvider delay={300}>
+                  <Tooltip>
+                    <TooltipTrigger render={<button onClick={() => setView("picker")} className="p-1 rounded hover:bg-[#ecebea] dark:hover:bg-[#242424]" />}>
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" sideOffset={6}>Back</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
                 <DialogTitle>Configure Sheet</DialogTitle>
               </div>
               <p className="text-sm text-[#6d6c6b]">Configure the columns to extract from your WhatsApp group messages.</p>
@@ -106,16 +112,21 @@ export function SheetsModal({ open, onClose, onDeploy }: Props) {
             <div className="flex gap-2 mb-3">
               <Input placeholder="New column name" value={newCol} onChange={(e) => setNewCol(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && newCol.trim()) { setColumns((p) => [...p, { name: newCol.trim() }]); setNewCol(""); }}} />
             </div>
-            <div className="space-y-2 max-h-40 overflow-y-auto mb-3">
-              {columns.map((col, i) => (
-                <div key={i} className="flex items-center gap-3 px-3 py-2 rounded-lg border border-black/[0.08] dark:border-white/[0.08]">
-                  <span className="flex-1 text-sm text-[#34322d] dark:text-[#adadad]">{col.name}</span>
-                  <button onClick={() => setColumns((p) => p.filter((_, j) => j !== i))} className="text-[#858481] hover:text-red-500">
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                  </button>
-                </div>
-              ))}
-            </div>
+            <TooltipProvider delay={300}>
+              <div className="space-y-2 max-h-40 overflow-y-auto mb-3">
+                {columns.map((col, i) => (
+                  <div key={i} className="flex items-center gap-3 px-3 py-2 rounded-lg border border-black/[0.08] dark:border-white/[0.08]">
+                    <span className="flex-1 text-sm text-[#34322d] dark:text-[#adadad]">{col.name}</span>
+                    <Tooltip>
+                      <TooltipTrigger render={<button onClick={() => setColumns((p) => p.filter((_, j) => j !== i))} className="text-[#858481] hover:text-red-500" />}>
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                      </TooltipTrigger>
+                      <TooltipContent side="top" sideOffset={6}>Remove column</TooltipContent>
+                    </Tooltip>
+                  </div>
+                ))}
+              </div>
+            </TooltipProvider>
             <Button className="w-full" onClick={() => setView("success")}>Save &amp; Deploy</Button>
           </>
         )}

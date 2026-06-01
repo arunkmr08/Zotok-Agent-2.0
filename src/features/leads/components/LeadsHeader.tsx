@@ -21,7 +21,7 @@ export function LeadsHeader({ group, search, setSearch, selectedDate, dateOpen, 
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search leads…"
-            className="pl-9 pr-3 py-2 text-sm rounded-lg border border-black/[0.08] dark:border-white/[0.08] bg-[#f4f3ef] dark:bg-[#242424] text-[#34322d] dark:text-[#dadada] placeholder:text-[#858481] outline-none focus:border-blue-400 w-48"
+            className="pl-9 pr-3 h-[40px] text-sm rounded-lg border border-black/[0.08] dark:border-white/[0.08] bg-[#f4f3ef] dark:bg-[#242424] text-[#34322d] dark:text-[#dadada] placeholder:text-[#858481] outline-none focus:border-blue-400 w-48"
           />
         </div>
 

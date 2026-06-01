@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { cn } from "@/lib/utils";
 import { DEFAULT_COLUMNS, MOCK_GROUPS, SHEET_OPTIONS_LEADS } from "@/features/agents/constants";
 import type { LeadsView } from "@/features/agents/types";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface Props {
   open: boolean;
@@ -97,9 +98,14 @@ export function LeadsModal({ open, onClose, onDeploy }: Props) {
           <>
             <DialogHeader>
               <div className="flex items-center gap-2">
-                <button onClick={() => setView("picker")} className="p-1 rounded hover:bg-[#ecebea] dark:hover:bg-[#242424]">
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-                </button>
+                <TooltipProvider delay={300}>
+                  <Tooltip>
+                    <TooltipTrigger render={<button onClick={() => setView("picker")} className="p-1 rounded hover:bg-[#ecebea] dark:hover:bg-[#242424]" />}>
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" sideOffset={6}>Back</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
                 <DialogTitle>Configure the Sheet Columns</DialogTitle>
               </div>
               <p className="text-sm text-[#6d6c6b]">Add, edit, or remove columns based on your requirement.</p>
@@ -111,17 +117,22 @@ export function LeadsModal({ open, onClose, onDeploy }: Props) {
             <div className="flex gap-2 mb-3">
               <Input placeholder="New column name" value={newCol} onChange={(e) => setNewCol(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && newCol.trim()) { setColumns((p) => [...p, { name: newCol.trim() }]); setNewCol(""); }}} />
             </div>
-            <div className="space-y-2 max-h-44 overflow-y-auto">
-              {columns.map((col, i) => (
-                <div key={i} className="flex items-center gap-3 px-3 py-2 rounded-lg border border-black/[0.08] dark:border-white/[0.08] bg-white dark:bg-[#1a1a1a]">
-                  <svg className="w-4 h-4 text-[#adadad] flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 6h6M9 12h6M9 18h6"/></svg>
-                  <span className="flex-1 text-sm text-[#34322d] dark:text-[#adadad]">{col.name}</span>
-                  <button onClick={() => setColumns((p) => p.filter((_, j) => j !== i))} className="text-[#858481] hover:text-red-500">
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                  </button>
-                </div>
-              ))}
-            </div>
+            <TooltipProvider delay={300}>
+              <div className="space-y-2 max-h-44 overflow-y-auto">
+                {columns.map((col, i) => (
+                  <div key={i} className="flex items-center gap-3 px-3 py-2 rounded-lg border border-black/[0.08] dark:border-white/[0.08] bg-white dark:bg-[#1a1a1a]">
+                    <svg className="w-4 h-4 text-[#adadad] flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 6h6M9 12h6M9 18h6"/></svg>
+                    <span className="flex-1 text-sm text-[#34322d] dark:text-[#adadad]">{col.name}</span>
+                    <Tooltip>
+                      <TooltipTrigger render={<button onClick={() => setColumns((p) => p.filter((_, j) => j !== i))} className="text-[#858481] hover:text-red-500" />}>
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                      </TooltipTrigger>
+                      <TooltipContent side="top" sideOffset={6}>Remove column</TooltipContent>
+                    </Tooltip>
+                  </div>
+                ))}
+              </div>
+            </TooltipProvider>
             <Button className="w-full mt-3" onClick={() => setView("groups")}>Continue</Button>
           </>
         )}
@@ -130,9 +141,14 @@ export function LeadsModal({ open, onClose, onDeploy }: Props) {
           <>
             <DialogHeader>
               <div className="flex items-center gap-2">
-                <button onClick={() => setView("columns")} className="p-1 rounded hover:bg-[#ecebea] dark:hover:bg-[#242424]">
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-                </button>
+                <TooltipProvider delay={300}>
+                  <Tooltip>
+                    <TooltipTrigger render={<button onClick={() => setView("columns")} className="p-1 rounded hover:bg-[#ecebea] dark:hover:bg-[#242424]" />}>
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" sideOffset={6}>Back</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
                 <DialogTitle>Select the Groups</DialogTitle>
               </div>
               <p className="text-sm text-[#6d6c6b]">Select WhatsApp groups to fetch conversations and customer enquiries from.</p>

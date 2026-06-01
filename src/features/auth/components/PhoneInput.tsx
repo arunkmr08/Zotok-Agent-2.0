@@ -26,7 +26,7 @@ export function PhoneInput({ id, label, value, error, dialCode, onDialCodeChange
           : "border-black/[0.08] dark:border-white/[0.08] focus-within:border-[#111] dark:focus-within:border-white focus-within:shadow-[0_0_0_3px_rgba(17,17,17,0.08)]"
       )}>
         <Select value={dialCode} onValueChange={(v) => v && onDialCodeChange(v)}>
-          <SelectTrigger className="h-auto min-h-[44px] cursor-pointer rounded-none border-0 border-r border-black/[0.08] dark:border-white/[0.08] bg-[#f4f3ef] dark:bg-[#242424] hover:bg-[#e8e5e0] dark:hover:bg-[#2e2e2e] text-[#34322d] dark:text-[#dadada] font-medium px-3 gap-1 focus-visible:ring-0 focus-visible:shadow-none focus-visible:border-r focus-visible:border-black/[0.08] dark:focus-visible:border-white/[0.08] text-sm flex-shrink-0 [&_svg]:text-[#34322d] dark:[&_svg]:text-[#dadada]">
+          <SelectTrigger className="h-[40px] cursor-pointer rounded-none border-0 border-r border-black/[0.08] dark:border-white/[0.08] bg-[#f4f3ef] dark:bg-[#242424] hover:bg-[#e8e5e0] dark:hover:bg-[#2e2e2e] text-[#34322d] dark:text-[#dadada] font-medium px-3 gap-1 focus-visible:ring-0 focus-visible:shadow-none focus-visible:border-r focus-visible:border-black/[0.08] dark:focus-visible:border-white/[0.08] text-sm flex-shrink-0 [&_svg]:text-[#34322d] dark:[&_svg]:text-[#dadada]">
             <SelectValue>
               {COUNTRY_CODES.find(c => c.name === dialCode)?.flag} {COUNTRY_CODES.find(c => c.name === dialCode)?.dial}
             </SelectValue>
@@ -58,7 +58,7 @@ export function PhoneInput({ id, label, value, error, dialCode, onDialCodeChange
             else if (value.length < 10) onError("Enter at least 10 digits");
             else onError("");
           }}
-          className="flex-1 px-[14px] py-[11px] bg-transparent outline-none text-[#111] dark:text-[#dadada]"
+          className="flex-1 px-[14px] py-[9px] h-[40px] bg-transparent outline-none text-[#111] dark:text-[#dadada]"
         />
       </div>
     </FormField>

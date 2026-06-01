@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { AppLayout } from "@/components/layout/app-layout";
 import { useConnectors } from "@/features/connectors/hooks/useConnectors";
 import { ConnectorCard } from "@/features/connectors/components/ConnectorCard";
 import { ConnectModal } from "@/features/connectors/components/ConnectModal";
@@ -11,7 +10,7 @@ export default function ConnectorsPage() {
   const state = useConnectors();
 
   return (
-    <AppLayout>
+    <>
       <div className="h-full overflow-y-auto">
         <div className="pointer-events-none fixed inset-0 overflow-hidden -z-0">
           <div className="absolute top-[-10%] left-[20%] w-72 h-72 rounded-full bg-blue-400/10 blur-3xl" />
@@ -87,6 +86,6 @@ export default function ConnectorsPage() {
         setDisconnectTarget={state.setDisconnectTarget}
         handleDisconnect={state.handleDisconnect}
       />
-    </AppLayout>
+    </>
   );
 }

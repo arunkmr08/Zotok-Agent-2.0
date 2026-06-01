@@ -1,6 +1,5 @@
 "use client";
 
-import { AppLayout } from "@/components/layout/app-layout";
 import { useAgents } from "@/features/agents/hooks/useAgents";
 import { AgentCard } from "@/features/agents/components/AgentCard";
 import { AgentCardSkeleton } from "@/features/agents/components/AgentCardSkeleton";
@@ -13,7 +12,7 @@ export default function AgentsPage() {
   const state = useAgents();
 
   return (
-    <AppLayout>
+    <>
       <div className="h-full overflow-y-auto px-8 py-8">
         <div className="pointer-events-none fixed inset-0 overflow-hidden -z-0">
           <div className="absolute top-[-10%] left-[20%] w-72 h-72 rounded-full bg-violet-400/10 blur-3xl" />
@@ -65,6 +64,6 @@ export default function AgentsPage() {
         removeTargetTitle={state.removeTargetTitle}
         remove={state.remove}
       />
-    </AppLayout>
+    </>
   );
 }
