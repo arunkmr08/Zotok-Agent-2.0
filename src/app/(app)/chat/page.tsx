@@ -65,7 +65,7 @@ export default function ChatPage() {
           /* ── Thread state: model header + messages + bottom composer ── */
           <>
 
-            <ChatThread messages={state.messages} threadRef={state.threadRef} />
+            <ChatThread messages={state.messages} threadRef={state.threadRef} isGenerating={state.isGenerating} />
             <ChatComposer
               input={state.input}
               setInput={state.setInput}

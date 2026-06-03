@@ -2,6 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "motion/react";
+
+const MotionLink = motion(Link);
 
 const STEPS = [
   {
@@ -23,7 +26,13 @@ const STEPS = [
 
 export function SetupCard({ onClose }: { onClose: () => void }) {
   return (
-    <div className="bg-white dark:bg-[#1a1a1a] rounded-[20px] p-4 flex flex-col gap-4 border border-black/[0.06] dark:border-white/[0.08] shadow-sm">
+    <motion.div
+      initial={{ opacity: 0, y: 12, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -28, scale: 0.95 }}
+      transition={{ duration: 0.35, ease: [0.32, 0.94, 0.6, 1] }}
+      className="bg-white dark:bg-[#1a1a1a] rounded-[20px] p-4 flex flex-col gap-4 border border-black/[0.06] dark:border-white/[0.08] shadow-sm"
+    >
       {/* Header */}
       <div className="flex items-center gap-2">
         <div
@@ -90,17 +99,20 @@ export function SetupCard({ onClose }: { onClose: () => void }) {
           >
             Skip for now
           </button>
-          <Link
+          <MotionLink
             href="/agents"
             className="px-4 py-2.5 rounded-lg bg-[#0067ff] text-white text-[14px] font-semibold flex items-center gap-2 hover:bg-[#0055d4] transition-colors"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 500, damping: 25 }}
           >
             Deploy First Karamchari
             <svg className="w-4 h-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
               <path d="M4 10h12M12 5l5 5-5 5" />
             </svg>
-          </Link>
+          </MotionLink>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

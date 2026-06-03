@@ -21,6 +21,7 @@ export function useChat() {
   const [syncState, setSyncState] = useState<'syncing' | 'success' | 'hidden'>('syncing');
   const [inputFocused, setInputFocused] = useState(false);
   const [waConnected, setWaConnected] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const threadRef = useRef<HTMLDivElement>(null);
 
@@ -44,7 +45,7 @@ export function useChat() {
 
   useEffect(() => {
     if (threadRef.current) threadRef.current.scrollTop = threadRef.current.scrollHeight;
-  }, [messages]);
+  }, [messages, isGenerating]);
 
   function autoResize() {
     const el = textareaRef.current;
@@ -70,9 +71,11 @@ export function useChat() {
     setInput("");
     setIsMultiline(false);
     if (textareaRef.current) textareaRef.current.style.height = "auto";
+    setIsGenerating(true);
     setTimeout(() => {
+      setIsGenerating(false);
       setMessages((prev) => [...prev, { role: "assistant", text: "I'm analysing your synced WhatsApp groups. Here's what I found…" }]);
-    }, 800);
+    }, 1500); // Realistic loading delay to show indicator
   }
 
   function handleKeyDown(e: React.KeyboardEvent) {
@@ -123,6 +126,7 @@ export function useChat() {
     toggleGroup,
     handleSimulateConnect,
     filteredGroups,
+    isGenerating,
   };
 }
 

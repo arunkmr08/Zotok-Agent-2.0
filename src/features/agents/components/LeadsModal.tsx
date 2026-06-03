@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { DEFAULT_COLUMNS, MOCK_GROUPS, SHEET_OPTIONS_LEADS } from "@/features/agents/constants";
@@ -8,9 +8,11 @@ import type { LeadsView } from "@/features/agents/types";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Checkbox } from "@/components/ui/checkbox";
 import { SHEET_PREVIEW_B64, SHEETS_ICON_B64 } from "@/features/agents/constants.images";
+import { motion, AnimatePresence } from "motion/react";
 
 interface Props {
   open: boolean;
+  triggerRect?: DOMRect | null;
   onClose: () => void;
   onDeploy: () => void;
 }
@@ -50,13 +52,20 @@ function ModalHeader({ title, desc, onClose, onBack }: { title: string; desc?: s
   );
 }
 
-export function LeadsModal({ open, onClose, onDeploy }: Props) {
+export function LeadsModal({ open, triggerRect, onClose, onDeploy }: Props) {
   const [view, setView] = useState<LeadsView>("connect");
   const [columns, setColumns] = useState(DEFAULT_COLUMNS.map((c) => ({ name: c })));
   const [newCol, setNewCol] = useState("");
   const [selectedSheet, setSelectedSheet] = useState("");
   const [groupSearch, setGroupSearch] = useState("");
   const [selectedGroups, setSelectedGroups] = useState<Set<string>>(new Set());
+  const [windowSize, setWindowSize] = useState({ w: 1024, h: 768 });
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setWindowSize({ w: window.innerWidth, h: window.innerHeight });
+    }
+  }, [open]);
 
   function handleConnect() {
     setView("loading");
@@ -68,16 +77,41 @@ export function LeadsModal({ open, onClose, onDeploy }: Props) {
 
   const filteredGroups = MOCK_GROUPS.filter((g) => g.name.toLowerCase().includes(groupSearch.toLowerCase()));
 
-  if (!open) return null;
+  const centerX = triggerRect ? triggerRect.left + triggerRect.width / 2 : windowSize.w / 2;
+  const centerY = triggerRect ? triggerRect.top + triggerRect.height / 2 : windowSize.h / 2;
+  const startX = centerX - windowSize.w / 2;
+  const startY = centerY - windowSize.h / 2;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-      <TooltipProvider delay={300}>
-        <div className="bg-[#f8f8f7] dark:bg-[#1a1a1a] border border-black/[0.12] dark:border-white/[0.08] rounded-[18px] drop-shadow-[0px_8px_16px_rgba(0,0,0,0.06)] w-full max-w-[720px] flex flex-col gap-[20px] p-[21px]">
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.12 }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
+        >
+          <TooltipProvider delay={300}>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.94, x: startX * 0.15, y: startY * 0.15 }}
+              animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
+              exit={{ opacity: 0, scale: 0.94, x: startX * 0.15, y: startY * 0.15 }}
+              transition={{ duration: 0.12, ease: "easeOut" }}
+              className="bg-[#f8f8f7] dark:bg-[#1a1a1a] border border-black/[0.12] dark:border-white/[0.08] rounded-[18px] drop-shadow-[0px_8px_16px_rgba(0,0,0,0.06)] w-full max-w-[720px] flex flex-col gap-[20px] p-[21px]"
+            >
 
+        <AnimatePresence mode="wait">
           {/* ── Connect view ── */}
           {(view === "connect" || view === "loading") && (
-            <>
+            <motion.div
+              key="connect"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2 }}
+              className="flex flex-col gap-[20px] w-full"
+            >
               <ModalHeader
                 title="Configure Collect New Leads"
                 desc="Detect unknown contacts and extract lead information. Configure the columns below."
@@ -107,25 +141,32 @@ export function LeadsModal({ open, onClose, onDeploy }: Props) {
               <div className="flex gap-[12px]">
                 <button
                   onClick={handleClose}
-                  className="flex-1 bg-white dark:bg-[#262626] border border-[#e8e6e0] dark:border-white/[0.1] rounded-[8px] py-[9px] font-semibold text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[18px] text-center hover:bg-[#f4f3ef] dark:hover:bg-[#303030] transition-colors"
+                  className="flex-1 bg-white dark:bg-[#262626] border border-[#e8e6e0] dark:border-white/[0.1] rounded-[8px] h-[34px] flex items-center justify-center font-semibold text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] hover:bg-[#f4f3ef] dark:hover:bg-[#303030] transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleConnect}
                   disabled={view === "loading"}
-                  className="flex-1 bg-[#0067ff] hover:bg-[#0055d4] disabled:opacity-70 transition-colors rounded-[8px] py-[9px] font-semibold text-[14px] text-white tracking-[-0.09px] leading-[18px] text-center flex items-center justify-center gap-[8px]"
+                  className="flex-1 bg-[#0067ff] hover:bg-[#0055d4] disabled:opacity-70 transition-colors rounded-[8px] h-[34px] flex items-center justify-center gap-[8px] font-semibold text-[14px] text-white tracking-[-0.09px]"
                 >
                   {view === "loading" && <span className="w-[14px] h-[14px] border-2 border-white border-t-transparent rounded-full animate-spin flex-shrink-0" />}
                   {view === "loading" ? "Connecting…" : "Continue in Google"}
                 </button>
               </div>
-            </>
+            </motion.div>
           )}
 
           {/* ── Picker view ── */}
           {view === "picker" && (
-            <>
+            <motion.div
+              key="picker"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2 }}
+              className="flex flex-col gap-[20px] w-full"
+            >
               <ModalHeader
                 title="Configure Collect New Leads"
                 desc="Detect unknown contacts and extract lead information. Configure the columns below."
@@ -203,23 +244,30 @@ export function LeadsModal({ open, onClose, onDeploy }: Props) {
               <button
                 onClick={() => setView("columns")}
                 disabled={!selectedSheet}
-                className="w-full bg-[#0067ff] hover:bg-[#0055d4] disabled:opacity-40 disabled:cursor-not-allowed transition-colors rounded-[8px] py-[10px] font-semibold text-[14px] text-white tracking-[-0.09px] leading-[18px] text-center"
+                className="w-full bg-[#0067ff] hover:bg-[#0055d4] disabled:opacity-40 disabled:cursor-not-allowed transition-colors rounded-[8px] h-[34px] flex items-center justify-center font-semibold text-[14px] text-white tracking-[-0.09px]"
               >
                 Continue
               </button>
-            </>
+            </motion.div>
           )}
 
           {/* ── Columns view ── */}
           {view === "columns" && (
-            <>
+            <motion.div
+              key="columns"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2 }}
+              className="flex flex-col gap-[20px] w-full"
+            >
               <ModalHeader title="Configure Sheet Columns" desc="Add, edit, or remove columns based on your requirement." onClose={handleClose} onBack={() => setView("picker")} />
 
               <div className="flex items-center justify-between">
                 <span className="font-medium text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px]">{columns.length} Columns</span>
                 <button
                   onClick={() => { if (newCol.trim()) { setColumns((p) => [...p, { name: newCol.trim() }]); setNewCol(""); } }}
-                  className="flex items-center gap-[6px] bg-white dark:bg-[#262626] border border-[#e8e6e0] dark:border-white/[0.1] pl-[13px] pr-[15px] py-[9px] rounded-[8px] font-semibold text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[18px] hover:bg-[#f4f3ef] dark:hover:bg-[#303030] transition-colors"
+                  className="flex items-center gap-[6px] bg-white dark:bg-[#262626] border border-[#e8e6e0] dark:border-white/[0.1] pl-[13px] pr-[15px] h-[34px] rounded-[8px] font-semibold text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] hover:bg-[#f4f3ef] dark:hover:bg-[#303030] transition-colors"
                 >
                   <svg className="w-[18px] h-[18px]" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="9" r="7.5"/><path d="M6 9h6M9 6v6"/></svg>
                   Add Column
@@ -254,16 +302,23 @@ export function LeadsModal({ open, onClose, onDeploy }: Props) {
 
               <button
                 onClick={() => setView("groups")}
-                className="w-full bg-[#0067ff] hover:bg-[#0055d4] transition-colors rounded-[8px] py-[10px] font-semibold text-[14px] text-white tracking-[-0.09px] leading-[18px] text-center"
+                className="w-full bg-[#0067ff] hover:bg-[#0055d4] transition-colors rounded-[8px] h-[34px] flex items-center justify-center font-semibold text-[14px] text-white tracking-[-0.09px]"
               >
                 Continue
               </button>
-            </>
+            </motion.div>
           )}
 
           {/* ── Groups view ── */}
           {view === "groups" && (
-            <>
+            <motion.div
+              key="groups"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2 }}
+              className="flex flex-col gap-[20px] w-full"
+            >
               <ModalHeader title="Select WhatsApp Groups" desc="Select groups to fetch conversations and customer enquiries from." onClose={handleClose} onBack={() => setView("columns")} />
 
               <div className="flex items-center gap-[8px] bg-white dark:bg-[#262626] border border-black/[0.08] dark:border-white/[0.08] rounded-[8px] px-[12px] py-[10px]">
@@ -291,16 +346,23 @@ export function LeadsModal({ open, onClose, onDeploy }: Props) {
               <button
                 onClick={() => setView("success")}
                 disabled={selectedGroups.size === 0}
-                className="w-full bg-[#0067ff] hover:bg-[#0055d4] disabled:opacity-40 disabled:cursor-not-allowed transition-colors rounded-[8px] py-[10px] font-semibold text-[14px] text-white tracking-[-0.09px] leading-[18px] text-center"
+                className="w-full bg-[#0067ff] hover:bg-[#0055d4] disabled:opacity-40 disabled:cursor-not-allowed transition-colors rounded-[8px] h-[34px] flex items-center justify-center font-semibold text-[14px] text-white tracking-[-0.09px]"
               >
                 Save &amp; Deploy
               </button>
-            </>
+            </motion.div>
           )}
 
           {/* ── Success view ── */}
           {view === "success" && (
-            <div className="flex flex-col items-center gap-[16px] py-[24px] text-center">
+            <motion.div
+              key="success"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.25 }}
+              className="flex flex-col items-center gap-[16px] py-[24px] text-center w-full"
+            >
               <div className="w-[72px] h-[72px] rounded-full bg-[#e6f0ff] dark:bg-[#0f2040] flex items-center justify-center">
                 <svg className="w-[36px] h-[36px] text-[#0067ff]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
@@ -313,15 +375,18 @@ export function LeadsModal({ open, onClose, onDeploy }: Props) {
               </div>
               <button
                 onClick={handleDone}
-                className="w-full bg-[#0067ff] hover:bg-[#0055d4] transition-colors rounded-[8px] py-[10px] font-semibold text-[14px] text-white tracking-[-0.09px] leading-[18px] text-center"
+                className="w-full bg-[#0067ff] hover:bg-[#0055d4] transition-colors rounded-[8px] h-[34px] flex items-center justify-center font-semibold text-[14px] text-white tracking-[-0.09px]"
               >
                 Done
               </button>
-            </div>
+            </motion.div>
           )}
+        </AnimatePresence>
 
-        </div>
-      </TooltipProvider>
-    </div>
+            </motion.div>
+          </TooltipProvider>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
