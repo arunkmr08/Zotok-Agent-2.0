@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "motion/react";
 import { useGroupsToSheets } from "@/features/groups-to-sheets/hooks/useGroupsToSheets";
 import { SheetSidebar } from "@/features/groups-to-sheets/components/SheetSidebar";
 import { SheetTable } from "@/features/groups-to-sheets/components/SheetTable";
@@ -10,35 +9,12 @@ export default function GroupsToSheetsPage() {
 
   return (
     <div className="h-full flex overflow-hidden">
-      <motion.div
-        initial={{ opacity: 0, x: -16 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
-        className="flex-shrink-0"
-      >
-        <SheetSidebar
-          sheets={state.sheets}
-          activeSheet={state.activeSheet}
-          setActiveSheet={state.setActiveSheet}
-        />
-      </motion.div>
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35, ease: "easeOut", delay: 0.07 }}
-        className="flex-1 flex flex-col overflow-hidden"
-      >
-        <SheetTable
-          sheet={state.sheet}
-          pagedRows={state.pagedRows}
-          page={state.page}
-          perPage={state.perPage}
-          totalPages={state.totalPages}
-          totalRows={state.totalRows}
-          setPage={state.setPage}
-          setPerPage={state.setPerPage}
-        />
-      </motion.div>
+      <SheetSidebar
+        sheets={state.sheets}
+        activeSheet={state.activeSheet}
+        setActiveSheet={state.setActiveSheet}
+      />
+      <SheetTable sheet={state.sheet} />
     </div>
   );
 }

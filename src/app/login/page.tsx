@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "motion/react";
 import { cn, toggleDark } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useLoginFlow } from "@/features/auth/hooks/useLoginFlow";
@@ -44,9 +43,7 @@ export default function LoginPage() {
         </Tooltip>
       </TooltipProvider>
 
-      <motion.main
-        layout
-        transition={{ duration: 0.28, ease: "easeInOut" }}
+      <main
         className={cn(
           "relative z-10 bg-white dark:bg-[#1a1a1a] border border-black/[0.08] dark:border-white/[0.08] rounded-[20px] px-8 py-10 w-full overflow-y-auto max-h-[calc(100vh-48px)] transition-[max-width] duration-[400ms] cubic-bezier-[0.16,1,0.3,1]",
           isExtraWide ? "max-w-[650px]" : isWide ? "max-w-[560px]" : "max-w-[400px]"
@@ -74,7 +71,7 @@ export default function LoginPage() {
         {step === "wa-history" && <WaHistoryStep {...flow} />}
         {step === "wa-groups"  && <WaGroupsStep {...flow} />}
         {step === "wa-syncing" && <WaSyncingStep {...flow} />}
-      </motion.main>
+      </main>
     </div>
   );
 }

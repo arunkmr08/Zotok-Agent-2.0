@@ -11,8 +11,6 @@ export function useLeads() {
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [flyoutLead, setFlyoutLead] = useState<Lead | null>(null);
   const [campaignLead, setCampaignLead] = useState<Lead | null>(null);
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(50);
   const dropRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -23,9 +21,6 @@ export function useLeads() {
     return () => document.removeEventListener("mousedown", onOutside);
   }, []);
 
-  // Reset to page 1 when filters change
-  useEffect(() => { setPage(1); }, [search, selectedDate]);
-
   const group = DATE_GROUPS.find((g) => g.label === selectedDate)!;
   const filtered = group.leads.filter(
     (l) =>
@@ -33,10 +28,6 @@ export function useLeads() {
       l.mobile.includes(search) ||
       l.location.toLowerCase().includes(search.toLowerCase())
   );
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
-  const safePage = Math.min(page, totalPages);
-  const pagedLeads = filtered.slice((safePage - 1) * perPage, safePage * perPage);
 
   function toggleAll() {
     if (selected.size === filtered.length) setSelected(new Set());
@@ -53,16 +44,6 @@ export function useLeads() {
     setSelectedDate(date);
     setDateOpen(false);
     setSelected(new Set());
-    setPage(1);
-  }
-
-  function setPageSafe(p: number) {
-    setPage(Math.max(1, Math.min(p, totalPages)));
-  }
-
-  function setPerPageAndReset(n: number) {
-    setPerPage(n);
-    setPage(1);
   }
 
   return {
@@ -75,17 +56,10 @@ export function useLeads() {
     dropRef,
     group,
     filtered,
-    pagedLeads,
     allDates: ALL_DATES,
     toggleAll,
     toggleOne,
     selectDate,
-    page: safePage,
-    perPage,
-    totalPages,
-    totalLeads: filtered.length,
-    setPage: setPageSafe,
-    setPerPage: setPerPageAndReset,
   };
 }
 
