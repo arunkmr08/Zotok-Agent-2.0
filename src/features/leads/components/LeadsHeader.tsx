@@ -7,7 +7,7 @@ type Props = Pick<LeadsState, "group" | "search" | "setSearch" | "selectedDate" 
 
 export function LeadsHeader({ group, search, setSearch, selectedDate, dateOpen, setDateOpen, allDates, selectDate, dropRef }: Props) {
   return (
-    <div className="flex items-center justify-between px-6 py-4 border-b border-black/[0.08] dark:border-white/[0.06] flex-shrink-0">
+    <div className="flex items-center justify-between px-6 py-4 border-b border-black/[0.08] dark:border-white/[0.06] bg-white dark:bg-[#1a1a1a] flex-shrink-0">
       <div>
         <h1 className="text-lg font-semibold text-[#111] dark:text-white">New Leads</h1>
         <p className="text-sm text-[#6d6c6b]">{group.leads.length} leads detected</p>
