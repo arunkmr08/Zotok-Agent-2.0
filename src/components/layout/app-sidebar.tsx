@@ -25,7 +25,7 @@ const RECENT_CHATS = [
   "Your replacement for order #ORD-44291 is on its way.",
 ];
 
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 
 function NavIcon({ icon }: { icon: string }) {
   return (
@@ -98,12 +98,18 @@ export function AppSidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const [deployedAgents, setDeployedAgents] = useState<string[]>([]);
 
-  useEffect(() => {
-    setCollapsed(localStorage.getItem("zotok_nav_collapsed") === "true");
+  function refreshDeployed() {
     const active = NAV_DEPLOYED.filter((a) =>
       localStorage.getItem(`zotok_agent_${a.key}`) === "active"
     ).map((a) => a.key);
     setDeployedAgents(active);
+  }
+
+  useEffect(() => {
+    setCollapsed(localStorage.getItem("zotok_nav_collapsed") === "true");
+    refreshDeployed();
+    window.addEventListener("agentStateChange", refreshDeployed);
+    return () => window.removeEventListener("agentStateChange", refreshDeployed);
   }, []);
 
   function handleCollapse(val: boolean) {
@@ -182,15 +188,26 @@ export function AppSidebar() {
           collapsed={collapsed} isActive={pathname === "/chat"} />
 
         {/* Deployed Karmacharis */}
-        {activeDeployed.length > 0 && (
-          <div className="flex flex-col gap-px">
-            {!collapsed && <p className={sectionCls}>Deployed Karmacharis</p>}
-            {activeDeployed.map((a) => (
-              <NavItem key={a.key} href={a.href} icon={a.icon} label={a.label}
-                collapsed={collapsed} isActive={pathname === a.href} />
-            ))}
-          </div>
-        )}
+        <AnimatePresence initial={false}>
+          {activeDeployed.length > 0 && (
+            <motion.div
+              key="deployed-section"
+              initial={{ opacity: 0, height: 0, y: -8 }}
+              animate={{ opacity: 1, height: "auto", y: 0 }}
+              exit={{ opacity: 0, height: 0, y: -8 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
+              className="overflow-hidden"
+            >
+              <div className="flex flex-col gap-px">
+                {!collapsed && <p className={sectionCls}>Deployed Karmacharis</p>}
+                {activeDeployed.map((a) => (
+                  <NavItem key={a.key} href={a.href} icon={a.icon} label={a.label}
+                    collapsed={collapsed} isActive={pathname === a.href} />
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Workspace */}
         <div className="flex flex-col gap-px">

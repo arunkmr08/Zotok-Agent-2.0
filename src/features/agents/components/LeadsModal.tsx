@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { DEFAULT_COLUMNS, MOCK_GROUPS, SHEET_OPTIONS_LEADS } from "@/features/agents/constants";
@@ -54,6 +54,8 @@ export function LeadsModal({ open, onClose, onDeploy }: Props) {
   const [view, setView] = useState<LeadsView>("connect");
   const [columns, setColumns] = useState(DEFAULT_COLUMNS.map((c) => ({ name: c })));
   const [newCol, setNewCol] = useState("");
+  const [dragOver, setDragOver] = useState<number | null>(null);
+  const dragIndex = useRef<number | null>(null);
   const [selectedSheet, setSelectedSheet] = useState("");
   const [groupSearch, setGroupSearch] = useState("");
   const [selectedGroups, setSelectedGroups] = useState<Set<string>>(new Set());
@@ -213,51 +215,115 @@ export function LeadsModal({ open, onClose, onDeploy }: Props) {
           {/* ── Columns view ── */}
           {view === "columns" && (
             <>
-              <ModalHeader title="Configure Sheet Columns" desc="Add, edit, or remove columns based on your requirement." onClose={handleClose} onBack={() => setView("picker")} />
+              <ModalHeader
+                title="Configure the Sheet Columns"
+                desc="Existing columns have been automatically fetched from the selected sheet. You can add, edit, reorder, or remove columns based on your requirement."
+                onClose={handleClose}
+                onBack={() => setView("picker")}
+              />
 
-              <div className="flex items-center justify-between">
-                <span className="font-medium text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px]">{columns.length} Columns</span>
+              {/* Count + Add button */}
+              <div className="flex items-center justify-between h-[36px]">
+                <span className="font-semibold text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[20px]">{columns.length} Columns</span>
                 <button
-                  onClick={() => { if (newCol.trim()) { setColumns((p) => [...p, { name: newCol.trim() }]); setNewCol(""); } }}
+                  onClick={() => setNewCol("")}
                   className="flex items-center gap-[6px] bg-white dark:bg-[#262626] border border-[#e8e6e0] dark:border-white/[0.1] pl-[13px] pr-[15px] py-[9px] rounded-[8px] font-semibold text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[18px] hover:bg-[#f4f3ef] dark:hover:bg-[#303030] transition-colors"
                 >
-                  <svg className="w-[18px] h-[18px]" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="9" r="7.5"/><path d="M6 9h6M9 6v6"/></svg>
+                  <svg className="w-[18px] h-[18px]" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="9" cy="9" r="7.5"/><path d="M6 9h6M9 6v6"/>
+                  </svg>
                   Add Column
                 </button>
               </div>
 
-              <input
-                type="text"
-                placeholder="New column name"
-                value={newCol}
-                onChange={(e) => setNewCol(e.target.value)}
-                onKeyDown={(e) => { if (e.key === "Enter" && newCol.trim()) { setColumns((p) => [...p, { name: newCol.trim() }]); setNewCol(""); } }}
-                className="w-full bg-white dark:bg-[#262626] border border-black/[0.08] dark:border-white/[0.08] rounded-[8px] px-[12px] py-[10px] text-[14px] text-[#34322d] dark:text-[#d9d9d9] placeholder:text-[#858481] outline-none focus:border-[#0067ff] transition-colors"
-              />
-
-              <div className="bg-white dark:bg-[#262626] border border-black/[0.06] dark:border-white/[0.06] rounded-[12px] overflow-hidden max-h-[240px] overflow-y-auto">
+              {/* Column list */}
+              <div className="bg-white dark:bg-[#262626] border border-black/[0.06] dark:border-white/[0.06] rounded-[8px] py-[8px] overflow-hidden max-h-[300px] overflow-y-auto">
                 {columns.map((col, i) => (
-                  <div key={i} className={`flex items-center gap-[10px] px-[16px] py-[12px] ${i < columns.length - 1 ? "border-b border-black/[0.06] dark:border-white/[0.06]" : ""}`}>
-                    <svg className="w-[16px] h-[16px] text-[#c0bfbd] flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M9 6h6M9 12h6M9 18h6"/></svg>
+                  <div
+                    key={i}
+                    draggable
+                    onDragStart={() => { dragIndex.current = i; }}
+                    onDragOver={(e) => { e.preventDefault(); setDragOver(i); }}
+                    onDragLeave={() => setDragOver(null)}
+                    onDrop={() => {
+                      if (dragIndex.current === null || dragIndex.current === i) { setDragOver(null); return; }
+                      const next = [...columns];
+                      const [moved] = next.splice(dragIndex.current, 1);
+                      next.splice(i, 0, moved);
+                      setColumns(next);
+                      dragIndex.current = null;
+                      setDragOver(null);
+                    }}
+                    onDragEnd={() => { dragIndex.current = null; setDragOver(null); }}
+                    className={cn(
+                      "flex items-center gap-[10px] px-[12px] py-[12px] border-b border-black/[0.06] dark:border-white/[0.06] transition-colors",
+                      dragOver === i ? "bg-[#e6f0ff] dark:bg-[#0f2040]" : "hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
+                    )}
+                  >
+                    {/* Drag handle */}
+                    <svg className="w-[18px] h-[18px] text-[#c0bfbd] dark:text-[#595959] flex-shrink-0 cursor-grab active:cursor-grabbing" viewBox="0 0 18 18" fill="currentColor">
+                      <circle cx="6.5" cy="5" r="1.2"/><circle cx="11.5" cy="5" r="1.2"/>
+                      <circle cx="6.5" cy="9" r="1.2"/><circle cx="11.5" cy="9" r="1.2"/>
+                      <circle cx="6.5" cy="13" r="1.2"/><circle cx="11.5" cy="13" r="1.2"/>
+                    </svg>
+                    {/* Name */}
                     <span className="flex-1 min-w-0 font-medium text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[18px]">{col.name}</span>
+                    {/* Delete */}
                     <Tooltip>
                       <TooltipTrigger render={
-                        <button onClick={() => setColumns((p) => p.filter((_, j) => j !== i))} className="w-[28px] h-[28px] flex items-center justify-center rounded-[6px] text-[#8c8c8c] hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
-                          <svg className="w-[14px] h-[14px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                        <button
+                          onClick={() => setColumns((p) => p.filter((_, j) => j !== i))}
+                          className="w-[18px] h-[18px] flex items-center justify-center text-[#c0bfbd] dark:text-[#595959] hover:text-red-500 transition-colors flex-shrink-0"
+                        >
+                          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-[18px] h-[18px]">
+                            <path d="M2.25 4.5h13.5M7.5 4.5V3a.75.75 0 0 1 .75-.75h1.5A.75.75 0 0 1 10.5 3v1.5M14.25 4.5l-.75 9.75a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5L3.75 4.5"/>
+                          </svg>
                         </button>
                       } />
                       <TooltipContent side="top" sideOffset={4}>Remove</TooltipContent>
                     </Tooltip>
                   </div>
                 ))}
+
+                {/* Inline add row */}
+                <div className="flex items-center gap-[10px] px-[12px] py-[12px]">
+                  <svg className="w-[18px] h-[18px] text-[#c0bfbd] dark:text-[#595959] flex-shrink-0" viewBox="0 0 18 18" fill="currentColor">
+                    <circle cx="6.5" cy="5" r="1.2"/><circle cx="11.5" cy="5" r="1.2"/>
+                    <circle cx="6.5" cy="9" r="1.2"/><circle cx="11.5" cy="9" r="1.2"/>
+                    <circle cx="6.5" cy="13" r="1.2"/><circle cx="11.5" cy="13" r="1.2"/>
+                  </svg>
+                  <input
+                    type="text"
+                    placeholder="Enter Column Name"
+                    value={newCol}
+                    onChange={(e) => setNewCol(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && newCol.trim()) {
+                        setColumns((p) => [...p, { name: newCol.trim() }]);
+                        setNewCol("");
+                      }
+                    }}
+                    className="flex-1 min-w-0 bg-transparent outline-none font-medium text-[14px] text-[#34322d] dark:text-[#d9d9d9] placeholder:text-[#858481] dark:placeholder:text-[#595959] tracking-[-0.09px] leading-[18px]"
+                  />
+                  <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-[18px] h-[18px] text-[#e0dedd] dark:text-[#3a3a3a] flex-shrink-0">
+                    <path d="M2.25 4.5h13.5M7.5 4.5V3a.75.75 0 0 1 .75-.75h1.5A.75.75 0 0 1 10.5 3v1.5M14.25 4.5l-.75 9.75a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5L3.75 4.5"/>
+                  </svg>
+                </div>
               </div>
 
-              <button
-                onClick={() => setView("groups")}
-                className="w-full bg-[#0067ff] hover:bg-[#0055d4] transition-colors rounded-[8px] py-[10px] font-semibold text-[14px] text-white tracking-[-0.09px] leading-[18px] text-center"
-              >
-                Continue
-              </button>
+              {/* Right-aligned Continue */}
+              <div className="flex justify-end">
+                <button
+                  onClick={() => {
+                    if (newCol.trim()) setColumns((p) => [...p, { name: newCol.trim() }]);
+                    setNewCol("");
+                    setView("groups");
+                  }}
+                  className="bg-[#0067ff] hover:bg-[#0055d4] transition-colors rounded-[8px] px-[20px] py-[9px] font-semibold text-[14px] text-white tracking-[-0.09px] leading-[18px]"
+                >
+                  Continue
+                </button>
+              </div>
             </>
           )}
 
