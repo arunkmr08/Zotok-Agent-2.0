@@ -2,19 +2,21 @@
 
 import { cn } from "@/lib/utils";
 import { PrimaryBtn } from "@/features/auth/components/PrimaryBtn";
+import { COUNTRY_CODES } from "@/features/auth/constants";
 import type { LoginFlowState } from "@/features/auth/hooks/useLoginFlow";
 
 type Props = Pick<LoginFlowState,
-  "phone" | "otpValues" | "otpError" | "setOtpError" | "otpResend" |
+  "phone" | "dialCode" | "otpValues" | "otpError" | "setOtpError" | "otpResend" |
   "otpRefs" | "timerRef" | "handleOtpInput" | "handleOtpKeyDown" | "setStep"
 >;
 
-export function OtpStep({ phone, otpValues, otpError, setOtpError, otpResend, otpRefs, timerRef, handleOtpInput, handleOtpKeyDown, setStep }: Props) {
+export function OtpStep({ phone, dialCode, otpValues, otpError, setOtpError, otpResend, otpRefs, timerRef, handleOtpInput, handleOtpKeyDown, setStep }: Props) {
+  const dial = COUNTRY_CODES.find((c) => c.name === dialCode)?.dial ?? "+91";
   return (
     <div key="otp" style={{ animation: "fadeStep 0.4s cubic-bezier(0.16, 1, 0.3, 1)" }}>
       <h1 className="text-[22px] font-semibold text-[#111] dark:text-white mb-[6px]">Enter the code</h1>
       <p className="text-sm text-[#6d6c6b] mb-[28px]">
-        We sent a 4-digit code to <strong>+91 {phone}</strong>{" "}
+        We sent a 4-digit code to <strong>{dial} {phone}</strong>{" "}
         <button className="text-[#111] dark:text-white font-medium text-[13px] underline underline-offset-[2px]" onClick={() => setStep("phone")}>Change</button>
       </p>
       <div className="flex justify-between gap-3">
@@ -48,6 +50,7 @@ export function OtpStep({ phone, otpValues, otpError, setOtpError, otpResend, ot
         disabled={otpValues.some(v => !v)}
         onClick={() => {
           if (otpValues.some(v => !v)) { setOtpError("Please enter all 4 digits"); return; }
+          if (otpValues.join("") !== "1234") { setOtpError("OTP is not valid"); return; }
           clearInterval(timerRef.current!);
           setStep("gst");
         }}

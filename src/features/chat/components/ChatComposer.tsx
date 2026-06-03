@@ -11,7 +11,7 @@ export function ChatComposer({ input, setInput, textareaRef, autoResize, handleK
   return (
     <div className="relative z-10 px-6 pb-6 pt-2">
       <div className="max-w-[760px] mx-auto">
-        <div className="bg-white dark:bg-[#262626] rounded-[50px] drop-shadow-[0px_3px_5px_rgba(0,0,0,0.08)] flex items-center gap-[12px] px-[16px] py-[12px] w-full">
+        <div className="bg-white dark:bg-[#1a1a1a] rounded-[50px] drop-shadow-[0px_3px_5px_rgba(0,0,0,0.08)] flex items-center gap-[12px] px-[16px] py-[12px] w-full">
           <div className="w-[26px] h-[26px] flex items-center justify-center flex-shrink-0">
             <Image src="/assets/icons/icon-minus.svg" alt="" width={20} height={20} className="dark:brightness-0 dark:invert opacity-50" />
           </div>

@@ -22,7 +22,7 @@ export function FormField({ label, htmlFor, error, className, children }: FormFi
           error ? "max-h-10 opacity-100 mt-[6px]" : "max-h-0 opacity-0"
         )}
       >
-        <FieldDescription>{error}</FieldDescription>
+        <FieldDescription className={error ? "text-destructive" : undefined}>{error}</FieldDescription>
       </div>
     </Field>
   );
