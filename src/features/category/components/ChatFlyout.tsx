@@ -55,23 +55,43 @@ export function ChatFlyout({ msg, onClose }: Props) {
         ))}
       </div>
       <div className="px-4 py-3 border-t border-black/[0.06] dark:border-white/[0.06]">
+        <TooltipProvider delay={300}>
         <div className="flex gap-2">
-          <select className="px-3 py-2 text-xs rounded-lg border border-black/[0.08] dark:border-white/[0.08] bg-[#f4f3ef] dark:bg-[#242424] text-[#6d6c6b] dark:text-[#7f7f7f] outline-none">
-            <option>+91 93883 22332</option>
-          </select>
-          <input
-            className="flex-1 px-3 h-[40px] text-sm rounded-xl border border-black/[0.08] dark:border-white/[0.08] bg-[#f4f3ef] dark:bg-[#242424] text-[#34322d] dark:text-[#dadada] placeholder:text-[#858481] outline-none focus:border-blue-400"
-            placeholder="Reply…"
-          />
-          <TooltipProvider delay={300}>
+          <div className="relative flex-1">
+            <input
+              className="w-full pl-3 pr-8 h-[40px] text-sm rounded-xl border border-black/[0.08] dark:border-white/[0.08] bg-[#f4f3ef] dark:bg-[#242424] text-[#34322d] dark:text-[#dadada] placeholder:text-[#858481] outline-none focus:border-blue-400"
+              placeholder="Reply…"
+            />
             <Tooltip>
-              <TooltipTrigger render={<button className="p-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600 transition-colors" />}>
-                <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2L2 7l5 3 3 5 4-13zM7 9l3-3" /></svg>
+              <TooltipTrigger render={
+                <button className="absolute right-2 top-1/2 -translate-y-1/2 h-[26px] px-[6px] flex items-center gap-[3px] rounded-md transition-all duration-200 hover:opacity-90"
+                  style={{ background: "linear-gradient(135deg, #0067ff 0%, #8c3cff 100%)", boxShadow: "0 2px 8px rgba(0,103,255,0.3)" }}
+                />
+              }>
+                <svg className="w-[10px] h-[10px] text-white flex-shrink-0" viewBox="0 0 12 12" fill="currentColor">
+                  <path d="M6 0l1.2 3.8L11 5l-3.8 1.2L6 10l-1.2-3.8L1 5l3.8-1.2z"/>
+                </svg>
+                <span className="text-white font-semibold text-[10px] tracking-[0.02px] leading-none">AI</span>
+              </TooltipTrigger>
+              <TooltipContent side="top" sideOffset={6}>Generate with AI</TooltipContent>
+            </Tooltip>
+          </div>
+            <Tooltip>
+              <TooltipTrigger render={
+                <button
+                  className="w-[40px] h-[40px] rounded-full bg-[#0067ff] hover:bg-[#0055d4] flex items-center justify-center flex-shrink-0 transition-all duration-300"
+                  style={{ boxShadow: "0 4px 14px rgba(0,103,255,0.45), 0 2px 6px rgba(0,103,255,0.25)" }}
+                />
+              }>
+                <svg className="w-[16px] h-[16px] brightness-0 invert" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M8 13V3M3 8l5-5 5 5" />
+                </svg>
               </TooltipTrigger>
               <TooltipContent side="top" sideOffset={6}>Send</TooltipContent>
             </Tooltip>
-          </TooltipProvider>
         </div>
+        </TooltipProvider>
+
       </div>
     </div>
   );

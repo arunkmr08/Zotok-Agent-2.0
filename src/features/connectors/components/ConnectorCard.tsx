@@ -21,13 +21,13 @@ export function ConnectorCard({ connector, connected, onConnect, onDisconnect }:
       {/* Icon + connected badge row */}
       <div className="flex items-center justify-between w-full">
         <div className={cn(
-          "w-[60px] h-[60px] flex-shrink-0 rounded-[12px] border border-[#e8e6e0] dark:border-white/[0.08] flex items-center justify-center overflow-hidden p-[9px]",
+          "w-[50px] h-[50px] flex-shrink-0 rounded-[12px] border border-[#e8e6e0] dark:border-white/[0.08] flex items-center justify-center overflow-hidden p-[8px]",
           connector.iconBg ? connector.iconBg : "bg-[#f8f8f7] dark:bg-[#262626]"
         )}>
           <Image
             src={`/assets/icons/${connector.icon}`}
             alt={connector.title}
-            width={42} height={42}
+            width={34} height={34}
             className="object-contain w-full h-full"
             onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
           />

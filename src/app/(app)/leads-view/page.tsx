@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { motion } from "motion/react";
 import { useLeads } from "@/features/leads/hooks/useLeads";
 import { LeadsHeader } from "@/features/leads/components/LeadsHeader";
 import { BulkBar } from "@/features/leads/components/BulkBar";
@@ -14,26 +15,47 @@ export default function LeadsViewPage() {
   return (
     <>
       <div className={cn("h-full flex flex-col overflow-hidden", state.flyoutLead && "pr-[380px]")}>
-        <LeadsHeader
-          group={state.group}
-          search={state.search}
-          setSearch={state.setSearch}
-          selectedDate={state.selectedDate}
-          dateOpen={state.dateOpen}
-          setDateOpen={state.setDateOpen}
-          allDates={state.allDates}
-          selectDate={state.selectDate}
-          dropRef={state.dropRef}
-        />
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.28, ease: "easeOut" }}
+          className="flex-shrink-0"
+        >
+          <LeadsHeader
+            group={state.group}
+            search={state.search}
+            setSearch={state.setSearch}
+            selectedDate={state.selectedDate}
+            dateOpen={state.dateOpen}
+            setDateOpen={state.setDateOpen}
+            allDates={state.allDates}
+            selectDate={state.selectDate}
+            dropRef={state.dropRef}
+          />
+        </motion.div>
         <BulkBar selected={state.selected} setSelected={state.setSelected} />
-        <LeadsTable
-          filtered={state.filtered}
-          selected={state.selected}
-          toggleAll={state.toggleAll}
-          toggleOne={state.toggleOne}
-          setFlyoutLead={state.setFlyoutLead}
-          setCampaignLead={state.setCampaignLead}
-        />
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, ease: "easeOut", delay: 0.1 }}
+          className="flex-1 flex flex-col overflow-hidden"
+        >
+          <LeadsTable
+            filtered={state.filtered}
+            pagedLeads={state.pagedLeads}
+            selected={state.selected}
+            toggleAll={state.toggleAll}
+            toggleOne={state.toggleOne}
+            setFlyoutLead={state.setFlyoutLead}
+            setCampaignLead={state.setCampaignLead}
+            page={state.page}
+            perPage={state.perPage}
+            totalPages={state.totalPages}
+            totalLeads={state.totalLeads}
+            setPage={state.setPage}
+            setPerPage={state.setPerPage}
+          />
+        </motion.div>
       </div>
 
       {state.flyoutLead && <ChatFlyout lead={state.flyoutLead} onClose={() => state.setFlyoutLead(null)} />}
