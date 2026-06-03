@@ -6,9 +6,9 @@ import type { Agent, AgentState } from "@/features/agents/types";
 interface Props {
   agent: Agent;
   state: AgentState;
-  onDeploy: () => void;
-  onConfigure: () => void;
-  onRemove: () => void;
+  onDeploy: (e: React.MouseEvent) => void;
+  onConfigure: (e: React.MouseEvent) => void;
+  onRemove: (e: React.MouseEvent) => void;
 }
 
 function CheckIcon() {
@@ -23,7 +23,7 @@ export function AgentCard({ agent, state, onDeploy, onConfigure, onRemove }: Pro
   const isActive = state === "active";
 
   return (
-    <article className="bg-white dark:bg-[#1a1a1a] border border-black/[0.12] dark:border-white/[0.08] rounded-[18px] drop-shadow-[0px_8px_16px_rgba(0,0,0,0.06)] flex flex-col gap-[24px] pt-[5px] px-[5px] pb-[21px]">
+    <article className="agent-card-container bg-white dark:bg-[#1a1a1a] border border-black/[0.12] dark:border-white/[0.08] rounded-[18px] drop-shadow-[0px_8px_16px_rgba(0,0,0,0.06)] flex flex-col gap-[24px] pt-[5px] px-[5px] pb-[21px]">
 
       {/* Preview image */}
       <div className="bg-[#f8f8f7] dark:bg-[#262626] rounded-[14px] overflow-hidden w-full aspect-[1595/986]">
@@ -69,14 +69,14 @@ export function AgentCard({ agent, state, onDeploy, onConfigure, onRemove }: Pro
         {isActive ? (
           <>
             <button
-              onClick={onConfigure}
-              className="flex items-center gap-[6px] pl-[12px] pr-[14px] py-[8px] rounded-[8px] font-semibold text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[18px] hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors"
+              onClick={(e) => onConfigure(e)}
+              className="flex items-center gap-[6px] pl-[12px] pr-[14px] h-[34px] rounded-[8px] font-semibold text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[18px] hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors"
             >
               Configure
             </button>
             <button
-              onClick={onRemove}
-              className="flex items-center gap-[6px] pl-[12px] pr-[14px] py-[8px] rounded-[8px] bg-red-500 hover:bg-red-600 transition-colors font-semibold text-[14px] text-white tracking-[-0.09px] leading-[18px]"
+              onClick={(e) => onRemove(e)}
+              className="flex items-center gap-[6px] pl-[12px] pr-[14px] h-[34px] rounded-[8px] bg-red-500 hover:bg-red-600 transition-colors font-semibold text-[14px] text-white tracking-[-0.09px] leading-[18px]"
             >
               Remove
             </button>
@@ -84,20 +84,16 @@ export function AgentCard({ agent, state, onDeploy, onConfigure, onRemove }: Pro
         ) : (
           <>
             <button
-              onClick={onConfigure}
-              className="flex items-center gap-[6px] pl-[12px] pr-[14px] py-[8px] rounded-[8px] font-semibold text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[18px] hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors"
+              onClick={(e) => onConfigure(e)}
+              className="flex items-center gap-[6px] pl-[12px] pr-[14px] h-[34px] rounded-[8px] font-semibold text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[18px] hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors"
             >
               Know More
             </button>
             <button
-              onClick={onDeploy}
-              className="flex items-center gap-[6px] pl-[12px] pr-[14px] py-[8px] rounded-[8px] bg-[#0067ff] hover:bg-[#0055d4] transition-colors font-semibold text-[14px] text-white tracking-[-0.09px] leading-[18px]"
+              onClick={(e) => onDeploy(e)}
+              className="flex items-center gap-[6px] pl-[12px] pr-[14px] h-[34px] rounded-[8px] bg-[#0067ff] hover:bg-[#0055d4] transition-colors font-semibold text-[14px] text-white tracking-[-0.09px] leading-[18px]"
             >
-              <svg className="w-[18px] h-[18px]" viewBox="0 0 18 18" fill="none">
-                <path d="M9.75 2.25C9.75 2.25 13.5 3 14.25 6.75C15 10.5 12.75 13.5 9 15C5.25 13.5 3 10.5 3.75 6.75C4.5 3 8.25 2.25 8.25 2.25" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <circle cx="9" cy="8.25" r="1.5" fill="white"/>
-                <path d="M9 9.75V12.75" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-              </svg>
+              <Image src="/assets/icons/deploy.svg" alt="" width={18} height={18} className="flex-shrink-0" />
               Deploy Karamchari
             </button>
           </>

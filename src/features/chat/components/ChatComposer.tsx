@@ -1,12 +1,14 @@
 "use client";
 
 import Image from "next/image";
+import { motion } from "motion/react";
 import type { ChatState } from "@/features/chat/hooks/useChat";
 
 type Props = Pick<ChatState, "input" | "setInput" | "textareaRef" | "autoResize" | "handleKeyDown" | "sendMessage" | "messages" | "syncState" | "setInputFocused">;
 
 export function ChatComposer({ input, setInput, textareaRef, autoResize, handleKeyDown, sendMessage, messages, syncState, setInputFocused }: Props) {
   const hasInput = input.trim().length > 0;
+  const isSendDisabled = !hasInput || syncState !== 'hidden';
 
   return (
     <div className="relative z-10 px-6 pb-6 pt-2">
@@ -32,10 +34,13 @@ export function ChatComposer({ input, setInput, textareaRef, autoResize, handleK
               <span>Gemini 3.1 Flash</span>
               <Image src="/assets/icons/icon-chevron-down.svg" alt="" width={20} height={20} className="dark:brightness-0 dark:invert opacity-60" />
             </button>
-            <button
-              disabled={!hasInput || syncState !== 'hidden'}
+            <motion.button
+              disabled={isSendDisabled}
               onClick={() => sendMessage()}
-              className="w-[36px] h-[36px] rounded-[50px] flex items-center justify-center flex-shrink-0 transition-all duration-300 disabled:cursor-not-allowed"
+              className="w-[36px] h-[36px] rounded-[50px] flex items-center justify-center flex-shrink-0 disabled:cursor-not-allowed"
+              whileHover={isSendDisabled ? undefined : { scale: 1.03 }}
+              whileTap={isSendDisabled ? undefined : { scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 500, damping: 25 }}
               style={{
                 background: hasInput && syncState === 'hidden' ? "#0067ff" : "rgba(55,53,47,0.08)",
                 border: hasInput && syncState === 'hidden' ? "none" : "1px solid rgba(229,231,235,0.06)",
@@ -48,7 +53,7 @@ export function ChatComposer({ input, setInput, textareaRef, autoResize, handleK
                 width={20} height={20}
                 className={hasInput && syncState === 'hidden' ? "brightness-0 invert arrow-nudge" : "dark:brightness-0 dark:invert opacity-50"}
               />
-            </button>
+            </motion.button>
           </div>
         </div>
       </div>

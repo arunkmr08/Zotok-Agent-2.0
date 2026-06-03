@@ -7,8 +7,8 @@ import type { Connector } from "@/features/connectors/types";
 interface Props {
   connector: Connector;
   connected: boolean;
-  onConnect: () => void;
-  onDisconnect: () => void;
+  onConnect: (e: React.MouseEvent) => void;
+  onDisconnect: (e: React.MouseEvent) => void;
 }
 
 export function ConnectorCard({ connector, connected, onConnect, onDisconnect }: Props) {
@@ -16,7 +16,7 @@ export function ConnectorCard({ connector, connected, onConnect, onDisconnect }:
   const showConnected = isDynamic && connected;
 
   return (
-    <article className="bg-white dark:bg-[#1a1a1a] border border-black/[0.12] dark:border-white/[0.08] rounded-[18px] drop-shadow-[0px_8px_16px_rgba(0,0,0,0.06)] flex flex-col gap-[20px] p-[21px]">
+    <article className="connector-card-container bg-white dark:bg-[#1a1a1a] border border-black/[0.12] dark:border-white/[0.08] rounded-[18px] drop-shadow-[0px_8px_16px_rgba(0,0,0,0.06)] flex flex-col gap-[20px] p-[21px]">
 
       {/* Icon + connected badge row */}
       <div className="flex items-center justify-between w-full">
@@ -52,7 +52,7 @@ export function ConnectorCard({ connector, connected, onConnect, onDisconnect }:
         {showConnected ? (
           <span className="font-normal text-[12px] text-[#8c8c8c] tracking-[-0.09px] leading-[18px] whitespace-nowrap">Last Sync: 5 min ago</span>
         ) : (
-          <button className="font-semibold text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[18px] pl-[12px] pr-[14px] py-[8px] rounded-[8px] hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors">
+          <button className="font-semibold text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[18px] pl-[12px] pr-[14px] h-[34px] rounded-[8px] hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors">
             Know More
           </button>
         )}
@@ -60,8 +60,8 @@ export function ConnectorCard({ connector, connected, onConnect, onDisconnect }:
         <div>
           {showConnected ? (
             <button
-              onClick={onDisconnect}
-              className="flex items-center gap-[6px] bg-white dark:bg-transparent border border-[#dd360c] pl-[13px] pr-[15px] py-[9px] rounded-[8px] font-semibold text-[14px] text-[#dd360c] tracking-[-0.09px] leading-[18px] hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+              onClick={(e) => onDisconnect(e)}
+              className="flex items-center gap-[6px] bg-white dark:bg-transparent border border-[#dd360c] pl-[13px] pr-[15px] h-[34px] rounded-[8px] font-semibold text-[14px] text-[#dd360c] tracking-[-0.09px] leading-[18px] hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
             >
               <svg className="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
                 <path d="M2 2l14 14M16 2 2 16" />
@@ -71,8 +71,8 @@ export function ConnectorCard({ connector, connected, onConnect, onDisconnect }:
             </button>
           ) : (
             <button
-              onClick={onConnect}
-              className="flex items-center gap-[6px] bg-[#0067ff] hover:bg-[#0055d4] transition-colors pl-[12px] pr-[14px] py-[8px] rounded-[8px] font-semibold text-[14px] text-white tracking-[-0.09px] leading-[18px]"
+              onClick={(e) => onConnect(e)}
+              className="flex items-center gap-[6px] bg-[#0067ff] hover:bg-[#0055d4] transition-colors pl-[12px] pr-[14px] h-[34px] rounded-[8px] font-semibold text-[14px] text-white tracking-[-0.09px] leading-[18px]"
             >
               <svg className="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 18 18" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M9 12.75V2.25M4.5 8.25 9 12.75l4.5-4.5M14.25 15.75H3.75" />

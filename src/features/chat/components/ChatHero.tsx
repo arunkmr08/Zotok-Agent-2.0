@@ -18,6 +18,7 @@ export function ChatHero({
   showSetupCard, dismissSetupCard, isMultiline, syncState, setInputFocused
 }: Props) {
   const hasInput = input.trim().length > 0;
+  const isSendDisabled = syncState !== 'hidden' || !hasInput;
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -30,8 +31,8 @@ export function ChatHero({
 
 
       {/* ── Centered hero content ── */}
-      <div className="flex-1 flex flex-col items-center justify-center px-6 overflow-y-auto">
-        <div className="w-full max-w-[760px] flex flex-col items-center">
+      <div className="flex-1 flex flex-col items-center justify-center px-6 overflow-y-auto pb-[200px]">
+        <div className="w-full max-w-[760px] flex flex-col items-center relative">
 
           {/* Title */}
           <h1 className="text-[40px] font-normal text-black dark:text-white text-center tracking-[-0.8px] leading-[48px] pb-8">
@@ -132,10 +133,13 @@ export function ChatHero({
                     <span>Gemini 3.1 Flash</span>
                     <Image src="/assets/icons/icon-chevron-down.svg" alt="" width={20} height={20} className="dark:brightness-0 dark:invert opacity-60" />
                   </button>
-                  <button
-                    disabled={syncState !== 'hidden' || !hasInput}
+                  <motion.button
+                    disabled={isSendDisabled}
                     onClick={() => sendMessage()}
-                    className="w-[36px] h-[36px] rounded-[50px] flex items-center justify-center flex-shrink-0 transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="w-[36px] h-[36px] rounded-[50px] flex items-center justify-center flex-shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
+                    whileHover={isSendDisabled ? undefined : { scale: 1.03 }}
+                    whileTap={isSendDisabled ? undefined : { scale: 0.97 }}
+                    transition={{ type: "spring", stiffness: 500, damping: 25 }}
                     style={{
                       background: hasInput && syncState === 'hidden' ? "#0067ff" : "rgba(55,53,47,0.08)",
                       border: hasInput && syncState === 'hidden' ? "none" : "1px solid rgba(229,231,235,0.06)",
@@ -145,7 +149,7 @@ export function ChatHero({
                     <Image src="/assets/icons/icon-chevron-up.svg" alt="" width={20} height={20}
                       className={hasInput && syncState === 'hidden' ? "brightness-0 invert arrow-nudge" : "dark:brightness-0 dark:invert opacity-50"}
                     />
-                  </button>
+                  </motion.button>
                 </div>
               </div>
             ) : (
@@ -172,14 +176,17 @@ export function ChatHero({
                       <span>Gemini 3.1 Flash</span>
                       <Image src="/assets/icons/icon-chevron-down.svg" alt="" width={20} height={20} className="dark:brightness-0 dark:invert opacity-60" />
                     </button>
-                    <button
-                      disabled={syncState !== 'hidden' || !hasInput}
+                    <motion.button
+                      disabled={isSendDisabled}
                       onClick={() => sendMessage()}
-                      className="w-[36px] h-[36px] rounded-[50px] bg-[#0067ff] flex items-center justify-center flex-shrink-0 hover:bg-[#0055d4] disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300"
+                      className="w-[36px] h-[36px] rounded-[50px] bg-[#0067ff] flex items-center justify-center flex-shrink-0 hover:bg-[#0055d4] disabled:opacity-40 disabled:cursor-not-allowed"
+                      whileHover={isSendDisabled ? undefined : { scale: 1.03 }}
+                      whileTap={isSendDisabled ? undefined : { scale: 0.97 }}
+                      transition={{ type: "spring", stiffness: 500, damping: 25 }}
                       style={{ boxShadow: hasInput && syncState === 'hidden' ? "0 4px 14px rgba(0,103,255,0.45), 0 2px 6px rgba(0,103,255,0.25)" : "none" }}
                     >
                       <Image src="/assets/icons/icon-chevron-up.svg" alt="" width={20} height={20} className={hasInput && syncState === 'hidden' ? "brightness-0 invert arrow-nudge" : "brightness-0 invert"} />
-                    </button>
+                    </motion.button>
                   </div>
                 </div>
               </div>
@@ -187,26 +194,35 @@ export function ChatHero({
           </div>
 
           {/* ── Setup card or prompt pills ── */}
-          <div className={`w-full mt-8 transition-all duration-700 delay-150 ease-out ${mounted ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-            {showSetupCard ? (
-              <SetupCard onClose={dismissSetupCard} />
-            ) : (
-              <div className="flex gap-3 flex-wrap justify-center">
-                {PROMPT_PILLS.map((p) => (
-                  <button
-                    key={p.id}
-                    onClick={() => sendMessage(p.label)}
-                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white dark:bg-[#1a1a1a] border border-black/[0.08] dark:border-white/[0.08] text-[14px] text-[#34322d] dark:text-[#adadad] hover:bg-[#f4f3ef] dark:hover:bg-[#242424] transition-colors shadow-sm"
-                  >
-                    <Image
-                      src={`/assets/icons/${p.icon}`} alt="" width={16} height={16}
-                      onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
-                    />
-                    <span>{p.label}</span>
-                  </button>
-                ))}
-              </div>
-            )}
+          <div className={`w-full absolute top-full left-0 mt-8 transition-all duration-700 delay-150 ease-out ${mounted ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
+            <AnimatePresence mode="wait">
+              {showSetupCard ? (
+                <SetupCard key="setup-card" onClose={dismissSetupCard} />
+              ) : (
+                <motion.div
+                  key="prompt-pills"
+                  initial={{ opacity: 0, y: 12, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -12, scale: 0.98 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="flex gap-3 flex-wrap justify-center"
+                >
+                  {PROMPT_PILLS.map((p) => (
+                    <button
+                      key={p.id}
+                      onClick={() => sendMessage(p.label)}
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white dark:bg-[#1a1a1a] border border-black/[0.08] dark:border-white/[0.08] text-[14px] text-[#34322d] dark:text-[#adadad] hover:bg-[#f4f3ef] dark:hover:bg-[#242424] transition-colors shadow-sm"
+                    >
+                      <Image
+                        src={`/assets/icons/${p.icon}`} alt="" width={16} height={16}
+                        onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                      />
+                      <span>{p.label}</span>
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
         </div>
