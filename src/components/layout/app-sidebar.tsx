@@ -8,16 +8,36 @@ import { cn, toggleDark } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const NAV_DEPLOYED = [
-  { key: "category", href: "/category-view",   label: "Category Messages", icon: "nav-category.svg" },
-  { key: "leads",    href: "/leads-view",       label: "New Leads",         icon: "nav-leads.svg"    },
-  { key: "sheets",   href: "/groups-to-sheets", label: "Groups to Sheets",  icon: "nav-sheets.svg"   },
+  { key: "category", href: "/category-view",   label: "Category Messages", icon: "nav-category.svg", shortcut: "⌥⌘1" },
+  { key: "leads",    href: "/leads-view",       label: "New Leads",         icon: "nav-leads.svg",    shortcut: "⌥⌘2" },
+  { key: "sheets",   href: "/groups-to-sheets", label: "Groups to Sheets",  icon: "nav-sheets.svg",   shortcut: "⌥⌘3" },
 ];
 
 const NAV_WORKSPACE = [
-  { href: "/agents",     label: "Karamcharis",   icon: "nav-karamchari.svg" },
-  { href: "/connectors", label: "Connectors",    icon: "nav-connectors.svg" },
-  { href: "/whatsapp",   label: "WhatsApp Sync", icon: "nav-whatsapp.svg"   },
-  { href: "/search",     label: "Search",        icon: "nav-search.svg"     },
+  { href: "/agents",     label: "Karamcharis",   icon: "nav-karamchari.svg", shortcut: "⌘⇧K" },
+  { href: "/connectors", label: "Connectors",    icon: "nav-connectors.svg", shortcut: "⌘⇧L" },
+  { href: "/whatsapp",   label: "WhatsApp Sync", icon: "nav-whatsapp.svg",   shortcut: "⌘⇧C" },
+  { href: "/search",     label: "Search",        icon: "nav-search.svg",     shortcut: "⌘K"  },
+];
+
+// cmd+shift shortcuts
+const SHORTCUT_MAP: Record<string, string> = {
+  KeyO:   "/chat",
+  KeyK:   "/agents",
+  KeyL:   "/connectors",
+  KeyC:   "/whatsapp",
+};
+
+// cmd only shortcuts (no shift, no alt)
+const SHORTCUT_MAP_NO_SHIFT: Record<string, string> = {
+  KeyK: "/search",
+};
+
+// option+cmd shortcuts for deployed karmacharis (gated by deployed state)
+const DEPLOYED_SHORTCUTS = [
+  { code: "Digit1", key: "category", href: "/category-view"    },
+  { code: "Digit2", key: "leads",    href: "/leads-view"       },
+  { code: "Digit3", key: "sheets",   href: "/groups-to-sheets" },
 ];
 
 const RECENT_CHATS = [
@@ -35,11 +55,19 @@ function NavIcon({ icon }: { icon: string }) {
   );
 }
 
+function ShortcutBadge({ shortcut }: { shortcut: string }) {
+  return (
+    <span className="text-[11px] font-medium text-[#858481] dark:text-[#595959] bg-black/[0.05] dark:bg-white/[0.08] rounded-[5px] px-[5px] py-[2px] tracking-[0px] flex-shrink-0 leading-none">
+      {shortcut}
+    </span>
+  );
+}
+
 function NavItem({
-  href, icon, label, collapsed, isActive,
+  href, icon, label, collapsed, isActive, shortcut,
 }: {
   href: string; icon: string; label: string;
-  collapsed: boolean; isActive: boolean;
+  collapsed: boolean; isActive: boolean; shortcut?: string;
 }) {
   const content = (
     <>
@@ -60,16 +88,23 @@ function NavItem({
       <div className="relative z-10 flex items-center gap-[4px] w-full">
         <NavIcon icon={icon} />
         {!collapsed && (
-          <span className="text-[14px] text-[#1f1f1f] dark:text-[#f0f0f0] tracking-[-0.09px] leading-normal">
-            {label}
-          </span>
+          <>
+            <span className="flex-1 text-[14px] text-[#1f1f1f] dark:text-[#f0f0f0] tracking-[-0.09px] leading-normal">
+              {label}
+            </span>
+            {shortcut && (
+              <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-150 pr-[4px]">
+                <ShortcutBadge shortcut={shortcut} />
+              </span>
+            )}
+          </>
         )}
       </div>
     </>
   );
 
   const containerCls = cn(
-    "relative flex items-center w-full transition-colors",
+    "group relative flex items-center w-full transition-colors",
     !isActive && "rounded-[10px] hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
   );
 
@@ -81,7 +116,10 @@ function NavItem({
         >
           {content}
         </TooltipTrigger>
-        <TooltipContent side="right" sideOffset={8}>{label}</TooltipContent>
+        <TooltipContent side="right" sideOffset={8}>
+          <span>{label}</span>
+          {shortcut && <ShortcutBadge shortcut={shortcut} />}
+        </TooltipContent>
       </Tooltip>
     );
   }
@@ -97,6 +135,7 @@ export function AppSidebar() {
   const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
   const [deployedAgents, setDeployedAgents] = useState<string[]>([]);
+  const [sidebarReady, setSidebarReady] = useState(false);
 
   function refreshDeployed() {
     const active = NAV_DEPLOYED.filter((a) =>
@@ -108,9 +147,37 @@ export function AppSidebar() {
   useEffect(() => {
     setCollapsed(localStorage.getItem("zotok_nav_collapsed") === "true");
     refreshDeployed();
+    setSidebarReady(true);
     window.addEventListener("agentStateChange", refreshDeployed);
     return () => window.removeEventListener("agentStateChange", refreshDeployed);
   }, []);
+
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      const target = e.target as HTMLElement;
+      if (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable) return;
+      if (!(e.metaKey || e.ctrlKey)) return;
+
+      if (e.altKey && !e.shiftKey) {
+        // ⌥⌘ + number → deployed karmachari pages (only if deployed)
+        const match = DEPLOYED_SHORTCUTS.find((s) => s.code === e.code);
+        if (match && deployedAgents.includes(match.key)) {
+          e.preventDefault();
+          router.push(match.href);
+        }
+      } else if (e.shiftKey && !e.altKey) {
+        // ⌘⇧ shortcuts
+        const href = SHORTCUT_MAP[e.code];
+        if (href) { e.preventDefault(); router.push(href); }
+      } else if (!e.shiftKey && !e.altKey) {
+        // ⌘ only shortcuts
+        const href = SHORTCUT_MAP_NO_SHIFT[e.code];
+        if (href) { e.preventDefault(); router.push(href); }
+      }
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [router, deployedAgents]);
 
   function handleCollapse(val: boolean) {
     setCollapsed(val);
@@ -125,7 +192,7 @@ export function AppSidebar() {
     <TooltipProvider delay={300}>
     <aside
       className={cn(
-        "flex flex-col h-screen overflow-hidden bg-white dark:bg-[#1f1f1f] border-r border-[#f0f0f0] dark:border-[#262626] transition-all duration-300 flex-shrink-0",
+        "flex flex-col h-screen overflow-hidden bg-white dark:bg-[#141414] border-r border-[#f0f0f0] dark:border-[#262626] transition-all duration-300 flex-shrink-0",
         collapsed ? "w-[52px]" : "w-[260px]"
       )}
     >
@@ -184,36 +251,38 @@ export function AppSidebar() {
       <nav className="flex-1 overflow-y-auto flex flex-col gap-[8px] px-[8px] py-[8px]">
 
         {/* New Chat */}
-        <NavItem href="/chat" icon="nav-new-chat.svg" label="New Chat"
+        <NavItem href="/chat" icon="nav-new-chat.svg" label="New Chat" shortcut="⌘⇧O"
           collapsed={collapsed} isActive={pathname === "/chat"} />
 
         {/* Deployed Karmacharis */}
-        <AnimatePresence initial={false}>
-          {activeDeployed.length > 0 && (
-            <motion.div
-              key="deployed-section"
-              initial={{ opacity: 0, height: 0, y: -8 }}
-              animate={{ opacity: 1, height: "auto", y: 0 }}
-              exit={{ opacity: 0, height: 0, y: -8 }}
-              transition={{ duration: 0.25, ease: "easeInOut" }}
-              className="overflow-hidden"
-            >
-              <div className="flex flex-col gap-px">
-                {!collapsed && <p className={sectionCls}>Deployed Karmacharis</p>}
-                {activeDeployed.map((a) => (
-                  <NavItem key={a.key} href={a.href} icon={a.icon} label={a.label}
-                    collapsed={collapsed} isActive={pathname === a.href} />
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {sidebarReady && (
+          <AnimatePresence initial={false}>
+            {activeDeployed.length > 0 && (
+              <motion.div
+                key="deployed-section"
+                initial={{ opacity: 0, height: 0, y: -8 }}
+                animate={{ opacity: 1, height: "auto", y: 0 }}
+                exit={{ opacity: 0, height: 0, y: -8 }}
+                transition={{ duration: 0.25, ease: "easeInOut" }}
+                className="overflow-hidden"
+              >
+                <div className="flex flex-col gap-px">
+                  {!collapsed && <p className={sectionCls}>Deployed Karmacharis</p>}
+                  {activeDeployed.map((a) => (
+                    <NavItem key={a.key} href={a.href} icon={a.icon} label={a.label} shortcut={a.shortcut}
+                      collapsed={collapsed} isActive={pathname === a.href} />
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        )}
 
         {/* Workspace */}
         <div className="flex flex-col gap-px">
           {!collapsed && <p className={sectionCls}>Workspace</p>}
           {NAV_WORKSPACE.map((item) => (
-            <NavItem key={item.href} href={item.href} icon={item.icon} label={item.label}
+            <NavItem key={item.href} href={item.href} icon={item.icon} label={item.label} shortcut={item.shortcut}
               collapsed={collapsed} isActive={pathname === item.href} />
           ))}
         </div>

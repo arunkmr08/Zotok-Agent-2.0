@@ -59,6 +59,7 @@ export function LeadsModal({ open, triggerRect, onClose, onDeploy }: Props) {
   const [dragOver, setDragOver] = useState<number | null>(null);
   const dragIndex = useRef<number | null>(null);
   const [selectedSheet, setSelectedSheet] = useState("");
+  const [sheetView, setSheetView] = useState<"grid" | "list">("grid");
   const [groupSearch, setGroupSearch] = useState("");
   const [selectedGroups, setSelectedGroups] = useState<Set<string>>(new Set());
   const [windowSize, setWindowSize] = useState({ w: 1024, h: 768 });
@@ -171,76 +172,148 @@ export function LeadsModal({ open, triggerRect, onClose, onDeploy }: Props) {
                   >
                     <ModalHeader
                       title="Configure Collect New Leads"
-                      desc="Detect unknown contacts and extract lead information. Configure the columns below."
+                      desc="Detect unknown contacts and extract lead information. Select a spreadsheet to store the leads."
                       onClose={handleClose}
                     />
 
                     {/* Sheet selector card */}
-                    <div className="bg-white dark:bg-[#262626] border border-black/[0.06] dark:border-white/[0.06] rounded-[12px] flex flex-col gap-[24px] px-[20px] py-[16px]">
+                    <div className="bg-white dark:bg-[#262626] border border-black/[0.06] dark:border-white/[0.06] rounded-[12px] flex flex-col gap-[20px] px-[20px] py-[16px] flex-1 min-h-0">
                       {/* Sub-header */}
                       <div className="flex items-center justify-between gap-[12px]">
                         <p className="font-semibold text-[14px] text-[#34322d] dark:text-white tracking-[-0.09px] leading-[20px] whitespace-nowrap">Select Your Preferred Sheet to Insert the Leads</p>
-                        <p className="font-normal text-[14px] text-[#858481] dark:text-[#8c8c8c] tracking-[-0.09px] leading-[22px] whitespace-nowrap">Connected to: jktraders223@gmail.com</p>
-                      </div>
-
-                      {/* Sheet options */}
-                      <div className="grid grid-cols-3 gap-[16px] max-h-[420px] overflow-y-auto pr-1">
-                        {/* Blank sheet option */}
-                        <button
-                          onClick={() => setSelectedSheet("blank")}
-                          className={cn(
-                            "flex flex-col items-center justify-center gap-[8px] rounded-[8px] border-dashed border-2 py-[40px] transition-colors",
-                            selectedSheet === "blank"
-                              ? "border-[#0067ff] bg-[#e6f0ff] dark:bg-[#0f2040]"
-                              : "border-black/[0.12] dark:border-white/[0.12] bg-[#f8f8f7] dark:bg-[#1f1f1f] hover:border-black/[0.2]"
-                          )}
-                        >
-                          <div className="bg-white dark:bg-[#262626] border border-black/[0.12] dark:border-white/[0.1] rounded-[10px] w-[60px] h-[60px] flex items-center justify-center shadow-[0px_8px_32px_rgba(0,0,0,0.06)]">
-                            <svg className="w-[24px] h-[24px] text-[#595959] dark:text-[#8c8c8c]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-                              <path d="M12 5v14M5 12h14" />
-                            </svg>
+                        <div className="flex items-center gap-[8px]">
+                          <p className="font-normal text-[13px] text-[#858481] dark:text-[#8c8c8c] tracking-[-0.09px] leading-[22px] whitespace-nowrap">Connected to: jktraders223@gmail.com</p>
+                          {/* View toggle */}
+                          <div className="flex items-center border border-black/[0.1] dark:border-white/[0.1] rounded-[8px] overflow-hidden">
+                            <button
+                              onClick={() => setSheetView("grid")}
+                              className={cn("w-[30px] h-[28px] flex items-center justify-center transition-colors", sheetView === "grid" ? "bg-[#0067ff] text-white" : "text-[#858481] hover:bg-black/[0.04] dark:hover:bg-white/[0.06]")}
+                            >
+                              <svg viewBox="0 0 16 16" fill="none" className="w-[14px] h-[14px]">
+                                <rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.5"/>
+                                <rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.5"/>
+                                <rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.5"/>
+                                <rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.5"/>
+                              </svg>
+                            </button>
+                            <button
+                              onClick={() => setSheetView("list")}
+                              className={cn("w-[30px] h-[28px] flex items-center justify-center transition-colors", sheetView === "list" ? "bg-[#0067ff] text-white" : "text-[#858481] hover:bg-black/[0.04] dark:hover:bg-white/[0.06]")}
+                            >
+                              <svg viewBox="0 0 16 16" fill="none" className="w-[14px] h-[14px]">
+                                <path d="M1 4h14M1 8h14M1 12h14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                              </svg>
+                            </button>
                           </div>
-                          <span className="font-medium text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[20px] whitespace-nowrap">Start from blank sheet</span>
-                        </button>
-
-                        {/* Existing sheet options */}
-                        {[
-                          { id: "feb", label: "New leads February 2026.xlsx" },
-                          { id: "mar", label: "New Enquiries 2026.xlsx" },
-                          { id: "apr", label: "Leads April 2026.xlsx" },
-                          { id: "q1", label: "Q1 Lead Report 2026.xlsx" },
-                          { id: "whatsapp", label: "WhatsApp Leads Master.xlsx" },
-                          { id: "crm", label: "CRM Import Ready 2026.xlsx" },
-                          { id: "jun", label: "June Leads Pipeline.xlsx" },
-                        ].map((s) => (
-                          <button
-                            key={s.id}
-                            onClick={() => setSelectedSheet(s.id)}
-                            className={cn(
-                              "flex flex-col items-start rounded-[8px] border overflow-hidden transition-all",
-                              selectedSheet === s.id
-                                ? "border-[#0067ff] shadow-[0px_8px_32px_rgba(0,103,255,0.15)]"
-                                : "border-black/[0.12] dark:border-white/[0.1] shadow-[0px_8px_32px_rgba(0,0,0,0.06)] hover:border-black/[0.2]"
-                            )}
-                          >
-                            {/* Preview image */}
-                            <div className="w-full border-b border-black/[0.06] dark:border-white/[0.06] bg-[#f8f8f7] dark:bg-[#1f1f1f]">
-                              {/* eslint-disable-next-line @next/next/no-img-element */}
-                              <img
-                                src={SHEET_PREVIEW_B64}
-                                alt="Sheet preview"
-                                className="w-full aspect-[640/360] object-cover pointer-events-none"
-                              />
-                            </div>
-                            {/* Label */}
-                            <div className="flex items-center gap-[8px] p-[12px] bg-white dark:bg-[#262626] w-full">
-                              {/* eslint-disable-next-line @next/next/no-img-element */}
-                              <img src={SHEETS_ICON_B64} alt="" className="w-[24px] h-[24px] flex-shrink-0" />
-                              <span className="font-medium text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[20px] truncate">{s.label}</span>
-                            </div>
-                          </button>
-                        ))}
+                        </div>
                       </div>
+
+                      {(() => {
+                        const SHEETS = [
+                          { id: "feb",      label: "New leads February 2026.xlsx" },
+                          { id: "mar",      label: "New Enquiries 2026.xlsx" },
+                          { id: "apr",      label: "Leads April 2026.xlsx" },
+                          { id: "q1",       label: "Q1 Lead Report 2026.xlsx" },
+                          { id: "whatsapp", label: "WhatsApp Leads Master.xlsx" },
+                          { id: "crm",      label: "CRM Import Ready 2026.xlsx" },
+                          { id: "jun",      label: "June Leads Pipeline.xlsx" },
+                        ];
+
+                        if (sheetView === "grid") return (
+                          <div className="grid grid-cols-3 gap-[16px] max-h-[420px] overflow-y-auto pr-1 flex-1 min-h-0">
+                            {/* Blank sheet */}
+                            <button
+                              onClick={() => setSelectedSheet("blank")}
+                              className={cn(
+                                "flex flex-col items-center justify-center gap-[8px] rounded-[8px] border-dashed border-2 py-[40px] transition-colors",
+                                selectedSheet === "blank"
+                                  ? "border-[#0067ff] bg-[#e6f0ff] dark:bg-[#0f2040]"
+                                  : "border-black/[0.12] dark:border-white/[0.12] bg-[#f8f8f7] dark:bg-[#1f1f1f] hover:border-black/[0.2]"
+                              )}
+                            >
+                              <div className="bg-white dark:bg-[#262626] border border-black/[0.12] dark:border-white/[0.1] rounded-[10px] w-[60px] h-[60px] flex items-center justify-center shadow-[0px_8px_32px_rgba(0,0,0,0.06)]">
+                                <svg className="w-[24px] h-[24px] text-[#595959] dark:text-[#8c8c8c]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M12 5v14M5 12h14" />
+                                </svg>
+                              </div>
+                              <span className="font-medium text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[20px] whitespace-nowrap">Start from blank sheet</span>
+                            </button>
+                            {/* Existing sheets */}
+                            {SHEETS.map((s) => (
+                              <button
+                                key={s.id}
+                                onClick={() => setSelectedSheet(s.id)}
+                                className={cn(
+                                  "flex flex-col items-start rounded-[8px] border overflow-hidden transition-all",
+                                  selectedSheet === s.id
+                                    ? "border-[#0067ff] shadow-[0px_8px_32px_rgba(0,103,255,0.15)]"
+                                    : "border-black/[0.12] dark:border-white/[0.1] shadow-[0px_8px_32px_rgba(0,0,0,0.06)] hover:border-black/[0.2]"
+                                )}
+                              >
+                                <div className="w-full border-b border-black/[0.06] dark:border-white/[0.06] bg-[#f8f8f7] dark:bg-[#1f1f1f]">
+                                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                                  <img src={SHEET_PREVIEW_B64} alt="Sheet preview" className="w-full aspect-[640/360] object-cover pointer-events-none" />
+                                </div>
+                                <div className="flex items-center gap-[8px] p-[12px] bg-white dark:bg-[#262626] w-full">
+                                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                                  <img src={SHEETS_ICON_B64} alt="" className="w-[24px] h-[24px] flex-shrink-0" />
+                                  <span className="font-medium text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[20px] truncate">{s.label}</span>
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        );
+
+                        return (
+                          <div className="flex flex-col gap-0 max-h-[420px] overflow-y-auto rounded-[8px] border border-black/[0.08] dark:border-white/[0.08] overflow-hidden flex-1 min-h-0">
+                            {/* Blank sheet row */}
+                            <button
+                              onClick={() => setSelectedSheet("blank")}
+                              className={cn(
+                                "flex items-center gap-[12px] px-[14px] h-[48px] border-b border-black/[0.06] dark:border-white/[0.06] transition-colors text-left",
+                                selectedSheet === "blank"
+                                  ? "bg-[#e6f0ff] dark:bg-[#0f2040]"
+                                  : "bg-white dark:bg-[#262626] hover:bg-[#f8f8f7] dark:hover:bg-[#2f2f2f]"
+                              )}
+                            >
+                              <div className="w-[32px] h-[32px] rounded-[8px] bg-[#f4f3ef] dark:bg-[#1f1f1f] border border-black/[0.08] dark:border-white/[0.08] flex items-center justify-center flex-shrink-0">
+                                <svg className="w-[16px] h-[16px] text-[#595959] dark:text-[#8c8c8c]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M12 5v14M5 12h14" />
+                                </svg>
+                              </div>
+                              <span className="flex-1 font-medium text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[20px]">Start from blank sheet</span>
+                              {selectedSheet === "blank" && (
+                                <svg className="w-[16px] h-[16px] text-[#0067ff] flex-shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M3 8l3.5 3.5L13 4.5" />
+                                </svg>
+                              )}
+                            </button>
+                            {/* Existing sheet rows */}
+                            {SHEETS.map((s, i) => (
+                              <button
+                                key={s.id}
+                                onClick={() => setSelectedSheet(s.id)}
+                                className={cn(
+                                  "flex items-center gap-[12px] px-[14px] h-[48px] transition-colors text-left",
+                                  i < SHEETS.length - 1 && "border-b border-black/[0.06] dark:border-white/[0.06]",
+                                  selectedSheet === s.id
+                                    ? "bg-[#e6f0ff] dark:bg-[#0f2040]"
+                                    : "bg-white dark:bg-[#262626] hover:bg-[#f8f8f7] dark:hover:bg-[#2f2f2f]"
+                                )}
+                              >
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img src={SHEETS_ICON_B64} alt="" className="w-[28px] h-[28px] flex-shrink-0" />
+                                <span className="flex-1 font-medium text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[20px] truncate">{s.label}</span>
+                                {selectedSheet === s.id && (
+                                  <svg className="w-[16px] h-[16px] text-[#0067ff] flex-shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M3 8l3.5 3.5L13 4.5" />
+                                  </svg>
+                                )}
+                              </button>
+                            ))}
+                          </div>
+                        );
+                      })()}
                     </div>
 
                     <button
@@ -256,17 +329,22 @@ export function LeadsModal({ open, triggerRect, onClose, onDeploy }: Props) {
                 {/* ── Columns view ── */}
                 {view === "columns" && (
                   <>
-                    <ModalHeader title="Configure Sheet Columns" desc="Add, edit, or remove columns based on your requirement." onClose={handleClose} onBack={() => setView("picker")} />
+                    <ModalHeader
+                      title="Configure the Sheet Columns"
+                      desc="Existing columns have been automatically fetched from the selected sheet. You can add, edit, reorder, or remove columns based on your requirement."
+                      onClose={handleClose}
+                      onBack={() => setView("picker")}
+                    />
 
                     {/* Count + Add button */}
                     <div className="flex items-center justify-between h-[36px]">
                       <span className="font-semibold text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[20px]">{columns.length} Columns</span>
                       <button
-                        onClick={() => { if (newCol.trim()) { setColumns((p) => [...p, { name: newCol.trim() }]); setNewCol(""); } }}
+                        onClick={() => setNewCol("")}
                         className="flex items-center gap-[6px] bg-white dark:bg-[#262626] border border-[#e8e6e0] dark:border-white/[0.1] pl-[13px] pr-[15px] py-[9px] rounded-[8px] font-semibold text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[18px] hover:bg-[#f4f3ef] dark:hover:bg-[#303030] transition-colors"
                       >
                         <svg className="w-[18px] h-[18px]" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-                          <circle cx="9" cy="9" r="7.5" /><path d="M6 9h6M9 6v6" />
+                          <circle cx="9" cy="9" r="7.5"/><path d="M6 9h6M9 6v6"/>
                         </svg>
                         Add Column
                       </button>
@@ -298,9 +376,9 @@ export function LeadsModal({ open, triggerRect, onClose, onDeploy }: Props) {
                         >
                           {/* Drag handle */}
                           <svg className="w-[18px] h-[18px] text-[#c0bfbd] dark:text-[#595959] flex-shrink-0 cursor-grab active:cursor-grabbing" viewBox="0 0 18 18" fill="currentColor">
-                            <circle cx="6.5" cy="5" r="1.2" /><circle cx="11.5" cy="5" r="1.2" />
-                            <circle cx="6.5" cy="9" r="1.2" /><circle cx="11.5" cy="9" r="1.2" />
-                            <circle cx="6.5" cy="13" r="1.2" /><circle cx="11.5" cy="13" r="1.2" />
+                            <circle cx="6.5" cy="5" r="1.2"/><circle cx="11.5" cy="5" r="1.2"/>
+                            <circle cx="6.5" cy="9" r="1.2"/><circle cx="11.5" cy="9" r="1.2"/>
+                            <circle cx="6.5" cy="13" r="1.2"/><circle cx="11.5" cy="13" r="1.2"/>
                           </svg>
                           {/* Name */}
                           <span className="flex-1 min-w-0 font-medium text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[18px]">{col.name}</span>
@@ -312,7 +390,7 @@ export function LeadsModal({ open, triggerRect, onClose, onDeploy }: Props) {
                                 className="w-[18px] h-[18px] flex items-center justify-center text-[#c0bfbd] dark:text-[#595959] hover:text-red-500 transition-colors flex-shrink-0"
                               >
                                 <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-[18px] h-[18px]">
-                                  <path d="M2.25 4.5h13.5M7.5 4.5V3a.75.75 0 0 1 .75-.75h1.5A.75.75 0 0 1 10.5 3v1.5M14.25 4.5l-.75 9.75a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5L3.75 4.5" />
+                                  <path d="M2.25 4.5h13.5M7.5 4.5V3a.75.75 0 0 1 .75-.75h1.5A.75.75 0 0 1 10.5 3v1.5M14.25 4.5l-.75 9.75a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5L3.75 4.5"/>
                                 </svg>
                               </button>
                             } />
@@ -324,9 +402,9 @@ export function LeadsModal({ open, triggerRect, onClose, onDeploy }: Props) {
                       {/* Inline add row */}
                       <div className="flex items-center gap-[10px] px-[12px] py-[12px]">
                         <svg className="w-[18px] h-[18px] text-[#c0bfbd] dark:text-[#595959] flex-shrink-0" viewBox="0 0 18 18" fill="currentColor">
-                          <circle cx="6.5" cy="5" r="1.2" /><circle cx="11.5" cy="5" r="1.2" />
-                          <circle cx="6.5" cy="9" r="1.2" /><circle cx="11.5" cy="9" r="1.2" />
-                          <circle cx="6.5" cy="13" r="1.2" /><circle cx="11.5" cy="13" r="1.2" />
+                          <circle cx="6.5" cy="5" r="1.2"/><circle cx="11.5" cy="5" r="1.2"/>
+                          <circle cx="6.5" cy="9" r="1.2"/><circle cx="11.5" cy="9" r="1.2"/>
+                          <circle cx="6.5" cy="13" r="1.2"/><circle cx="11.5" cy="13" r="1.2"/>
                         </svg>
                         <input
                           type="text"
@@ -342,17 +420,24 @@ export function LeadsModal({ open, triggerRect, onClose, onDeploy }: Props) {
                           className="flex-1 min-w-0 bg-transparent outline-none font-medium text-[14px] text-[#34322d] dark:text-[#d9d9d9] placeholder:text-[#858481] dark:placeholder:text-[#595959] tracking-[-0.09px] leading-[18px]"
                         />
                         <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-[18px] h-[18px] text-[#e0dedd] dark:text-[#3a3a3a] flex-shrink-0">
-                          <path d="M2.25 4.5h13.5M7.5 4.5V3a.75.75 0 0 1 .75-.75h1.5A.75.75 0 0 1 10.5 3v1.5M14.25 4.5l-.75 9.75a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5L3.75 4.5" />
+                          <path d="M2.25 4.5h13.5M7.5 4.5V3a.75.75 0 0 1 .75-.75h1.5A.75.75 0 0 1 10.5 3v1.5M14.25 4.5l-.75 9.75a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5L3.75 4.5"/>
                         </svg>
                       </div>
                     </div>
 
-                    <button
-                      onClick={() => setView("groups")}
-                      className="w-full bg-[#0067ff] hover:bg-[#0055d4] transition-colors rounded-[8px] py-[10px] font-semibold text-[14px] text-white tracking-[-0.09px] leading-[18px] text-center"
-                    >
-                      Continue
-                    </button>
+                    {/* Right-aligned Continue */}
+                    <div className="flex justify-end">
+                      <button
+                        onClick={() => {
+                          if (newCol.trim()) setColumns((p) => [...p, { name: newCol.trim() }]);
+                          setNewCol("");
+                          setView("groups");
+                        }}
+                        className="bg-[#0067ff] hover:bg-[#0055d4] transition-colors rounded-[8px] px-[20px] py-[9px] font-semibold text-[14px] text-white tracking-[-0.09px] leading-[18px]"
+                      >
+                        Continue
+                      </button>
+                    </div>
                   </>
                 )}
 
