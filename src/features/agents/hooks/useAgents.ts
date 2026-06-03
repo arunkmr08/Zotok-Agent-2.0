@@ -27,12 +27,14 @@ export function useAgents() {
   function deploy(key: AgentKey) {
     setStates((p) => ({ ...p, [key]: "active" }));
     localStorage.setItem(`zotok_agent_${key}`, "active");
+    window.dispatchEvent(new Event("agentStateChange"));
   }
 
   function remove(key: AgentKey) {
     setStates((p) => ({ ...p, [key]: "inactive" }));
     localStorage.setItem(`zotok_agent_${key}`, "inactive");
     setRemoveKey(null);
+    window.dispatchEvent(new Event("agentStateChange"));
   }
 
   const removeTargetTitle = removeKey ? AGENTS.find((a) => a.key === removeKey)?.title ?? "" : "";
