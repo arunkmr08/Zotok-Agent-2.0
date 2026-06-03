@@ -13,9 +13,9 @@ export const CATEGORIES: CategoryMeta[] = [
 export const GROUP_COLORS: Record<string, string> = {
   "Mumbai Traders":  "#537ff1",
   "Delhi Wholesale": "#b879ff",
-  "Bangalore Tech":  "#3cc3df",
-  "Chennai Buyers":  "#50c796",
-  "Pune Factory":    "#ffae4c",
+  "Bangalore Tech":  "#1a8fa8",
+  "Chennai Buyers":  "#1e9166",
+  "Pune Factory":    "#c97200",
   "Jaipur Market":   "#ff6b6b",
   "Kolkata Dealers": "#328efa",
 };

@@ -11,7 +11,7 @@ export function CategoryTable({ cat, msgs, setFlyoutMsg }: Props) {
       <div className="flex items-center justify-between px-6 py-4 border-b border-black/[0.08] dark:border-white/[0.06] bg-white dark:bg-[#1a1a1a] flex-shrink-0">
         <div>
           <h1 className="text-base font-semibold text-[#111] dark:text-white">{cat.label}</h1>
-          <p className="text-sm text-[#6d6c6b]">{msgs.length} messages</p>
+          <p className="text-sm text-[#6d6c6b] dark:text-[#8c8c8c]">{msgs.length} messages</p>
         </div>
       </div>
 
@@ -19,17 +19,17 @@ export function CategoryTable({ cat, msgs, setFlyoutMsg }: Props) {
         <table className="w-full text-sm">
           <thead className="bg-[#f4f3ef] dark:bg-[#242424] sticky top-0 z-10">
             <tr>
-              <th className="px-4 py-3 text-left font-medium text-[#6d6c6b] whitespace-nowrap">Received Time</th>
-              <th className="px-4 py-3 text-left font-medium text-[#6d6c6b] whitespace-nowrap">Sent in Group / Thread</th>
-              <th className="px-4 py-3 text-left font-medium text-[#6d6c6b] whitespace-nowrap">Sent By</th>
-              <th className="px-4 py-3 text-left font-medium text-[#6d6c6b]">Message</th>
-              <th className="px-4 py-3 text-right font-medium text-[#6d6c6b]">Action</th>
+              <th className="px-4 py-3 text-left font-medium text-[#6d6c6b] dark:text-[#8c8c8c] whitespace-nowrap">Received Time</th>
+              <th className="px-4 py-3 text-left font-medium text-[#6d6c6b] dark:text-[#8c8c8c] whitespace-nowrap">Sent in Group / Thread</th>
+              <th className="px-4 py-3 text-left font-medium text-[#6d6c6b] dark:text-[#8c8c8c] whitespace-nowrap">Sent By</th>
+              <th className="px-4 py-3 text-left font-medium text-[#6d6c6b] dark:text-[#8c8c8c]">Message</th>
+              <th className="px-4 py-3 text-right font-medium text-[#6d6c6b] dark:text-[#8c8c8c]">Action</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-black/[0.06] dark:divide-white/[0.06]">
             {msgs.map((m) => (
               <tr key={m.id} className="bg-white dark:bg-[#1a1a1a] hover:bg-[#f4f3ef] dark:hover:bg-[#2a2a2a] transition-colors">
-                <td className="px-4 py-3 text-[#6d6c6b] whitespace-nowrap">{m.time}</td>
+                <td className="px-4 py-3 text-[#6d6c6b] dark:text-[#8c8c8c] whitespace-nowrap">{m.time}</td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
                     <div
