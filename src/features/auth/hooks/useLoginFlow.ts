@@ -43,15 +43,20 @@ export function useLoginFlow() {
   // Syncing step
   const [syncText, setSyncText] = useState("");
 
+  const restartOtpTimer = () => {
+    setOtpResend(30);
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setOtpResend((v) => {
+        if (v <= 1) { clearInterval(timerRef.current!); return 0; }
+        return v - 1;
+      });
+    }, 1000);
+  };
+
   useEffect(() => {
     if (step === "otp") {
-      setOtpResend(30);
-      timerRef.current = setInterval(() => {
-        setOtpResend((v) => {
-          if (v <= 1) { clearInterval(timerRef.current!); return 0; }
-          return v - 1;
-        });
-      }, 1000);
+      restartOtpTimer();
     }
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [step]);
@@ -87,7 +92,7 @@ export function useLoginFlow() {
     step, setStep,
     phone, setPhone, phoneError, setPhoneError, dialCode, setDialCode,
     otpValues, otpError, setOtpError, otpResend, otpRefs, timerRef,
-    handleOtpInput, handleOtpKeyDown,
+    handleOtpInput, handleOtpKeyDown, restartOtpTimer,
     gst, setGst, gstError, setGstError, gstOtp, setGstOtp,
     waPhone, setWaPhone, waPhoneError, setWaPhoneError, waDialCode, setWaDialCode,
     selectedHistory, setSelectedHistory, historyFrom, setHistoryFrom, historyTo, setHistoryTo,

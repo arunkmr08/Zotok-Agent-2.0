@@ -38,7 +38,6 @@ export function ChatComposer({ input, setInput, textareaRef, autoResize, handleK
               disabled={isSendDisabled}
               onClick={() => sendMessage()}
               className="w-[36px] h-[36px] rounded-[50px] flex items-center justify-center flex-shrink-0 disabled:cursor-not-allowed"
-              whileHover={isSendDisabled ? undefined : { scale: 1.03 }}
               whileTap={isSendDisabled ? undefined : { scale: 0.97 }}
               transition={{ type: "spring", stiffness: 500, damping: 25 }}
               style={{

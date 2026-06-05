@@ -137,7 +137,6 @@ export function ChatHero({
                     disabled={isSendDisabled}
                     onClick={() => sendMessage()}
                     className="w-[36px] h-[36px] rounded-[50px] flex items-center justify-center flex-shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
-                    whileHover={isSendDisabled ? undefined : { scale: 1.03 }}
                     whileTap={isSendDisabled ? undefined : { scale: 0.97 }}
                     transition={{ type: "spring", stiffness: 500, damping: 25 }}
                     style={{
@@ -180,7 +179,6 @@ export function ChatHero({
                       disabled={isSendDisabled}
                       onClick={() => sendMessage()}
                       className="w-[36px] h-[36px] rounded-[50px] bg-[#0067ff] flex items-center justify-center flex-shrink-0 hover:bg-[#0055d4] disabled:opacity-40 disabled:cursor-not-allowed"
-                      whileHover={isSendDisabled ? undefined : { scale: 1.03 }}
                       whileTap={isSendDisabled ? undefined : { scale: 0.97 }}
                       transition={{ type: "spring", stiffness: 500, damping: 25 }}
                       style={{ boxShadow: hasInput && syncState === 'hidden' ? "0 4px 14px rgba(0,103,255,0.45), 0 2px 6px rgba(0,103,255,0.25)" : "none" }}
