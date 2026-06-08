@@ -1,10 +1,14 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { GROUPS } from "@/features/chat/constants";
 import type { Message } from "@/features/chat/types";
 
 export function useChat() {
+  const searchParams = useSearchParams();
+  const recentIndex = searchParams ? searchParams.get("recentIndex") : null;
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [showSetupCard, setShowSetupCard] = useState(true);
@@ -24,6 +28,28 @@ export function useChat() {
   const [isGenerating, setIsGenerating] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const threadRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (recentIndex !== null) {
+      const idx = parseInt(recentIndex, 10);
+      if (idx === 0) {
+        setMessages([
+          { role: "user", text: "Is my order #ORD-8821 delivered?" },
+          { role: "assistant", text: "Great news! Your order has been delivered. It was received by the security desk at 10:15 AM today." }
+        ]);
+        setShowSetupCard(false);
+      } else if (idx === 1) {
+        setMessages([
+          { role: "user", text: "Where is my replacement for order #ORD-44291?" },
+          { role: "assistant", text: "Your replacement for order #ORD-44291 is on its way. It is currently with our courier partner and is expected to be delivered by tomorrow evening." }
+        ]);
+        setShowSetupCard(false);
+      }
+    } else {
+      setMessages([]);
+      setShowSetupCard(true);
+    }
+  }, [recentIndex]);
 
   useEffect(() => {
     if (!waConnected) setConnectModal(true);
@@ -74,7 +100,7 @@ export function useChat() {
     setIsGenerating(true);
     setTimeout(() => {
       setIsGenerating(false);
-      setMessages((prev) => [...prev, { role: "assistant", text: "I'm analysing your synced WhatsApp groups. Here's what I found…" }]);
+      setMessages((prev) => [...prev, { role: "assistant", text: "I'm analysing your synced WhatsApp groups. Here's what I found…", isStreaming: true }]);
     }, 1500); // Realistic loading delay to show indicator
   }
 

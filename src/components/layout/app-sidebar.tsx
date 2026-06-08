@@ -292,12 +292,13 @@ export function AppSidebar() {
           <div className="flex flex-col gap-px">
             <p className={sectionCls}>Recent Chat</p>
             {RECENT_CHATS.map((chat, i) => (
-              <div
+              <Link
                 key={i}
+                href={`/chat?recentIndex=${i}`}
                 className="flex items-center px-[10px] py-[8px] rounded-[10px] cursor-pointer hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
               >
                 <p className="text-[14px] text-[#1f1f1f] dark:text-[#f0f0f0] tracking-[-0.09px] leading-[20px] truncate">{chat}</p>
-              </div>
+              </Link>
             ))}
           </div>
         )}

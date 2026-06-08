@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "motion/react";
+import { Suspense } from "react";
 import { useChat } from "@/features/chat/hooks/useChat";
 import { ChatThread } from "@/features/chat/components/ChatThread";
 import { ChatComposer } from "@/features/chat/components/ChatComposer";
@@ -9,6 +10,14 @@ import { ChatHero } from "@/features/chat/components/ChatHero";
 import { HistoryModal } from "@/features/chat/components/HistoryModal";
 
 export default function ChatPage() {
+  return (
+    <Suspense fallback={<div className="h-full flex items-center justify-center bg-[#f9f9f9] dark:bg-[#141414] text-[#858481]">Loading Chat...</div>}>
+      <ChatContent />
+    </Suspense>
+  );
+}
+
+function ChatContent() {
   const state = useChat();
   const noMessages = state.messages.length === 0;
 

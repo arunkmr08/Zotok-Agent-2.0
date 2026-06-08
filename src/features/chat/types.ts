@@ -1,6 +1,7 @@
 export interface Message {
   role: "user" | "assistant";
   text: string;
+  isStreaming?: boolean;
 }
 
 export interface Group {
