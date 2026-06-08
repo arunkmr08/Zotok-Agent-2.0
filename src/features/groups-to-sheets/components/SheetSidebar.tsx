@@ -1,7 +1,6 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { motion } from "motion/react";
 import type { GroupsToSheetsState } from "@/features/groups-to-sheets/hooks/useGroupsToSheets";
 
 type Props = Pick<GroupsToSheetsState, "sheets" | "activeSheet" | "setActiveSheet">;
@@ -9,22 +8,12 @@ type Props = Pick<GroupsToSheetsState, "sheets" | "activeSheet" | "setActiveShee
 export function SheetSidebar({ sheets, activeSheet, setActiveSheet }: Props) {
   return (
     <div className="w-[260px] h-full flex-shrink-0 border-r border-black/[0.08] dark:border-white/[0.06] bg-white dark:bg-[#1a1a1a] overflow-y-auto">
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.25, delay: 0.1 }}
-        className="px-4 py-4"
-      >
+      <div className="px-4 py-4">
         <h2 className="text-xs font-semibold text-[#858481]">Sheets</h2>
-      </motion.div>
+      </div>
       <nav className="px-2 py-2 space-y-0.5">
         {sheets.map((s, i) => (
-          <motion.div
-            key={s.id}
-            initial={{ opacity: 0, x: -8 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.25, ease: "easeOut", delay: 0.12 + i * 0.04 }}
-          >
+          <div key={s.id}>
             <button
               onClick={() => setActiveSheet(s.id)}
               className={cn(
@@ -37,7 +26,7 @@ export function SheetSidebar({ sheets, activeSheet, setActiveSheet }: Props) {
               <span className="text-base">{s.icon}</span>
               <span className="truncate">{s.name}</span>
             </button>
-          </motion.div>
+          </div>
         ))}
       </nav>
     </div>

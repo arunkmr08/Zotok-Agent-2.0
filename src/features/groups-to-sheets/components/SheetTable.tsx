@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "motion/react";
 import { COL_LABELS, VISIBLE_COLS } from "@/features/groups-to-sheets/constants";
 import { ColValue } from "@/features/groups-to-sheets/components/ColValue";
 import { TablePagination } from "@/components/ui/table-pagination";
@@ -11,12 +10,7 @@ type Props = Pick<GroupsToSheetsState, "sheet" | "pagedRows" | "page" | "perPage
 export function SheetTable({ sheet, pagedRows, page, perPage, totalPages, totalRows, setPage, setPerPage }: Props) {
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
-      <motion.div
-        initial={{ opacity: 0, y: -6 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.28, ease: "easeOut", delay: 0.1 }}
-        className="flex items-center justify-between px-6 py-4 border-b border-black/[0.08] dark:border-white/[0.06] flex-shrink-0"
-      >
+      <div className="flex items-center justify-between px-6 py-4 border-b border-black/[0.08] dark:border-white/[0.06] flex-shrink-0">
         <div>
           <h1 className="text-base font-semibold text-[#111] dark:text-white">
             {sheet.icon} {sheet.name}
@@ -33,7 +27,7 @@ export function SheetTable({ sheet, pagedRows, page, perPage, totalPages, totalR
             Open in Sheets
           </button>
         </div>
-      </motion.div>
+      </div>
 
       <div className="flex-1 min-h-0 overflow-auto">
         <table className="w-full text-sm min-w-[700px]">
@@ -49,11 +43,8 @@ export function SheetTable({ sheet, pagedRows, page, perPage, totalPages, totalR
           </thead>
           <tbody className="divide-y divide-black/[0.06] dark:divide-white/[0.06]">
             {pagedRows.map((row, i) => (
-              <motion.tr
+              <tr
                 key={i}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.22, ease: "easeOut", delay: 0.15 + Math.min(i * 0.03, 0.24) }}
                 className="hover:bg-[#f4f3ef] dark:hover:bg-[#2a2a2a] transition-colors"
               >
                 <td className="px-4 py-3 text-[#858481] text-xs">{(page - 1) * perPage + i + 1}</td>
@@ -62,7 +53,7 @@ export function SheetTable({ sheet, pagedRows, page, perPage, totalPages, totalR
                     <ColValue col={col} row={row} />
                   </td>
                 ))}
-              </motion.tr>
+              </tr>
             ))}
           </tbody>
         </table>

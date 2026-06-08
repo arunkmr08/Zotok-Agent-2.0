@@ -98,10 +98,10 @@ export function SheetsModal({ open, triggerRect, onClose, onDeploy }: Props) {
         >
           <TooltipProvider delay={300}>
             <motion.div
-              initial={{ opacity: 0, scale: 0.94, x: startX * 0.15, y: startY * 0.15 }}
+              initial={{ opacity: 0, scale: 0.98, x: startX * 0.08, y: startY * 0.08 }}
               animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
-              exit={{ opacity: 0, scale: 0.94, x: startX * 0.15, y: startY * 0.15 }}
-              transition={{ duration: 0.12, ease: "easeOut" }}
+              exit={{ opacity: 0, scale: 0.98, x: startX * 0.08, y: startY * 0.08 }}
+              transition={{ duration: 0.14, ease: [0.16, 1, 0.3, 1] }}
               className="bg-[#f8f8f7] dark:bg-[#1a1a1a] border border-black/[0.12] dark:border-white/[0.08] rounded-[18px] drop-shadow-[0px_8px_16px_rgba(0,0,0,0.06)] w-full max-w-[720px] flex flex-col gap-[20px] p-[21px]"
             >
               <AnimatePresence mode="wait">
@@ -110,10 +110,10 @@ export function SheetsModal({ open, triggerRect, onClose, onDeploy }: Props) {
                 {(view === "connect" || view === "loading") && (
                   <motion.div
                     key="connect"
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    transition={{ duration: 0.2 }}
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.98 }}
+                    transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
                     className="flex flex-col gap-[20px] w-full"
                   >
                     <ModalHeader
@@ -163,10 +163,10 @@ export function SheetsModal({ open, triggerRect, onClose, onDeploy }: Props) {
                 {view === "picker" && (
                   <motion.div
                     key="picker"
-                    initial={{ opacity: 0, y: 8 }}
+                    initial={{ opacity: 0, y: 4 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    transition={{ duration: 0.2 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.12, ease: [0.16, 1, 0.3, 1] }}
                     className="flex flex-col gap-[20px] w-full"
                   >
                     <ModalHeader
@@ -237,10 +237,10 @@ export function SheetsModal({ open, triggerRect, onClose, onDeploy }: Props) {
                 {view === "columns" && (
                   <motion.div
                     key="columns"
-                    initial={{ opacity: 0, y: 8 }}
+                    initial={{ opacity: 0, y: 4 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    transition={{ duration: 0.2 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.12, ease: [0.16, 1, 0.3, 1] }}
                     className="flex flex-col gap-[20px] w-full"
                   >
                     <ModalHeader
@@ -351,10 +351,10 @@ export function SheetsModal({ open, triggerRect, onClose, onDeploy }: Props) {
                 {view === "success" && (
                   <motion.div
                     key="success"
-                    initial={{ opacity: 0, scale: 0.95 }}
+                    initial={{ opacity: 0, scale: 0.98 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.25 }}
+                    exit={{ opacity: 0, scale: 0.98 }}
+                    transition={{ duration: 0.12, ease: [0.16, 1, 0.3, 1] }}
                     className="flex flex-col items-center gap-[16px] py-[24px] text-center w-full"
                   >
                     <div className="w-[72px] h-[72px] rounded-full bg-[#e6f0ff] dark:bg-[#0f2040] flex items-center justify-center">

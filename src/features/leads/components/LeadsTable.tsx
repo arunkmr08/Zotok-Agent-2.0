@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { TablePagination } from "@/components/ui/table-pagination";
@@ -31,11 +30,8 @@ export function LeadsTable({ filtered, pagedLeads, selected, toggleAll, toggleOn
           </thead>
           <tbody className="divide-y divide-black/[0.06] dark:divide-white/[0.06]">
             {pagedLeads.map((lead, i) => (
-              <motion.tr
+              <tr
                 key={lead.id}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.22, ease: "easeOut", delay: 0.15 + Math.min(i * 0.03, 0.24) }}
                 className={cn(
                   "transition-colors",
                   selected.has(lead.id) ? "bg-blue-50 dark:bg-blue-950/40" : "hover:bg-[#f4f3ef] dark:hover:bg-[#1e1e1e]"
@@ -61,7 +57,7 @@ export function LeadsTable({ filtered, pagedLeads, selected, toggleAll, toggleOn
                     <Button size="sm" onClick={() => setCampaignLead(lead)}>+ Campaign</Button>
                   </div>
                 </td>
-              </motion.tr>
+              </tr>
             ))}
             {pagedLeads.length === 0 && (
               <tr>

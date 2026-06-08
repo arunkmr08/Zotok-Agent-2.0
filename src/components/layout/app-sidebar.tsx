@@ -80,9 +80,9 @@ function NavItem({
               ? "bg-[#e7f1ff] dark:bg-[#0049b5] rounded-[10px]"
               : "bg-[#e7f1ff] dark:bg-[#0049b5] border-l-[3px] border-[#0067ff] dark:border-[#5e9fff] rounded-tr-[6px] rounded-br-[6px]"
           )}
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ type: "spring", stiffness: 400, damping: 30 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
         />
       )}
       <div className="relative z-10 flex items-center gap-[4px] w-full">

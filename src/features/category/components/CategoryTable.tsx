@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { TablePagination } from "@/components/ui/table-pagination";
 import type { CategoryViewState } from "@/features/category/hooks/useCategoryView";
@@ -10,17 +9,12 @@ type Props = Pick<CategoryViewState, "cat" | "msgs" | "setFlyoutMsg" | "page" | 
 export function CategoryTable({ cat, msgs, setFlyoutMsg, page, perPage, totalPages, totalMsgs, setPage, setPerPage }: Props) {
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
-      <motion.div
-        initial={{ opacity: 0, y: -6 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.28, ease: "easeOut", delay: 0.1 }}
-        className="flex items-center justify-between px-6 py-4 border-b border-black/[0.08] dark:border-white/[0.06] flex-shrink-0"
-      >
+      <div className="flex items-center justify-between px-6 py-4 border-b border-black/[0.08] dark:border-white/[0.06] flex-shrink-0">
         <div>
           <h1 className="text-base font-semibold text-[#111] dark:text-white">{cat.label}</h1>
           <p className="text-sm text-[#6d6c6b] dark:text-[#8c8c8c]">{totalMsgs} messages</p>
         </div>
-      </motion.div>
+      </div>
 
       <div className="flex-1 min-h-0 overflow-y-auto">
         <table className="w-full text-sm">
@@ -35,11 +29,8 @@ export function CategoryTable({ cat, msgs, setFlyoutMsg, page, perPage, totalPag
           </thead>
           <tbody className="divide-y divide-black/[0.06] dark:divide-white/[0.06]">
             {msgs.map((m, i) => (
-              <motion.tr
+              <tr
                 key={m.id}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.22, ease: "easeOut", delay: 0.15 + Math.min(i * 0.03, 0.24) }}
                 onClick={() => setFlyoutMsg(m)}
                 className="hover:bg-[#f4f3ef] dark:hover:bg-[#1e1e1e] transition-colors cursor-pointer"
               >
@@ -60,7 +51,7 @@ export function CategoryTable({ cat, msgs, setFlyoutMsg, page, perPage, totalPag
                 <td className="px-4 py-3 text-right">
                   <Button size="sm" variant="outline" onClick={() => setFlyoutMsg(m)}>View</Button>
                 </td>
-              </motion.tr>
+              </tr>
             ))}
           </tbody>
         </table>
