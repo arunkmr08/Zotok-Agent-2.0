@@ -14,7 +14,7 @@ export function DetailsStep({ gst, setGst, phone, setStep }: Props) {
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
-          className="text-[20px] font-semibold text-[#111] dark:text-white mb-[6px]"
+          className="text-[20px] font-semibold text-[#111] dark:text-white"
         >
           Your Business Details
         </motion.h2>
@@ -35,7 +35,7 @@ export function DetailsStep({ gst, setGst, phone, setStep }: Props) {
             <FormField label="GST Number">
               <Input
                 value={gst}
-                onChange={(e) => setGst(e.target.value)}
+                disabled
                 placeholder="Enter GST Number"
               />
             </FormField>
