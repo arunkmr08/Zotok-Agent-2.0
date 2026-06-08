@@ -24,7 +24,7 @@ export function OtpStep({ phone, dialCode, otpValues, otpError, setOtpError, otp
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
-          className="text-[22px] font-semibold text-[#111] dark:text-white mb-[6px]"
+          className="text-[22px] font-semibold text-[#111] dark:text-white"
         >
           Enter the code
         </motion.h1>
@@ -52,10 +52,10 @@ export function OtpStep({ phone, dialCode, otpValues, otpError, setOtpError, otp
               onChange={(e) => handleOtpInput(i, e.target.value)}
               onKeyDown={(e) => handleOtpKeyDown(i, e)}
               onFocus={(e) => e.target.select()}
-              aria-invalid={!!otpError && !v}
+              aria-invalid={!!otpError}
               className={cn(
-                "h-16 w-auto min-w-0 max-w-20 flex-[1_1_0%] text-center text-[26px] font-semibold rounded-lg outline-none transition-all duration-200 focus:-translate-y-0.5",
-                otpError && !v
+                "h-16 w-0 min-w-0 flex-[1_1_0%] text-center text-[26px] font-semibold rounded-lg outline-none transition-all duration-200 focus:-translate-y-0.5",
+                otpError
                   ? "border border-destructive bg-destructive/5 dark:bg-destructive/10 text-[#111] dark:text-white focus:border-destructive focus:shadow-[0_4px_12px_rgba(239,68,68,0.15)]"
                   : "border border-black/[0.08] dark:border-white/[0.08] bg-[#f4f3ef] dark:bg-[#242424] text-[#111] dark:text-white focus:bg-white dark:focus:bg-[#1a1a1a] focus:border-[#111] dark:focus:border-white focus:shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
               )}
@@ -66,7 +66,7 @@ export function OtpStep({ phone, dialCode, otpValues, otpError, setOtpError, otp
           "overflow-hidden transition-all duration-300 ease-out",
           otpError ? "max-h-12 opacity-100 mt-3 mb-2" : "max-h-0 opacity-0 mb-0"
         )}>
-          <p className="text-sm text-destructive">{otpError}</p>
+          <p className="text-sm text-destructive text-center">{otpError}</p>
         </div>
       </div>
 
@@ -82,7 +82,7 @@ export function OtpStep({ phone, dialCode, otpValues, otpError, setOtpError, otp
             if (otpValues.some(v => !v)) { setOtpError("Please enter all 4 digits"); return; }
             if (otpValues.join("") !== "1234") { setOtpError("OTP is not valid"); return; }
             clearInterval(timerRef.current!);
-            setStep("details");
+            setStep("gst");
           }}
         >
           Verify and continue
@@ -91,7 +91,7 @@ export function OtpStep({ phone, dialCode, otpValues, otpError, setOtpError, otp
           Didn&apos;t get it?{" "}
           {otpResend > 0
             ? <span className="opacity-50">Resend in {otpResend}s</span>
-            : <button onClick={handleResend} className="text-[#111] dark:text-white underline underline-offset-[2px] font-semibold text-[13px] hover:text-[#0067ff] dark:hover:text-[#0067ff] transition-all">Resend</button>}
+            : <button onClick={handleResend} className="text-[#111] dark:text-white font-medium text-[13px] underline underline-offset-[2px]">Resend</button>}
         </p>
       </motion.div>
     </div>

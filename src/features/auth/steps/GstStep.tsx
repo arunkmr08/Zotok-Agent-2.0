@@ -88,10 +88,10 @@ export function GstStep({ gst, setGst, gstError, setGstError, setStep }: Props) 
           onClick={() => {
             const err = validateGst(gst);
             if (err) { setGstError(err); return; }
-            setStep("gst-otp");
+            setStep("details");
           }}
         >
-          Verify GST <ArrowIcon />
+          Validate GST <ArrowIcon />
         </PrimaryBtn>
       </motion.div>
     </div>

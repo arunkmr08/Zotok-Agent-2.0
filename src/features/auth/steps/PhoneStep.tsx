@@ -17,7 +17,7 @@ export function PhoneStep({ phone, setPhone, phoneError, setPhoneError, dialCode
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
-          className="text-[22px] font-semibold text-[#111] dark:text-white mb-[6px]"
+          className="text-[22px] font-semibold text-[#111] dark:text-white"
         >
           Welcome to Zotok
         </motion.h1>

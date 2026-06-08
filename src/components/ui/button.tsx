@@ -73,7 +73,7 @@ function Button({
       data-slot="button"
       className={classes}
       whileTap={{ scale: 0.98 }}
-      transition={{ type: "spring", stiffness: 500, damping: 25 }}
+      transition={{ type: "tween", duration: 0.1, ease: "easeOut" }}
       {...props}
     />
   )

@@ -182,12 +182,6 @@
     transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   }
 
-  button:hover,
-  [role="button"]:hover,
-  [data-slot="button"]:hover {
-    transform: none !important;
-  }
-
   button:active,
   [role="button"]:active,
   [data-slot="button"]:active {

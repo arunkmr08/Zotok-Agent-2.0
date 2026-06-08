@@ -13,6 +13,7 @@ import { WaConnectStep } from "@/features/auth/steps/WaConnectStep";
 import { WaPhoneStep } from "@/features/auth/steps/WaPhoneStep";
 import { WaCodeStep } from "@/features/auth/steps/WaCodeStep";
 import { WaHistoryStep } from "@/features/auth/steps/WaHistoryStep";
+import { GstStep } from "@/features/auth/steps/GstStep";
 import { WaGroupsStep } from "@/features/auth/steps/WaGroupsStep";
 import { WaSyncingStep } from "@/features/auth/steps/WaSyncingStep";
 
@@ -73,6 +74,7 @@ export default function LoginPage() {
           <div className="w-full flex flex-col justify-start">
             {step === "phone"      && <PhoneStep {...flow} />}
             {step === "otp"        && <OtpStep {...flow} showToast={showToast} />}
+            {step === "gst"        && <GstStep {...flow} />}
             {step === "details"    && <DetailsStep {...flow} />}
             {step === "wa-connect" && <WaConnectStep {...flow} />}
             {step === "wa-phone"   && <WaPhoneStep {...flow} />}
@@ -92,11 +94,12 @@ export default function LoginPage() {
                 initial={false}
                 animate={{
                   width: `${
-                    step === "details" ? 16.7 :
-                    step === "wa-connect" || step === "wa-phone" ? 33.3 :
-                    step === "wa-code" ? 50 :
-                    step === "wa-history" ? 66.7 :
-                    step === "wa-groups" ? 83.3 :
+                    step === "gst" ? 14.3 :
+                    step === "details" ? 28.6 :
+                    step === "wa-connect" || step === "wa-phone" ? 42.9 :
+                    step === "wa-code" ? 57.1 :
+                    step === "wa-history" ? 71.4 :
+                    step === "wa-groups" ? 85.7 :
                     100
                   }%`
                 }}
