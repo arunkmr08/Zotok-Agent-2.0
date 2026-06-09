@@ -14,9 +14,9 @@ export default function CategoryViewPage() {
     <>
       <div className={cn("h-full flex overflow-hidden bg-[#f9f9f9] dark:bg-[#141414]", state.flyoutMsg && "pr-[380px]")}>
         <motion.div
-          initial={{ opacity: 0, x: -16 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.12, ease: "easeOut" }}
           className="flex-shrink-0"
         >
           <CategorySidebar
@@ -26,9 +26,9 @@ export default function CategoryViewPage() {
           />
         </motion.div>
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, ease: "easeOut", delay: 0.07 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.12, ease: "easeOut" }}
           className="flex-1 flex flex-col overflow-hidden"
         >
           <CategoryTable

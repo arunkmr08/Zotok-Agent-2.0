@@ -16,9 +16,9 @@ export default function LeadsViewPage() {
     <>
       <div className={cn("h-full flex flex-col overflow-hidden", state.flyoutLead && "pr-[380px]")}>
         <motion.div
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.28, ease: "easeOut" }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.12, ease: "easeOut" }}
           className="flex-shrink-0"
         >
           <LeadsHeader
@@ -35,9 +35,9 @@ export default function LeadsViewPage() {
         </motion.div>
         <BulkBar selected={state.selected} setSelected={state.setSelected} />
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, ease: "easeOut", delay: 0.1 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.12, ease: "easeOut" }}
           className="flex-1 flex flex-col overflow-hidden"
         >
           <LeadsTable

@@ -25,7 +25,7 @@ export function ChatThread({ messages, threadRef, isGenerating }: Props) {
                 {m.role === "assistant" ? (
                   <div className="w-full flex flex-col max-w-[90%] md:max-w-[85%]">
                     <div className="text-[16px] font-normal text-black dark:text-[#f0f0f0] leading-[28px] whitespace-pre-wrap">
-                      <StreamingText text={m.text} isLatest={i === messages.length - 1} />
+                      <StreamingText text={m.text} isLatest={m.isStreaming ?? false} />
                     </div>
                     <div className="flex items-center gap-4 mt-4">
                       <Tooltip>

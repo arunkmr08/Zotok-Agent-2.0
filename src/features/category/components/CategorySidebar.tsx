@@ -1,7 +1,6 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { motion } from "motion/react";
 import type { CategoryViewState } from "@/features/category/hooks/useCategoryView";
 
 type Props = Pick<CategoryViewState, "categories" | "activeCategory" | "handleSelectCategory">;
@@ -9,22 +8,12 @@ type Props = Pick<CategoryViewState, "categories" | "activeCategory" | "handleSe
 export function CategorySidebar({ categories, activeCategory, handleSelectCategory }: Props) {
   return (
     <div className="w-[260px] h-full flex-shrink-0 border-r border-black/[0.08] dark:border-white/[0.06] bg-white dark:bg-[#141414] overflow-y-auto">
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.25, delay: 0.1 }}
-        className="px-4 py-4"
-      >
+      <div className="px-4 py-4">
         <h2 className="text-xs font-semibold text-[#858481]">Categories</h2>
-      </motion.div>
+      </div>
       <nav className="px-2 py-2 space-y-0.5">
         {categories.map((c, i) => (
-          <motion.div
-            key={c.key}
-            initial={{ opacity: 0, x: -8 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.25, ease: "easeOut", delay: 0.12 + i * 0.04 }}
-          >
+          <div key={c.key}>
             <button
               onClick={() => handleSelectCategory(c.key)}
               className={cn(
@@ -37,7 +26,7 @@ export function CategorySidebar({ categories, activeCategory, handleSelectCatego
               <span>{c.label}</span>
               <span className={cn("text-xs font-semibold px-1.5 py-0.5 rounded-md", c.bg, c.color)}>{c.count}</span>
             </button>
-          </motion.div>
+          </div>
         ))}
       </nav>
     </div>
