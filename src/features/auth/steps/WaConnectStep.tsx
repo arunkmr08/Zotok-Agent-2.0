@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
+import { ArrowIcon } from "@/features/auth/components/ArrowIcon";
 import type { LoginFlowState } from "@/features/auth/hooks/useLoginFlow";
 
 type Props = Pick<LoginFlowState, "setStep">;
@@ -80,27 +81,21 @@ export function WaConnectStep({ setStep }: Props) {
   const isExpired = timeLeft <= 0;
 
   return (
-    <div className="flex flex-col gap-6 relative py-1">
+    <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-1.5">
-        <div className="flex justify-between items-start mb-1">
-          <motion.h1
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            className="text-[21px] font-semibold text-[#111] dark:text-white flex-1 pr-12 leading-snug"
-          >
-            Scan to Login with your Whatsapp account
-          </motion.h1>
-          <button
-            className="absolute top-1 right-0 text-[13px] font-semibold text-[#6d6c6b] hover:text-[#111] dark:hover:text-white transition-colors"
-            onClick={() => setStep("wa-history")}
-          >Skip</button>
-        </div>
+        <motion.h1
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25, ease: "easeOut" }}
+          className="text-[21px] font-semibold text-[#111] dark:text-white leading-snug"
+        >
+          Scan to Login with your Whatsapp account
+        </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.25, ease: "easeOut", delay: 0.04 }}
-          className="text-sm text-[#6d6c6b] mb-4"
+          className="text-sm text-[#6d6c6b]"
         >
           Link your number so Zotok can read the groups you choose.
         </motion.p>
@@ -109,17 +104,14 @@ export function WaConnectStep({ setStep }: Props) {
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.25, ease: "easeOut", delay: 0.08 }}
-          className="flex gap-8 items-center mt-2"
+          className="flex gap-8 items-center justify-center mt-4"
         >
-          <div className="flex-1 flex flex-col justify-between min-h-[200px] gap-4">
+          <div className="flex-1 flex flex-col justify-center gap-4">
             <ol className="login-steps">
               <li><span>Scan the QR Code with your phone&apos;s Camera</span></li>
               <li><span>Tap the link to open WhatsApp</span></li>
               <li><span>Scan the QR code again to link to your account</span></li>
             </ol>
-            <div>
-              <button className="text-[13px] text-[#6d6c6b] underline underline-offset-[2px] font-medium hover:text-[#0067ff] transition-all">Need help?</button>
-            </div>
           </div>
           
           <div className="w-[180px] h-[180px] flex-shrink-0 relative border border-black/[0.08] dark:border-white/[0.08] rounded-xl bg-white dark:bg-[#1f1f1f] flex items-center justify-center p-2.5 overflow-hidden shadow-sm">
@@ -132,7 +124,7 @@ export function WaConnectStep({ setStep }: Props) {
                 <span className="text-[11px] font-bold text-[#111] dark:text-white uppercase tracking-wider">QR Code Expired</span>
                 <button
                   onClick={handleReload}
-                  className="w-10 h-10 rounded-full bg-[#0067ff] hover:bg-[#0055d4] text-white flex items-center justify-center shadow transition-all transform active:scale-95"
+                  className="w-10 h-10 rounded-full bg-[#0067ff] hover:bg-[#0055d4] text-white flex items-center justify-center shadow transition-colors"
                   aria-label="Reload QR Code"
                 >
                   <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
@@ -153,13 +145,18 @@ export function WaConnectStep({ setStep }: Props) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.25, ease: "easeOut", delay: 0.12 }}
-        className="pt-4 flex justify-center border-t border-black/[0.04] dark:border-white/[0.04]"
+        className="pt-4 flex items-center justify-between border-t border-black/[0.04] dark:border-white/[0.04]"
       >
+        <button className="text-[13px] text-[#6d6c6b] underline underline-offset-[2px] font-medium hover:text-[#0067ff] transition-all">Need help?</button>
         <button
-          className="text-[13px] text-[#34322d] dark:text-[#adadad] underline underline-offset-[2px] font-semibold hover:text-[#0067ff] dark:hover:text-[#0067ff] transition-all"
+          className="text-[13px] font-semibold text-[#6d6c6b] hover:text-[#111] dark:hover:text-white transition-colors"
+          onClick={() => setStep("wa-history")}
+        >Skip</button>
+        <button
+          className="flex items-center gap-1.5 text-[13px] text-[#34322d] dark:text-[#adadad] underline underline-offset-[2px] font-semibold hover:text-[#0067ff] dark:hover:text-[#0067ff] transition-all"
           onClick={() => setStep("wa-phone")}
         >
-          Login with phone number &gt;
+          Login with phone number <ArrowIcon />
         </button>
       </motion.div>
     </div>

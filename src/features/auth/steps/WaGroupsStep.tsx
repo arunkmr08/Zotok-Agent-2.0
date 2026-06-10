@@ -48,10 +48,10 @@ export function WaGroupsStep({ selectedHistory, selectedGroups, groupSearch, set
               <div
                 key={g.id}
                 className={cn(
-                  "flex items-center gap-3 px-[14px] py-[10px] rounded-xl border cursor-pointer transition-colors bg-white dark:bg-[#1a1a1a]",
+                  "flex items-center gap-3 px-[14px] py-[10px] rounded-xl border border-black/[0.08] dark:border-white/[0.08] cursor-pointer transition-colors",
                   selectedGroups.includes(g.id)
-                    ? "border-[#111] dark:border-white bg-[#f4f3ef] dark:bg-[#242424]"
-                    : "border-black/[0.08] dark:border-white/[0.08] hover:border-[#6d6c6b]"
+                    ? "bg-[#37352f0a] dark:bg-white/[0.04]"
+                    : "bg-white dark:bg-[#1a1a1a] hover:bg-[#37352f0a] dark:hover:bg-white/[0.04]"
                 )}
                 onClick={() => toggleGroup(g.id)}
               >
@@ -64,10 +64,10 @@ export function WaGroupsStep({ selectedHistory, selectedGroups, groupSearch, set
                 </div>
                 <div className={cn(
                   "w-4 h-4 rounded border flex items-center justify-center transition-colors flex-shrink-0",
-                  selectedGroups.includes(g.id) ? "border-[#111] dark:border-white bg-[#111] dark:bg-white" : "border-black/[0.12] dark:border-white/[0.2]"
+                  selectedGroups.includes(g.id) ? "border-[#0067ff] bg-[#0067ff]" : "border-black/[0.12] dark:border-white/[0.2]"
                 )}>
                   {selectedGroups.includes(g.id) && (
-                    <svg className="w-2.5 h-2.5 text-white dark:text-black" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="3">
+                    <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="3">
                       <path d="M3 8.5l3 3 7-7" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                   )}
@@ -85,9 +85,14 @@ export function WaGroupsStep({ selectedHistory, selectedGroups, groupSearch, set
         className="pt-1 flex gap-3"
       >
         <button
-          className="flex-1 py-[9px] px-4 rounded-lg border border-black/[0.08] dark:border-white/[0.08] text-[#34322d] dark:text-[#dadada] font-medium hover:bg-[#f4f3ef] dark:hover:bg-[#242424] transition-colors"
-          onClick={() => router.push("/chat")}
-        >Maybe Later</button>
+          className="flex-1 py-[9px] px-4 rounded-lg border border-black/[0.08] dark:border-white/[0.08] text-[#34322d] dark:text-[#dadada] font-medium hover:bg-[#f4f3ef] dark:hover:bg-[#242424] transition-colors flex items-center justify-center gap-2"
+          onClick={() => setStep("wa-history")}
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M10 3L5 8l5 5" />
+          </svg>
+          Back
+        </button>
         <button
           className="flex-1 py-[9px] px-4 rounded-lg bg-[#0067ff] hover:bg-[#0055d4] text-white font-medium transition-colors disabled:opacity-45 disabled:cursor-not-allowed"
           disabled={selectedGroups.length === 0}

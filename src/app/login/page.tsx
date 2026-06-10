@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import { cn, toggleDark } from "@/lib/utils";
@@ -27,6 +27,11 @@ export default function LoginPage() {
     const timer = setTimeout(() => setToast(null), 3000);
     return () => clearTimeout(timer);
   };
+
+  const { waPhone } = flow;
+  useEffect(() => {
+    if (step === "wa-history") showToast(`WhatsApp Connected to +91 ${waPhone || "98765 43210"} Successfully!`);
+  }, [step]);
 
   return (
     <div className="relative h-screen flex items-center justify-center overflow-hidden bg-[#f4f3ef] dark:bg-[#1a1a1a] px-6">
@@ -57,7 +62,7 @@ export default function LoginPage() {
         transition={{ duration: 0.3, ease: "easeOut" }}
         className={cn(
           "relative z-10 bg-white dark:bg-[#1a1a1a] border border-black/[0.08] dark:border-white/[0.08] rounded-[20px] px-8 py-9 w-full flex flex-col justify-between shadow-lg overflow-hidden",
-          step === "wa-connect" ? "max-w-[720px]" : "max-w-[520px]"
+          step === "wa-connect" ? "max-w-[720px]" : step === "details" || step === "wa-history" || step === "wa-groups" || step === "wa-code" ? "max-w-[520px]" : "max-w-[420px]"
         )}
         style={{
           boxShadow: "rgba(17,17,17,0.12) 0px 26px 60px -6px, rgba(17,17,17,0.02) 0px 28px 28px -14px",
@@ -68,6 +73,24 @@ export default function LoginPage() {
             <Image src="/assets/icons/zotok-logo-20.svg" alt="Zotok" width={22} height={18} />
           </div>
           <span className="text-[18px] font-semibold text-[#34322d] dark:text-[#dadada] tracking-[-0.01em]">Zotok</span>
+          {step !== "phone" && step !== "otp" && (() => {
+            const currentStep = step === "gst" ? 1 : step === "details" ? 2 : step === "wa-connect" || step === "wa-phone" || step === "wa-code" ? 3 : step === "wa-history" ? 4 : step === "wa-groups" ? 5 : 6;
+            const total = 6;
+            const r = 5.5;
+            const circ = 2 * Math.PI * r;
+            const offset = circ * (1 - currentStep / total);
+            return (
+              <div className="ml-auto flex items-center gap-1.5 border border-[#f0f0f0] dark:border-white/[0.1] rounded-full px-2 py-1 flex-shrink-0">
+                <svg className="w-4 h-4 -rotate-90" viewBox="0 0 16 16" fill="none">
+                  <circle cx="8" cy="8" r={r} stroke="#e5e5e5" strokeWidth="1.5" />
+                  <circle cx="8" cy="8" r={r} stroke="#0067ff" strokeWidth="1.5" strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={offset} />
+                </svg>
+                <p className="text-[12px] font-semibold text-[#595959] dark:text-[#8c8c8c] tracking-[0.01px]">
+                  {currentStep} of {total}
+                </p>
+              </div>
+            );
+          })()}
         </div>
 
         <div className="flex-1 flex flex-col justify-start min-h-0 relative">
@@ -85,29 +108,6 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Pagination Progress Bar - Only shown after OTP, not on explore/syncing step */}
-        {step !== "phone" && step !== "otp" && step !== "wa-syncing" && (
-          <div className="flex justify-center mt-6 flex-shrink-0">
-            <div className="w-[108px] h-1 bg-black/10 dark:bg-white/10 rounded-full overflow-hidden">
-              <motion.div
-                className="h-full bg-[#22c55e] rounded-full"
-                initial={false}
-                animate={{
-                  width: `${
-                    step === "gst" ? 14.3 :
-                    step === "details" ? 28.6 :
-                    step === "wa-connect" || step === "wa-phone" ? 42.9 :
-                    step === "wa-code" ? 57.1 :
-                    step === "wa-history" ? 71.4 :
-                    step === "wa-groups" ? 85.7 :
-                    100
-                  }%`
-                }}
-                transition={{ duration: 0.25, ease: "linear" }}
-              />
-            </div>
-          </div>
-        )}
       </motion.main>
 
       {/* Toast Notification */}

@@ -38,8 +38,6 @@ export function ChatComposer({ input, setInput, textareaRef, autoResize, handleK
               disabled={isSendDisabled}
               onClick={() => sendMessage()}
               className="w-[36px] h-[36px] rounded-[50px] flex items-center justify-center flex-shrink-0 disabled:cursor-not-allowed"
-              whileTap={isSendDisabled ? undefined : { scale: 0.97 }}
-              transition={{ type: "spring", stiffness: 500, damping: 25 }}
               style={{
                 background: hasInput && syncState === 'hidden' ? "#0067ff" : "rgba(55,53,47,0.08)",
                 border: hasInput && syncState === 'hidden' ? "none" : "1px solid rgba(229,231,235,0.06)",

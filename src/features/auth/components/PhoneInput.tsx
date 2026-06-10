@@ -134,7 +134,7 @@ export function PhoneInput({ id, label, value, error, dialCode, onDialCodeChange
           aria-expanded={open}
           onClick={openDropdown}
           onKeyDown={handleTriggerKeyDown}
-          className="h-[40px] flex items-center gap-[6px] px-3 border-r border-black/[0.08] dark:border-white/[0.08] bg-[#f4f3ef] dark:bg-[#242424] hover:bg-[#e8e5e0] dark:hover:bg-[#2e2e2e] text-[#34322d] dark:text-[#dadada] font-medium text-sm transition-colors select-none whitespace-nowrap flex-shrink-0"
+          className="h-[40px] flex items-center gap-[6px] px-3 border-r border-black/[0.08] dark:border-white/[0.08] bg-white dark:bg-[#242424] hover:bg-[#f4f3ef] dark:hover:bg-[#2e2e2e] text-[#34322d] dark:text-[#dadada] font-medium text-sm transition-colors select-none whitespace-nowrap flex-shrink-0"
         >
           <span>{selected.flag}</span>
           <span>{selected.dial}</span>

@@ -1,4 +1,5 @@
 import { motion } from "motion/react";
+import { ArrowIcon } from "@/features/auth/components/ArrowIcon";
 import { PhoneInput } from "@/features/auth/components/PhoneInput";
 import { PrimaryBtn } from "@/features/auth/components/PrimaryBtn";
 import type { LoginFlowState } from "@/features/auth/hooks/useLoginFlow";
@@ -16,7 +17,7 @@ export function WaPhoneStep({ waPhone, setWaPhone, waPhoneError, setWaPhoneError
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
-          className="text-[22px] font-semibold text-[#111] dark:text-white mb-[6px]"
+          className="text-[22px] font-semibold text-[#111] dark:text-white"
         >
           Enter your WhatsApp Phone number
         </motion.h1>
@@ -59,12 +60,12 @@ export function WaPhoneStep({ waPhone, setWaPhone, waPhoneError, setWaPhoneError
             setStep("wa-code");
           }}
         >Next</PrimaryBtn>
-        <p className="text-center">
+        <div className="flex justify-center">
           <button
-            className="text-[13px] text-[#111] dark:text-white underline underline-offset-[2px] font-semibold hover:text-[#0067ff] dark:hover:text-[#0067ff] transition-all"
+            className="flex items-center gap-1.5 text-[13px] text-[#111] dark:text-white underline underline-offset-[2px] font-semibold hover:text-[#0067ff] dark:hover:text-[#0067ff] transition-all"
             onClick={() => setStep("wa-connect")}
-          >Login With QR Code</button>
-        </p>
+          >Login With QR Code <ArrowIcon /></button>
+        </div>
       </motion.div>
     </div>
   );

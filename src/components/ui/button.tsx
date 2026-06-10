@@ -1,6 +1,4 @@
-import { Button as ButtonPrimitive } from "@base-ui/react/button"
 import { cva, type VariantProps } from "class-variance-authority"
-import { motion } from "motion/react"
 
 import { cn } from "@/lib/utils"
 
@@ -41,43 +39,25 @@ const buttonVariants = cva(
   }
 )
 
-import { type HTMLMotionProps } from "motion/react"
-
 export interface ButtonProps
-  extends Omit<HTMLMotionProps<"button">, "ref">,
-    VariantProps<typeof buttonVariants> {
-  animated?: boolean
-}
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {}
+
+import React from "react"
 
 function Button({
   className,
   variant = "default",
   size = "default",
-  animated = true,
   ...props
 }: ButtonProps) {
-  const classes = cn(buttonVariants({ variant, size, className }))
-
-  if (!animated) {
-    return (
-      <button
-        data-slot="button"
-        className={classes}
-        {...(props as any)}
-      />
-    )
-  }
-
   return (
-    <motion.button
+    <button
       data-slot="button"
-      className={classes}
-      whileTap={{ scale: 0.98 }}
-      transition={{ type: "tween", duration: 0.1, ease: "easeOut" }}
+      className={cn(buttonVariants({ variant, size, className }))}
       {...props}
     />
   )
 }
 
 export { Button, buttonVariants }
-
