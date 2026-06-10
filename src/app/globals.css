@@ -174,21 +174,17 @@
 
   button,
   [role="button"],
-  [data-slot="button"] {
+  [data-slot="button"],
+  a {
     font-family: inherit;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    transform: none !important;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease !important;
   }
 
-  button:active,
-  [role="button"]:active,
-  [data-slot="button"]:active {
-    transform: scale(0.98) !important;
-  }
-
-  /* ── Apple-style Card Hover Animation ── */
+/* ── Apple-style Card Hover Animation ── */
   article {
     transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.5s cubic-bezier(0.25, 1, 0.5, 1);
   }
@@ -290,7 +286,7 @@
   counter-reset: step;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
 }
 
 .login-steps li {
@@ -300,6 +296,17 @@
   font-size: 13px;
   color: #6d6c6b;
   line-height: 1.5;
+  position: relative;
+}
+
+.login-steps li:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 9px;
+  top: 22px;
+  bottom: -16px;
+  width: 1.5px;
+  background: #e0dfdd;
 }
 
 .login-steps li::before {
@@ -324,6 +331,10 @@
 .dark .login-steps li::before {
   background: #dadada;
   color: #111111;
+}
+
+.dark .login-steps li:not(:last-child)::after {
+  background: #333333;
 }
 
 /* ── Chat: send arrow nudge ── */

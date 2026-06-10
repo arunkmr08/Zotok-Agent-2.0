@@ -102,8 +102,6 @@ export function SetupCard({ onClose }: { onClose: () => void }) {
           <MotionLink
             href="/agents"
             className="px-4 py-2.5 rounded-lg bg-[#0067ff] text-white text-[14px] font-semibold flex items-center gap-2 hover:bg-[#0055d4] transition-colors"
-            whileTap={{ scale: 0.97 }}
-            transition={{ type: "spring", stiffness: 500, damping: 25 }}
           >
             Deploy First Karamchari
             <svg className="w-4 h-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">

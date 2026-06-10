@@ -25,7 +25,7 @@ export function GstStep({ gst, setGst, gstError, setGstError, setStep }: Props) 
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
-          className="text-[22px] font-semibold text-[#111] dark:text-white mb-[6px]"
+          className="text-[22px] font-semibold text-[#111] dark:text-white"
         >
           Enter GST Number
         </motion.h1>

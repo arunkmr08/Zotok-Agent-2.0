@@ -137,8 +137,6 @@ export function ChatHero({
                     disabled={isSendDisabled}
                     onClick={() => sendMessage()}
                     className="w-[36px] h-[36px] rounded-[50px] flex items-center justify-center flex-shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
-                    whileTap={isSendDisabled ? undefined : { scale: 0.97 }}
-                    transition={{ type: "spring", stiffness: 500, damping: 25 }}
                     style={{
                       background: hasInput && syncState === 'hidden' ? "#0067ff" : "rgba(55,53,47,0.08)",
                       border: hasInput && syncState === 'hidden' ? "none" : "1px solid rgba(229,231,235,0.06)",
@@ -179,8 +177,6 @@ export function ChatHero({
                       disabled={isSendDisabled}
                       onClick={() => sendMessage()}
                       className="w-[36px] h-[36px] rounded-[50px] bg-[#0067ff] flex items-center justify-center flex-shrink-0 hover:bg-[#0055d4] disabled:opacity-40 disabled:cursor-not-allowed"
-                      whileTap={isSendDisabled ? undefined : { scale: 0.97 }}
-                      transition={{ type: "spring", stiffness: 500, damping: 25 }}
                       style={{ boxShadow: hasInput && syncState === 'hidden' ? "0 4px 14px rgba(0,103,255,0.45), 0 2px 6px rgba(0,103,255,0.25)" : "none" }}
                     >
                       <Image src="/assets/icons/icon-chevron-up.svg" alt="" width={20} height={20} className={hasInput && syncState === 'hidden' ? "brightness-0 invert arrow-nudge" : "brightness-0 invert"} />

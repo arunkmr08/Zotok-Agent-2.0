@@ -7,12 +7,12 @@ import { HISTORY_OPTIONS } from "@/features/auth/constants";
 import type { LoginFlowState } from "@/features/auth/hooks/useLoginFlow";
 
 type Props = Pick<LoginFlowState,
-  "waPhone" | "selectedHistory" | "setSelectedHistory" |
+  "selectedHistory" | "setSelectedHistory" |
   "historyFrom" | "setHistoryFrom" | "historyTo" | "setHistoryTo" |
   "selectedGroups" | "setSyncText" | "setStep"
 >;
 
-export function WaHistoryStep({ waPhone, selectedHistory, setSelectedHistory, historyFrom, setHistoryFrom, historyTo, setHistoryTo, selectedGroups, setSyncText, setStep }: Props) {
+export function WaHistoryStep({ selectedHistory, setSelectedHistory, historyFrom, setHistoryFrom, historyTo, setHistoryTo, selectedGroups, setSyncText, setStep }: Props) {
   return (
     <div className="flex flex-col gap-5">
       <div className="flex flex-col gap-1">
@@ -20,7 +20,7 @@ export function WaHistoryStep({ waPhone, selectedHistory, setSelectedHistory, hi
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
-          className="text-[22px] font-semibold text-[#111] dark:text-white mb-[6px]"
+          className="text-[22px] font-semibold text-[#111] dark:text-white"
         >
           Fetch WhatsApp Chat History
         </motion.h1>
@@ -32,19 +32,6 @@ export function WaHistoryStep({ waPhone, selectedHistory, setSelectedHistory, hi
         >
           Import past messages so Zotok can start with context.
         </motion.p>
-        <motion.div
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.25, ease: "easeOut", delay: 0.08 }}
-          className="flex items-center gap-2 h-10 px-3 mb-4 bg-[#d5ffde] border border-black/[0.12] rounded-lg text-[#004a10] text-sm font-medium tracking-[-0.09px] flex-shrink-0"
-        >
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style={{ flexShrink: 0 }}>
-            <circle cx="9" cy="9" r="8" stroke="#004a10" strokeWidth="1.5" />
-            <path d="M5.5 9.5l2.5 2.5 4.5-5" stroke="#004a10" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          WhatsApp Connected to <strong>+91 {waPhone || "98765 43210"}</strong> Successfully!
-        </motion.div>
-        
         <motion.div
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
@@ -65,7 +52,7 @@ export function WaHistoryStep({ waPhone, selectedHistory, setSelectedHistory, hi
               >
                 <span className="flex-1 text-sm font-medium text-[#34322d] dark:text-[#dadada] tracking-[-0.09px] leading-[18px]">{opt.label}</span>
                 <div className={cn(
-                  "w-4 h-4 rounded-full border-2 transition-colors flex-shrink-0 flex items-center justify-center",
+                  "w-5 h-5 rounded-full border-2 transition-colors flex-shrink-0 flex items-center justify-center",
                   selectedHistory === opt.days ? "border-[#0067ff] bg-[#0067ff]" : "border-black/[0.12] dark:border-white/[0.2]"
                 )}>
                   {selectedHistory === opt.days && (
