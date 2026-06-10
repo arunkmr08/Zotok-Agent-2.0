@@ -9,6 +9,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Checkbox } from "@/components/ui/checkbox";
 import { SHEET_PREVIEW_B64, SHEETS_ICON_B64 } from "@/features/agents/constants.images";
 import { motion, AnimatePresence } from "motion/react";
+import { DeployedLottie } from "@/features/agents/components/DeployedLottie";
 
 interface Props {
   open: boolean;
@@ -26,9 +27,7 @@ function ModalHeader({ title, desc, onClose, onBack }: { title: string; desc?: s
             <Tooltip>
               <TooltipTrigger render={
                 <button onClick={onBack} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors flex-shrink-0">
-                  <svg className="w-[18px] h-[18px] text-[#34322d] dark:text-[#d9d9d9]" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M11.25 4.5 6.75 9l4.5 4.5" />
-                  </svg>
+                  <Image src="/assets/icons/icon-back.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />
                 </button>
               } />
               <TooltipContent side="top" sideOffset={4}>Back</TooltipContent>
@@ -41,7 +40,7 @@ function ModalHeader({ title, desc, onClose, onBack }: { title: string; desc?: s
       <Tooltip>
         <TooltipTrigger render={
           <button onClick={onClose} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors flex-shrink-0">
-            <svg className="w-[18px] h-[18px] text-[#34322d] dark:text-[#d9d9d9]" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round">
+            <svg className="w-[18px] h-[18px] text-[#34322d] dark:text-[#d9d9d9]" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
               <path d="M4 4l10 10M14 4 4 14" />
             </svg>
           </button>
@@ -82,8 +81,6 @@ export function LeadsModal({ open, triggerRect, onClose, onDeploy }: Props) {
 
   const centerX = triggerRect ? triggerRect.left + triggerRect.width / 2 : windowSize.w / 2;
   const centerY = triggerRect ? triggerRect.top + triggerRect.height / 2 : windowSize.h / 2;
-  const startX = centerX - windowSize.w / 2;
-  const startY = centerY - windowSize.h / 2;
 
   return (
     <AnimatePresence>
@@ -97,9 +94,9 @@ export function LeadsModal({ open, triggerRect, onClose, onDeploy }: Props) {
         >
           <TooltipProvider delay={300}>
             <motion.div
-              initial={{ opacity: 0, scale: 0.98, x: startX * 0.08, y: startY * 0.08 }}
+              initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
-              exit={{ opacity: 0, scale: 0.98, x: startX * 0.08, y: startY * 0.08 }}
+              exit={{ opacity: 0, scale: 0.98 }}
               transition={{ duration: 0.14, ease: [0.16, 1, 0.3, 1] }}
               className="bg-[#f8f8f7] dark:bg-[#1a1a1a] border border-black/[0.12] dark:border-white/[0.08] rounded-[18px] drop-shadow-[0px_8px_16px_rgba(0,0,0,0.06)] w-full max-w-[720px] flex flex-col gap-[20px] p-[21px]"
             >
@@ -124,10 +121,10 @@ export function LeadsModal({ open, triggerRect, onClose, onDeploy }: Props) {
                     {/* Connection card */}
                     <div className="bg-white dark:bg-[#262626] border border-black/[0.06] dark:border-white/[0.06] rounded-[18px] flex flex-col items-center justify-center gap-[20px] py-[48px] px-[80px]">
                       <div className="flex items-center gap-[22px]">
-                        <div className="bg-white dark:bg-[#1a1a1a] border border-black/[0.12] dark:border-white/[0.1] rounded-[10px] shadow-[0px_8px_32px_rgba(0,0,0,0.06)] w-[60px] h-[60px] flex items-center justify-center p-[1px] overflow-hidden">
+                        <div className="bg-[#589981] rounded-[10px] shadow-[0px_8px_32px_rgba(0,0,0,0.06)] w-[60px] h-[60px] flex items-center justify-center overflow-hidden">
                           <Image src="/assets/icons/zotok-logo-36.svg" alt="Zotok" width={38} height={38} />
                         </div>
-                        <svg className="w-[20px] h-[20px] text-[#8c8c8c]" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <svg className="w-[20px] h-[20px] text-[#8c8c8c]" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                           <path d="M4 7h12M13 4l3 3-3 3M16 13H4M7 16l-3-3 3-3" />
                         </svg>
                         <div className="bg-white dark:bg-[#1a1a1a] border border-black/[0.12] dark:border-white/[0.1] rounded-[10px] shadow-[0px_8px_32px_rgba(0,0,0,0.06)] w-[60px] h-[60px] flex items-center justify-center p-[1px] overflow-hidden">
@@ -190,10 +187,10 @@ export function LeadsModal({ open, triggerRect, onClose, onDeploy }: Props) {
                               className={cn("w-[30px] h-[28px] flex items-center justify-center transition-colors", sheetView === "grid" ? "bg-[#0067ff] text-white" : "text-[#858481] hover:bg-black/[0.04] dark:hover:bg-white/[0.06]")}
                             >
                               <svg viewBox="0 0 16 16" fill="none" className="w-[14px] h-[14px]">
-                                <rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.5"/>
-                                <rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.5"/>
-                                <rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.5"/>
-                                <rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.5"/>
+                                <rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.8"/>
+                                <rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.8"/>
+                                <rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.8"/>
+                                <rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.8"/>
                               </svg>
                             </button>
                             <button
@@ -201,7 +198,7 @@ export function LeadsModal({ open, triggerRect, onClose, onDeploy }: Props) {
                               className={cn("w-[30px] h-[28px] flex items-center justify-center transition-colors", sheetView === "list" ? "bg-[#0067ff] text-white" : "text-[#858481] hover:bg-black/[0.04] dark:hover:bg-white/[0.06]")}
                             >
                               <svg viewBox="0 0 16 16" fill="none" className="w-[14px] h-[14px]">
-                                <path d="M1 4h14M1 8h14M1 12h14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                                <path d="M1 4h14M1 8h14M1 12h14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
                               </svg>
                             </button>
                           </div>
@@ -232,7 +229,7 @@ export function LeadsModal({ open, triggerRect, onClose, onDeploy }: Props) {
                               )}
                             >
                               <div className="bg-white dark:bg-[#262626] border border-black/[0.12] dark:border-white/[0.1] rounded-[10px] w-[60px] h-[60px] flex items-center justify-center shadow-[0px_8px_32px_rgba(0,0,0,0.06)]">
-                                <svg className="w-[24px] h-[24px] text-[#595959] dark:text-[#8c8c8c]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                                <svg className="w-[24px] h-[24px] text-[#595959] dark:text-[#8c8c8c]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                                   <path d="M12 5v14M5 12h14" />
                                 </svg>
                               </div>
@@ -277,13 +274,13 @@ export function LeadsModal({ open, triggerRect, onClose, onDeploy }: Props) {
                               )}
                             >
                               <div className="w-[32px] h-[32px] rounded-[8px] bg-[#f4f3ef] dark:bg-[#1f1f1f] border border-black/[0.08] dark:border-white/[0.08] flex items-center justify-center flex-shrink-0">
-                                <svg className="w-[16px] h-[16px] text-[#595959] dark:text-[#8c8c8c]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                                <svg className="w-[16px] h-[16px] text-[#595959] dark:text-[#8c8c8c]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                                   <path d="M12 5v14M5 12h14" />
                                 </svg>
                               </div>
                               <span className="flex-1 font-medium text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[20px]">Start from blank sheet</span>
                               {selectedSheet === "blank" && (
-                                <svg className="w-[16px] h-[16px] text-[#0067ff] flex-shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <svg className="w-[16px] h-[16px] text-[#0067ff] flex-shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                                   <path d="M3 8l3.5 3.5L13 4.5" />
                                 </svg>
                               )}
@@ -305,7 +302,7 @@ export function LeadsModal({ open, triggerRect, onClose, onDeploy }: Props) {
                                 <img src={SHEETS_ICON_B64} alt="" className="w-[28px] h-[28px] flex-shrink-0" />
                                 <span className="flex-1 font-medium text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[20px] truncate">{s.label}</span>
                                 {selectedSheet === s.id && (
-                                  <svg className="w-[16px] h-[16px] text-[#0067ff] flex-shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                  <svg className="w-[16px] h-[16px] text-[#0067ff] flex-shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M3 8l3.5 3.5L13 4.5" />
                                   </svg>
                                 )}
@@ -343,7 +340,7 @@ export function LeadsModal({ open, triggerRect, onClose, onDeploy }: Props) {
                         onClick={() => setNewCol("")}
                         className="flex items-center gap-[6px] bg-white dark:bg-[#262626] border border-[#e8e6e0] dark:border-white/[0.1] pl-[13px] pr-[15px] py-[9px] rounded-[8px] font-semibold text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[18px] hover:bg-[#f4f3ef] dark:hover:bg-[#303030] transition-colors"
                       >
-                        <svg className="w-[18px] h-[18px]" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                        <svg className="w-[18px] h-[18px]" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                           <circle cx="9" cy="9" r="7.5"/><path d="M6 9h6M9 6v6"/>
                         </svg>
                         Add Column
@@ -389,7 +386,7 @@ export function LeadsModal({ open, triggerRect, onClose, onDeploy }: Props) {
                                 onClick={() => setColumns((p) => p.filter((_, j) => j !== i))}
                                 className="w-[18px] h-[18px] flex items-center justify-center text-[#c0bfbd] dark:text-[#595959] hover:text-red-500 transition-colors flex-shrink-0"
                               >
-                                <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-[18px] h-[18px]">
+                                <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-[18px] h-[18px]">
                                   <path d="M2.25 4.5h13.5M7.5 4.5V3a.75.75 0 0 1 .75-.75h1.5A.75.75 0 0 1 10.5 3v1.5M14.25 4.5l-.75 9.75a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5L3.75 4.5"/>
                                 </svg>
                               </button>
@@ -419,7 +416,7 @@ export function LeadsModal({ open, triggerRect, onClose, onDeploy }: Props) {
                           }}
                           className="flex-1 min-w-0 bg-transparent outline-none font-medium text-[14px] text-[#34322d] dark:text-[#d9d9d9] placeholder:text-[#858481] dark:placeholder:text-[#595959] tracking-[-0.09px] leading-[18px]"
                         />
-                        <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-[18px] h-[18px] text-[#e0dedd] dark:text-[#3a3a3a] flex-shrink-0">
+                        <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-[18px] h-[18px] text-[#e0dedd] dark:text-[#3a3a3a] flex-shrink-0">
                           <path d="M2.25 4.5h13.5M7.5 4.5V3a.75.75 0 0 1 .75-.75h1.5A.75.75 0 0 1 10.5 3v1.5M14.25 4.5l-.75 9.75a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5L3.75 4.5"/>
                         </svg>
                       </div>
@@ -495,19 +492,14 @@ export function LeadsModal({ open, triggerRect, onClose, onDeploy }: Props) {
                     transition={{ duration: 0.12, ease: [0.16, 1, 0.3, 1] }}
                     className="flex flex-col items-center gap-[16px] py-[24px] text-center w-full"
                   >
-                    <div className="w-[72px] h-[72px] rounded-full bg-[#e6f0ff] dark:bg-[#0f2040] flex items-center justify-center">
-                      <svg className="w-[36px] h-[36px] text-[#0067ff]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
-                        <path d="m9 12 2 2 4-4" />
-                      </svg>
-                    </div>
+                    <DeployedLottie />
                     <div className="flex flex-col gap-[4px]">
                       <p className="font-semibold text-[18px] text-[#34322d] dark:text-white tracking-[-0.33px]">Karamchari Deployed!</p>
                       <p className="font-normal text-[14px] text-[#858481] dark:text-[#8c8c8c] tracking-[-0.09px] leading-[22px]">Collect New Leads is now active and monitoring your selected WhatsApp groups.</p>
                     </div>
                     <button
                       onClick={handleDone}
-                      className="w-full bg-[#0067ff] hover:bg-[#0055d4] transition-colors rounded-[8px] h-[34px] flex items-center justify-center font-semibold text-[14px] text-white tracking-[-0.09px]"
+                      className="w-[100px] bg-[#0067ff] hover:bg-[#0055d4] transition-colors rounded-[8px] h-[34px] flex items-center justify-center font-semibold text-[14px] text-white tracking-[-0.09px]"
                     >
                       Done
                     </button>

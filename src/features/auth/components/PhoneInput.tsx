@@ -138,7 +138,7 @@ export function PhoneInput({ id, label, value, error, dialCode, onDialCodeChange
         >
           <span>{selected.flag}</span>
           <span>{selected.dial}</span>
-          <svg className="w-[14px] h-[14px] text-[#858481] dark:text-[#595959]" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <svg className="w-[14px] h-[14px] text-[#858481] dark:text-[#595959]" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <path d="M3 5l4 4 4-4" />
           </svg>
         </button>

@@ -40,12 +40,13 @@ export const AGENT_ICONS: Record<AgentKey, string> = {
 };
 
 export const DEFAULT_CATEGORIES: Category[] = [
-  { name: "Orders & Dispatch",        checked: true,  desc: "", prompt: "Messages about placing orders, order confirmations, dispatch status, delivery updates, and shipment tracking." },
-  { name: "Payments & Outstanding",   checked: true,  desc: "", prompt: "Messages related to payment receipts, pending dues, invoices, credit notes, and outstanding balance reminders." },
-  { name: "Inventory & Production",   checked: true,  desc: "", prompt: "Messages about stock levels, material availability, production schedules, replenishment requests, and warehouse updates." },
-  { name: "Logistics & Transport",    checked: false, desc: "", prompt: "Messages concerning vehicle assignments, route planning, driver coordination, freight details, and delivery scheduling." },
-  { name: "Priority & Escalations",   checked: false, desc: "", prompt: "Urgent messages requiring immediate attention, escalations, complaints, or time-sensitive issues flagged by customers or teams." },
-  { name: "Sales & Customer Follow-Ups", checked: true, desc: "", prompt: "Messages about new inquiries, quotations, follow-up conversations, deal closures, and prospective customer engagement." },
+  { name: "Orders & Dispatch",           checked: true,  desc: "Detect messages related to new orders, order status, dispatch updates, delivery schedules, and shipment tracking.",                           prompt: "Messages about placing orders, order confirmations, dispatch status, delivery updates, and shipment tracking." },
+  { name: "Payments & Outstanding",      checked: true,  desc: "Detect payment confirmations, pending invoices, outstanding dues, credit requests, and collection follow-ups.",                              prompt: "Messages related to payment receipts, pending dues, invoices, credit notes, and outstanding balance reminders." },
+  { name: "Inventory & Production",      checked: true,  desc: "Detect stock availability inquiries, inventory updates, production requests, manufacturing status, and replenishment needs.",                prompt: "Messages about stock levels, material availability, production schedules, replenishment requests, and warehouse updates." },
+  { name: "Logistics & Transport",       checked: false, desc: "Detect messages about vehicle availability, transportation schedules, route planning, freight coordination, and delivery logistics.",        prompt: "Messages concerning vehicle assignments, route planning, driver coordination, freight details, and delivery scheduling." },
+  { name: "Priority & Escalations",      checked: false, desc: "Detect urgent issues, complaints, escalations, critical business requests, and messages requiring immediate attention.",                     prompt: "Urgent messages requiring immediate attention, escalations, complaints, or time-sensitive issues flagged by customers or teams." },
+  { name: "Sales & Customer Follow-Ups", checked: true,  desc: "Detect sales inquiries, quotation requests, product interest, customer follow-ups, lead nurturing, and deal progression conversations.",    prompt: "Messages about new inquiries, quotations, follow-up conversations, deal closures, and prospective customer engagement." },
+  { name: "Customer Support & Service",  checked: false, desc: "Detect support requests, product issues, service complaints, troubleshooting discussions, and customer assistance queries.",                 prompt: "Messages about customer support tickets, product complaints, troubleshooting requests, and after-sales service queries." },
 ];
 
 export const MOCK_GROUPS = [

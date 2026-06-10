@@ -10,7 +10,7 @@ const DotLottieReact = dynamic(
 export function SuccessLottie() {
   return (
     <DotLottieReact
-      src="/assets/success-feedback-animation.lottie"
+      src="/assets/lotties/success-feedback-animation.lottie"
       autoplay
       loop={false}
       speed={1}

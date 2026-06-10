@@ -11,7 +11,7 @@ type Props = Pick<WhatsappState, "syncedGroups" | "slotsUsed" | "slotsLeft" | "a
 
 function TrashIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <polyline points="3 6 5 6 21 6" />
       <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
       <path d="M10 11v6M14 11v6M9 6V4h6v2" />
@@ -44,7 +44,7 @@ export function SyncedGroupsList({ syncedGroups, slotsUsed, slotsLeft, allGroups
           <p className="text-sm text-[#858481]">{slotsUsed} of {MAX_FREE} slots used on free plan</p>
         </div>
         <Button size="sm" variant="outline" onClick={openAddGroups} disabled={slotsLeft === 0}>
-          <svg className="w-4 h-4 mr-1.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg className="w-4 h-4 mr-1.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="12" cy="12" r="9" /><path d="M12 8v8M8 12h8" />
           </svg>
           Add Groups
@@ -102,7 +102,7 @@ export function SyncedGroupsList({ syncedGroups, slotsUsed, slotsLeft, allGroups
           <p className="text-sm text-[#858481] mt-0.5">Pro removes the cap and unlocks all groups.</p>
         </div>
         <Button size="sm" className="flex-shrink-0">
-          <svg className="w-4 h-4 mr-1.5" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <svg className="w-4 h-4 mr-1.5" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <rect x="3" y="9" width="12" height="9" rx="2" />
             <path d="M6 9V6a3 3 0 0 1 6 0v3" />
           </svg>
@@ -119,7 +119,7 @@ export function SyncedGroupsList({ syncedGroups, slotsUsed, slotsLeft, allGroups
             transition={{ duration: 0.25, ease: "easeOut" }}
             className="fixed top-6 left-1/2 z-50 pointer-events-none bg-[#34322d] text-white px-4 py-2.5 rounded-lg shadow-lg font-medium text-sm flex items-center gap-2 border border-black/[0.08]"
           >
-            <svg className="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg className="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
               <polyline points="22 4 12 14.01 9 11.01" />
             </svg>

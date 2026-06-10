@@ -21,8 +21,6 @@ export function DisconnectDialog({ open, triggerRect, disconnectTarget, setDisco
 
   const centerX = triggerRect ? triggerRect.left + triggerRect.width / 2 : windowSize.w / 2;
   const centerY = triggerRect ? triggerRect.top + triggerRect.height / 2 : windowSize.h / 2;
-  const startX = centerX - windowSize.w / 2;
-  const startY = centerY - windowSize.h / 2;
 
   return (
     <AnimatePresence>
@@ -35,9 +33,9 @@ export function DisconnectDialog({ open, triggerRect, disconnectTarget, setDisco
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.94, x: startX * 0.15, y: startY * 0.15 }}
+            initial={{ opacity: 0, scale: 0.94 }}
             animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
-            exit={{ opacity: 0, scale: 0.94, x: startX * 0.15, y: startY * 0.15 }}
+            exit={{ opacity: 0, scale: 0.94 }}
             transition={{ duration: 0.12, ease: "easeOut" }}
             className="bg-[#f8f8f7] dark:bg-[#1a1a1a] border border-black/[0.12] dark:border-white/[0.08] rounded-[18px] drop-shadow-[0px_8px_16px_rgba(0,0,0,0.06)] w-full max-w-xs flex flex-col gap-[20px] p-[21px] text-center"
           >

@@ -40,7 +40,7 @@ export default function LoginPage() {
         className="absolute inset-0 w-full h-full object-cover"
         style={{ transform: "scale(1.5)" }}
       >
-        <source src="/assets/Generated video 1.mp4" type="video/mp4" />
+        <source src="/assets/video/Generated video 1.mp4" type="video/mp4" />
       </video>
       <div
         className="absolute inset-0 pointer-events-none dark:bg-black/30"
@@ -82,8 +82,8 @@ export default function LoginPage() {
             return (
               <div className="ml-auto flex items-center gap-1.5 border border-[#f0f0f0] dark:border-white/[0.1] rounded-full px-2 py-1 flex-shrink-0">
                 <svg className="w-4 h-4 -rotate-90" viewBox="0 0 16 16" fill="none">
-                  <circle cx="8" cy="8" r={r} stroke="#e5e5e5" strokeWidth="1.5" />
-                  <circle cx="8" cy="8" r={r} stroke="#0067ff" strokeWidth="1.5" strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={offset} />
+                  <circle cx="8" cy="8" r={r} stroke="#e5e5e5" strokeWidth="1.8" />
+                  <circle cx="8" cy="8" r={r} stroke="#0067ff" strokeWidth="1.8" strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={offset} />
                 </svg>
                 <p className="text-[12px] font-semibold text-[#595959] dark:text-[#8c8c8c] tracking-[0.01px]">
                   {currentStep} of {total}
@@ -120,7 +120,7 @@ export default function LoginPage() {
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
             className="absolute top-6 left-1/2 -translate-x-1/2 z-50 bg-[#111] dark:bg-white text-white dark:text-[#111] px-4 py-2.5 rounded-lg text-sm font-semibold shadow-lg flex items-center gap-2 border border-black/10 dark:border-white/10"
           >
-            <svg className="w-4 h-4 text-green-500 flex-shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <svg className="w-4 h-4 text-green-500 flex-shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8">
               <path d="M3 8.5l3 3 7-7" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
             <span className="whitespace-nowrap">{toast}</span>

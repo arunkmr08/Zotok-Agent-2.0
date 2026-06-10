@@ -56,7 +56,7 @@ export function WaHistoryStep({ selectedHistory, setSelectedHistory, historyFrom
                   selectedHistory === opt.days ? "border-[#0067ff] bg-[#0067ff]" : "border-black/[0.12] dark:border-white/[0.2]"
                 )}>
                   {selectedHistory === opt.days && (
-                    <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M2 5.5l2 2 4-4" />
                     </svg>
                   )}

@@ -63,7 +63,7 @@ export function ConnectorCard({ connector, connected, onConnect, onDisconnect }:
               onClick={(e) => onDisconnect(e)}
               className="flex items-center gap-[6px] bg-white dark:bg-transparent border border-[#dd360c] pl-[13px] pr-[15px] h-[34px] rounded-[8px] font-semibold text-[14px] text-[#dd360c] tracking-[-0.09px] leading-[18px] hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
             >
-              <svg className="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+              <svg className="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
                 <path d="M2 2l14 14M16 2 2 16" />
                 <circle cx="9" cy="9" r="7" />
               </svg>
@@ -74,7 +74,7 @@ export function ConnectorCard({ connector, connected, onConnect, onDisconnect }:
               onClick={(e) => onConnect(e)}
               className="flex items-center gap-[6px] bg-[#0067ff] hover:bg-[#0055d4] transition-colors pl-[12px] pr-[14px] h-[34px] rounded-[8px] font-semibold text-[14px] text-white tracking-[-0.09px] leading-[18px]"
             >
-              <svg className="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 18 18" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg className="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 18 18" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M9 12.75V2.25M4.5 8.25 9 12.75l4.5-4.5M14.25 15.75H3.75" />
               </svg>
               Connect
