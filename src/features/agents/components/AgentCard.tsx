@@ -13,7 +13,7 @@ interface Props {
 
 function CheckIcon() {
   return (
-    <svg className="w-[14px] h-[14px] flex-shrink-0 text-[#595959]" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <svg className="w-[14px] h-[14px] flex-shrink-0 text-[#595959]" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M2.5 7l3 3 6-6" />
     </svg>
   );
@@ -23,7 +23,7 @@ export function AgentCard({ agent, state, onDeploy, onConfigure, onRemove }: Pro
   const isActive = state === "active";
 
   return (
-    <article className="agent-card-container bg-white dark:bg-[#1a1a1a] border border-black/[0.12] dark:border-white/[0.08] rounded-[18px] drop-shadow-[0px_8px_16px_rgba(0,0,0,0.06)] flex flex-col gap-[24px] pt-[5px] px-[5px] pb-[21px]">
+    <article className="agent-card-container bg-white dark:bg-[#1a1a1a] border border-black/[0.12] dark:border-white/[0.08] rounded-[18px] drop-shadow-[0px_8px_16px_rgba(0,0,0,0.06)] flex flex-col gap-[24px] pt-[5px] px-[5px] pb-[21px] h-full">
 
       {/* Preview image */}
       <div className="bg-[#f8f8f7] dark:bg-[#262626] rounded-[14px] overflow-hidden w-full aspect-[1595/986]">
@@ -37,7 +37,7 @@ export function AgentCard({ agent, state, onDeploy, onConfigure, onRemove }: Pro
       </div>
 
       {/* Body */}
-      <div className="flex flex-col gap-[16px] px-[16px]">
+      <div className="flex flex-col gap-[16px] px-[16px] flex-1">
 
         {/* Title + description */}
         <div className="flex flex-col gap-[4px]">
@@ -84,7 +84,6 @@ export function AgentCard({ agent, state, onDeploy, onConfigure, onRemove }: Pro
         ) : (
           <>
             <button
-              onClick={(e) => onConfigure(e)}
               className="flex items-center gap-[6px] pl-[12px] pr-[14px] h-[34px] rounded-[8px] font-semibold text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[18px] hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors"
             >
               Know More

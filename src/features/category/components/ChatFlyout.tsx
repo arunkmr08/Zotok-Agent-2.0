@@ -83,7 +83,7 @@ export function ChatFlyout({ msg, onClose }: Props) {
                   style={{ boxShadow: "0 4px 14px rgba(0,103,255,0.45), 0 2px 6px rgba(0,103,255,0.25)" }}
                 />
               }>
-                <svg className="w-[16px] h-[16px] brightness-0 invert" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg className="w-[16px] h-[16px] brightness-0 invert" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M8 13V3M3 8l5-5 5 5" />
                 </svg>
               </TooltipTrigger>

@@ -22,13 +22,13 @@ export function ConnectionCard({ syncedGroups, slotsUsed, resyncing, handleResyn
         </div>
         <div className="flex gap-2 flex-shrink-0">
           <Button size="sm" variant="destructive" onClick={() => setDisconnectModal(true)}>
-            <svg className="w-4 h-4 mr-1.5" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg className="w-4 h-4 mr-1.5" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <path d="M10.5 7.5 7.5 10.5M8.5 4.5 10 3a4.24 4.24 0 0 1 5 5L13.5 9.5M9.5 13.5 8 15a4.24 4.24 0 0 1-5-5L4.5 8.5" />
             </svg>
             Disconnect
           </Button>
           <Button size="sm" onClick={handleResync} disabled={resyncing}>
-            <svg className={cn("w-4 h-4 mr-1.5", resyncing && "animate-spin")} viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg className={cn("w-4 h-4 mr-1.5", resyncing && "animate-spin")} viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <path d="M1.5 6A7.5 7.5 0 0 1 15.5 8.5M16.5 12A7.5 7.5 0 0 1 2.5 9.5" />
               <polyline points="1.5 2.5 1.5 6 5 6" />
               <polyline points="16.5 15.5 16.5 12 13 12" />
@@ -43,7 +43,7 @@ export function ConnectionCard({ syncedGroups, slotsUsed, resyncing, handleResyn
   return (
     <div className="flex flex-col items-center gap-4 p-8 bg-white dark:bg-[#1a1a1a] rounded-xl border border-dashed border-black/[0.12] dark:border-white/[0.08] mb-8 text-center">
       <div className="w-14 h-14 rounded-xl bg-[#ecebea] dark:bg-[#242424] flex items-center justify-center">
-        <svg className="w-7 h-7 text-[#858481]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <svg className="w-7 h-7 text-[#858481]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
         </svg>
       </div>

@@ -14,7 +14,7 @@ export function LeadsHeader({ group, search, setSearch, selectedDate, dateOpen, 
       </div>
       <div className="flex items-center gap-3">
         <div className="relative">
-          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#858481]" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#858481]" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8">
             <circle cx="7" cy="7" r="4.5" /><path d="m10.5 10.5 3 3" />
           </svg>
           <input
@@ -30,7 +30,7 @@ export function LeadsHeader({ group, search, setSearch, selectedDate, dateOpen, 
             onClick={() => setDateOpen((v) => !v)}
             className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg border border-black/[0.08] dark:border-white/[0.08] bg-white dark:bg-[#1a1a1a] text-[#34322d] dark:text-[#adadad] hover:border-black/[0.12] transition-colors"
           >
-            <svg className="w-4 h-4 text-[#858481]" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <svg className="w-4 h-4 text-[#858481]" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8">
               <rect x="2" y="3" width="12" height="11" rx="1.5" /><path d="M5 1v2M11 1v2M2 7h12" />
             </svg>
             {selectedDate}

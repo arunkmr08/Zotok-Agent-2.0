@@ -19,11 +19,11 @@ export function SheetTable({ sheet, pagedRows, page, perPage, totalPages, totalR
         </div>
         <div className="flex gap-2">
           <button className="flex items-center gap-1.5 px-3 py-2 text-sm rounded-lg border border-black/[0.08] dark:border-white/[0.08] text-[#6d6c6b] dark:text-[#7f7f7f] hover:border-black/[0.12] transition-colors">
-            <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M8 2v10M4 8l4 4 4-4M2 14h12" /></svg>
+            <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M8 2v10M4 8l4 4 4-4M2 14h12" /></svg>
             Export
           </button>
           <button className="flex items-center gap-1.5 px-3 py-2 text-sm rounded-lg bg-green-500 text-white hover:bg-green-600 transition-colors font-medium">
-            <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="2" width="12" height="12" rx="1.5" /><path d="M5 8h6M8 5v6" /></svg>
+            <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="2" y="2" width="12" height="12" rx="1.5" /><path d="M5 8h6M8 5v6" /></svg>
             Open in Sheets
           </button>
         </div>

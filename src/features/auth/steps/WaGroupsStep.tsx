@@ -67,7 +67,7 @@ export function WaGroupsStep({ selectedHistory, selectedGroups, groupSearch, set
                   selectedGroups.includes(g.id) ? "border-[#0067ff] bg-[#0067ff]" : "border-black/[0.12] dark:border-white/[0.2]"
                 )}>
                   {selectedGroups.includes(g.id) && (
-                    <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="3">
+                    <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8">
                       <path d="M3 8.5l3 3 7-7" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                   )}
@@ -88,9 +88,7 @@ export function WaGroupsStep({ selectedHistory, selectedGroups, groupSearch, set
           className="flex-1 py-[9px] px-4 rounded-lg border border-black/[0.08] dark:border-white/[0.08] text-[#34322d] dark:text-[#dadada] font-medium hover:bg-[#f4f3ef] dark:hover:bg-[#242424] transition-colors flex items-center justify-center gap-2"
           onClick={() => setStep("wa-history")}
         >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M10 3L5 8l5 5" />
-          </svg>
+          <Image src="/assets/icons/icon-back.svg" alt="" width={16} height={16} className="dark:invert" unoptimized />
           Back
         </button>
         <button

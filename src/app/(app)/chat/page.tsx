@@ -37,6 +37,7 @@ function ChatContent() {
           <div className="pointer-events-none absolute inset-0 overflow-hidden" style={{ zIndex: 0 }}>
             <motion.div
               className="blob-pulse absolute rounded-full"
+              initial={{ opacity: 0, scale: 0, left: "50%", top: "50%", x: "-50%", y: "-50%" }}
               animate={{
                 left: "50%",
                 top: "50%",
@@ -45,8 +46,14 @@ function ChatContent() {
                 width: state.inputFocused ? 900 : 798,
                 height: state.inputFocused ? 520 : 441,
                 opacity: 1,
+                scale: 1,
               }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
+              transition={{
+                opacity: { duration: 1.2, ease: [0.16, 1, 0.3, 1] },
+                scale: { duration: 1.4, ease: [0.16, 1, 0.3, 1] },
+                width: { duration: 0.5, ease: "easeInOut" },
+                height: { duration: 0.5, ease: "easeInOut" },
+              }}
               style={{ background: "rgba(0,103,255,0.6)" }}
             />
             <div className="absolute inset-0 bg-white/70 dark:bg-black/60 backdrop-blur-[100px]" />

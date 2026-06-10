@@ -91,7 +91,7 @@ export default function AgentsPage() {
               </button>
               <button className="flex items-center gap-[8px] font-medium text-[14px] text-[#595959] dark:text-[#8c8c8c] tracking-[-0.33px] leading-[16px] hover:text-[#141414] dark:hover:text-white transition-colors">
                 <svg className="w-[18px] h-[18px]" viewBox="0 0 18 18" fill="none">
-                  <circle cx="9" cy="9" r="7.5" stroke="currentColor" strokeWidth="1.25" />
+                  <circle cx="9" cy="9" r="7.5" stroke="currentColor" strokeWidth="1.8" />
                   <path d="M7.5 6.5l4.5 2.5-4.5 2.5V6.5z" fill="currentColor" />
                 </svg>
                 Watch how it works

@@ -36,21 +36,7 @@ export function ChatHero({
 
           {/* Title */}
           <h1 className="text-[40px] font-normal text-black dark:text-white text-center tracking-[-0.8px] leading-[48px] pb-8">
-            {"What can I do for you?".split("").map((char, i) => (
-              <motion.span
-                key={i}
-                initial={{ filter: "blur(8px)", opacity: 0, y: 4 }}
-                animate={{ filter: "blur(0px)", opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.4,
-                  ease: "easeOut",
-                  delay: i * 0.03,
-                }}
-                className="inline-block"
-              >
-                {char === " " ? "\u00A0" : char}
-              </motion.span>
-            ))}
+            What can I do for you?
           </h1>
 
           {/* ── Input container with sync row ── */}
@@ -75,7 +61,7 @@ export function ChatHero({
                             className="w-[20px] h-[20px] text-[#0067ff] dark:text-white animate-spin"
                             viewBox="0 0 24 24" fill="none"
                           >
-                            <path d="M21 12A9 9 0 1 1 12 3" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                            <path d="M21 12A9 9 0 1 1 12 3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
                           </svg>
                         </motion.div>
                       ) : (
