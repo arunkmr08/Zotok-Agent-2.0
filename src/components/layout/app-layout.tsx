@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { AppSidebar } from "./app-sidebar";
@@ -206,7 +206,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         animate={{ opacity: loading ? 0 : 1 }}
         transition={{ duration: 0.15, ease: "easeOut" }}
       >
-        <AppSidebar />
+        <Suspense fallback={<SidebarSkeleton />}>
+          <AppSidebar />
+        </Suspense>
         <main className="relative flex-1 overflow-hidden">
           <motion.div
             className="w-full h-full"

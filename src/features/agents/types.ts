@@ -18,5 +18,5 @@ export interface Category {
 }
 
 export type CatView = "list" | "create" | "success";
-export type LeadsView = "connect" | "loading" | "picker" | "columns" | "groups" | "success";
-export type SheetsView = "connect" | "loading" | "picker" | "columns" | "success";
+export type LeadsView = "connect" | "loading" | "picker" | "columns" | "keywords" | "groups" | "success";
+export type SheetsView = "connect" | "loading" | "picker" | "columns" | "keywords" | "actions" | "groups" | "success";
