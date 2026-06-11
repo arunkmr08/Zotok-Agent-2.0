@@ -55,9 +55,14 @@ export const MOCK_GROUPS = [
   { name: "Key Customer Orders", members: "46 Members", avatar: "group-avatar-indigo.svg" },
   { name: "Sales Follow-Ups",    members: "47 Members", avatar: "group-avatar-olive.svg" },
   { name: "Pending Payments",    members: "38 Members", avatar: "group-avatar-teal.svg" },
+  { name: "North Zone Leads",    members: "31 Members", avatar: "group-avatar-maroon.svg" },
+  { name: "VIP Customers",       members: "12 Members", avatar: "group-avatar-indigo.svg" },
+  { name: "Product Enquiries",   members: "58 Members", avatar: "group-avatar-green.svg" },
+  { name: "Retail Partner Chat", members: "24 Members", avatar: "group-avatar-olive.svg" },
+  { name: "Reorder Reminders",   members: "41 Members", avatar: "group-avatar-teal.svg" },
 ];
 
-export const DEFAULT_COLUMNS = ["Name", "Phone", "Message", "Group", "Date"];
+export const DEFAULT_COLUMNS = ["Name", "Phone", "Message", "Group", "Date", "Status"];
 
 export const SHEET_OPTIONS_LEADS = [
   { id: "blank", label: "Start from blank sheet" },

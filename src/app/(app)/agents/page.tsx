@@ -173,7 +173,7 @@ export default function AgentsPage() {
 
       <CategoryModal open={state.openModal === "category"} triggerRect={triggerRect} onClose={() => state.setOpenModal(null)} onDeploy={() => state.deploy("category")} />
       <LeadsModal open={state.openModal === "leads"} triggerRect={triggerRect} onClose={() => state.setOpenModal(null)} onDeploy={() => state.deploy("leads")} />
-      <SheetsModal open={state.openModal === "sheets"} triggerRect={triggerRect} onClose={() => state.setOpenModal(null)} onDeploy={() => state.deploy("sheets")} />
+      <SheetsModal open={state.openModal === "sheets"} triggerRect={triggerRect} onClose={() => state.setOpenModal(null)} onDeploy={() => state.deploy("sheets")} step={Object.values(state.states).filter(s => s === "active").length} totalSteps={4} />
       <RemoveDialog open={!!state.removeKey} triggerRect={triggerRect} removeKey={state.removeKey} setRemoveKey={state.setRemoveKey} removeTargetTitle={state.removeTargetTitle} remove={state.remove} />
     </>
   );

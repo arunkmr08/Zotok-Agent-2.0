@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { cn, toggleDark } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 
 const NAV_DEPLOYED = [
   { key: "category", href: "/category-view",   label: "Category Messages", icon: "nav-category.svg", shortcut: "⌥⌘1" },
@@ -17,7 +18,6 @@ const NAV_WORKSPACE = [
   { href: "/agents",     label: "Karamcharis",   icon: "nav-karamchari.svg", shortcut: "⌘⇧K" },
   { href: "/connectors", label: "Connectors",    icon: "nav-connectors.svg", shortcut: "⌘⇧L" },
   { href: "/whatsapp",   label: "WhatsApp Sync", icon: "nav-whatsapp.svg",   shortcut: "⌘⇧C" },
-  { href: "/search",     label: "Search",        icon: "nav-search.svg",     shortcut: "⌘K"  },
 ];
 
 // cmd+shift shortcuts
@@ -89,7 +89,7 @@ function NavItem({
         <NavIcon icon={icon} />
         {!collapsed && (
           <>
-            <span className="flex-1 text-[14px] text-[#1f1f1f] dark:text-[#f0f0f0] tracking-[-0.09px] leading-normal">
+            <span className="flex-1 text-[14px] font-medium text-[#1f1f1f] dark:text-[#f0f0f0] tracking-[-0.09px] leading-normal">
               {label}
             </span>
             {shortcut && (
@@ -132,7 +132,9 @@ function NavItem({
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const router = useRouter();
+  const recentIndex = searchParams.get("recentIndex");
   const [collapsed, setCollapsed] = useState(false);
   const [deployedAgents, setDeployedAgents] = useState<string[]>([]);
   const [sidebarReady, setSidebarReady] = useState(false);
@@ -252,7 +254,7 @@ export function AppSidebar() {
 
         {/* New Chat */}
         <NavItem href="/chat" icon="nav-new-chat.svg" label="New Chat" shortcut="⌘⇧O"
-          collapsed={collapsed} isActive={pathname === "/chat"} />
+          collapsed={collapsed} isActive={pathname === "/chat" && recentIndex === null} />
 
         {/* Deployed Karmacharis */}
         {sidebarReady && (
@@ -291,62 +293,92 @@ export function AppSidebar() {
         {!collapsed && (
           <div className="flex flex-col gap-px">
             <p className={sectionCls}>Recent Chat</p>
-            {RECENT_CHATS.map((chat, i) => (
-              <Link
-                key={i}
-                href={`/chat?recentIndex=${i}`}
-                className="flex items-center px-[10px] py-[8px] rounded-[10px] cursor-pointer hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
-              >
-                <p className="text-[14px] text-[#1f1f1f] dark:text-[#f0f0f0] tracking-[-0.09px] leading-[20px] truncate">{chat}</p>
-              </Link>
-            ))}
+            {RECENT_CHATS.map((chat, i) => {
+              const isRecentActive = pathname === "/chat" && recentIndex === String(i);
+              return (
+                <Link
+                  key={i}
+                  href={`/chat?recentIndex=${i}`}
+                  className={cn(
+                    "relative flex items-center px-[10px] py-[8px] rounded-[10px] cursor-pointer transition-colors",
+                    isRecentActive
+                      ? "bg-[#e7f1ff] dark:bg-[#0049b5] border-l-[3px] border-[#0067ff] dark:border-[#5e9fff] rounded-tl-none rounded-bl-none"
+                      : "hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
+                  )}
+                >
+                  <p className="text-[14px] font-medium text-[#1f1f1f] dark:text-[#f0f0f0] tracking-[-0.09px] leading-[20px] truncate">{chat}</p>
+                </Link>
+              );
+            })}
           </div>
         )}
       </nav>
 
       {/* Footer */}
       <div className="border-t border-[rgba(0,0,0,0.06)] dark:border-[#262626] flex items-center gap-[8px] px-[8px] py-[12px]">
-        <Link href="/profile" className="flex-shrink-0">
-          <div className="w-[36px] h-[36px] rounded-full bg-[#0067ff] dark:bg-[#003b91] flex items-center justify-center text-white dark:text-[#d9d9d9] text-[16px] font-semibold">
-            P
-          </div>
-        </Link>
+        <DropdownMenu>
+          <DropdownMenuTrigger render={
+            <button type="button" className="flex-shrink-0 rounded-full focus:outline-none">
+              <div className="w-[36px] h-[36px] rounded-full bg-[#0067ff] dark:bg-[#003b91] flex items-center justify-center text-white dark:text-[#d9d9d9] text-[16px] font-semibold hover:opacity-90 transition-opacity">P</div>
+            </button>
+          } />
+          <DropdownMenuContent side="top" align="start" sideOffset={8}
+            className="w-[260px] !rounded-[14px] !p-0 !shadow-[0px_8px_24px_rgba(0,0,0,0.14)] border border-black/[0.12] dark:border-white/[0.1] bg-white dark:bg-[#1f1f1f] overflow-hidden">
+            {/* User info */}
+            <div className="flex items-center gap-[8px] px-[12px] py-[12px]">
+              <div className="w-[32px] h-[32px] rounded-full bg-[#0067ff] dark:bg-[#003b91] flex items-center justify-center text-white text-[14px] font-semibold flex-shrink-0">P</div>
+              <div className="flex flex-col gap-0 min-w-0">
+                <p className="font-semibold text-[14px] text-[#34322d] dark:text-[#f0f0f0] tracking-[-0.18px] leading-[20px] truncate">Prathik Rati</p>
+                <p className="font-normal text-[13px] text-[#858481] dark:text-[#8c8c8c] tracking-[-0.09px] leading-[20px]">Pro Plan</p>
+              </div>
+            </div>
+            <DropdownMenuSeparator className="bg-[#f0f0f0] dark:bg-[#2a2a2a]" />
+            {/* Section 1 */}
+            <div className="py-[4px]">
+              {[
+                { label: "WhatsApp Settings", icon: <Image src="/assets/icons/menu-settings.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />, onClick: () => router.push("/settings") },
+                { label: "Account",      icon: <Image src="/assets/icons/menu-profile.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />, onClick: () => router.push("/profile") },
+                { label: "Usage Limit",  icon: <Image src="/assets/icons/menu-settings.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />, onClick: () => {} },
+                { label: "Upgrade Plan", icon: <Image src="/assets/icons/menu-upgrade.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />, onClick: () => {} },
+              ].map(({ label, icon, onClick }) => (
+                <button key={label} type="button" onClick={onClick}
+                  className="w-full flex items-center gap-[4px] px-[12px] h-[36px] hover:bg-black/[0.03] dark:hover:bg-white/[0.04] transition-colors">
+                  <div className="w-[36px] h-[36px] flex items-center justify-center flex-shrink-0 text-[#34322d] dark:text-[#d9d9d9]">{icon}</div>
+                  <span className="font-medium text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.18px] leading-[20px]">{label}</span>
+                </button>
+              ))}
+            </div>
+            <DropdownMenuSeparator className="bg-[#f0f0f0] dark:bg-[#2a2a2a]" />
+            {/* Section 2 */}
+            <div className="py-[4px]">
+              {[
+                { label: "Help",   icon: <Image src="/assets/icons/menu-help.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />, onClick: () => {} },
+                { label: "Logout", icon: <Image src="/assets/icons/menu-logout.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />, onClick: () => router.push("/login") },
+              ].map(({ label, icon, onClick }) => (
+                <button key={label} type="button" onClick={onClick}
+                  className="w-full flex items-center gap-[4px] px-[12px] h-[36px] hover:bg-black/[0.03] dark:hover:bg-white/[0.04] transition-colors">
+                  <div className="w-[36px] h-[36px] flex items-center justify-center flex-shrink-0 text-[#34322d] dark:text-[#d9d9d9]">{icon}</div>
+                  <span className="font-medium text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.18px] leading-[20px]">{label}</span>
+                </button>
+              ))}
+            </div>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
         {!collapsed && (
           <>
             <div className="flex flex-col gap-[2px] flex-1 min-w-0">
               <p className="text-[14px] font-medium text-[#1f1f1f] dark:text-[#f0f0f0] tracking-[-0.09px] truncate">Prathik Rati</p>
               <p className="text-[12px] text-[#858481] dark:text-[#8c8c8c] tracking-[0.01px] truncate">+91 93883 22332</p>
             </div>
-            <div className="flex items-center flex-shrink-0">
-              <Tooltip>
-                <TooltipTrigger
-                  render={
-                    <button
-                      onClick={toggleDark}
-                      className="w-[36px] h-[36px] flex items-center justify-center rounded-[6px] hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
-                      aria-label="Toggle dark mode"
-                    >
-                      <Image src="/assets/icons/nav-theme.svg" alt="" width={18} height={18} className="dark:brightness-0 dark:invert" />
-                    </button>
-                  }
-                />
-                <TooltipContent side="top" sideOffset={4}>Toggle theme</TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger
-                  render={
-                    <button
-                      onClick={() => router.push("/login")}
-                      className="w-[36px] h-[36px] flex items-center justify-center rounded-[6px] hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
-                      aria-label="Log out"
-                    >
-                      <Image src="/assets/icons/nav-logout.svg" alt="" width={18} height={18} className="dark:brightness-0 dark:invert" />
-                    </button>
-                  }
-                />
-                <TooltipContent side="top" sideOffset={4}>Log out</TooltipContent>
-              </Tooltip>
-            </div>
+            <Tooltip>
+              <TooltipTrigger render={
+                <button onClick={toggleDark} className="w-[36px] h-[36px] flex items-center justify-center rounded-[6px] hover:bg-black/[0.04] dark:hover:bg-white/[0.06]" aria-label="Toggle dark mode">
+                  <Image src="/assets/icons/nav-theme.svg" alt="" width={18} height={18} className="dark:brightness-0 dark:invert" />
+                </button>
+              } />
+              <TooltipContent side="top" sideOffset={4}>Toggle theme</TooltipContent>
+            </Tooltip>
           </>
         )}
       </div>
