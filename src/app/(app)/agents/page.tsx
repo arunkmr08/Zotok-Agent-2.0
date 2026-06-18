@@ -86,7 +86,7 @@ export default function AgentsPage() {
                 }}
                 className="flex items-center gap-[6px] pl-[12px] pr-[14px] py-[8px] rounded-[8px] bg-[#0067ff] hover:bg-[#0055d4] transition-colors font-semibold text-[14px] text-white tracking-[-0.09px] leading-[18px]"
               >
-                <Image src="/assets/icons/deploy.svg" alt="" width={18} height={18} className="flex-shrink-0" />
+                <Image src="/assets/icons/Deploy.svg" alt="" width={18} height={18} className="flex-shrink-0" />
                 Deploy Now
               </button>
               <button className="flex items-center gap-[8px] font-medium text-[14px] text-[#595959] dark:text-[#8c8c8c] tracking-[-0.33px] leading-[16px] hover:text-[#141414] dark:hover:text-white transition-colors">
