@@ -92,7 +92,7 @@ export function AgentCard({ agent, state, onDeploy, onConfigure, onRemove }: Pro
               onClick={(e) => onDeploy(e)}
               className="flex items-center gap-[6px] pl-[12px] pr-[14px] h-[34px] rounded-[8px] bg-[#0067ff] hover:bg-[#0055d4] transition-colors font-semibold text-[14px] text-white tracking-[-0.09px] leading-[18px]"
             >
-              <Image src="/assets/icons/deploy.svg" alt="" width={18} height={18} className="flex-shrink-0" />
+              <Image src="/assets/icons/Deploy.svg" alt="" width={18} height={18} className="flex-shrink-0" />
               Deploy Karamchari
             </button>
           </>

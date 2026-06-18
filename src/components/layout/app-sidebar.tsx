@@ -7,6 +7,7 @@ import Image from "next/image";
 import { cn, toggleDark } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
+import { AccountSettings } from "@/features/account/components/AccountSettings";
 
 const NAV_DEPLOYED = [
   { key: "category", href: "/category-view",   label: "Category Messages", icon: "nav-category.svg", shortcut: "⌥⌘1" },
@@ -46,6 +47,7 @@ const RECENT_CHATS = [
 ];
 
 import { motion, AnimatePresence } from "motion/react";
+
 
 function NavIcon({ icon }: { icon: string }) {
   return (
@@ -138,6 +140,8 @@ export function AppSidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const [deployedAgents, setDeployedAgents] = useState<string[]>([]);
   const [sidebarReady, setSidebarReady] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
+  const [accountDefaultTab, setAccountDefaultTab] = useState("whatsapp");
 
   function refreshDeployed() {
     const active = NAV_DEPLOYED.filter((a) =>
@@ -192,6 +196,7 @@ export function AppSidebar() {
 
   return (
     <TooltipProvider delay={300}>
+    <>
     <aside
       className={cn(
         "flex flex-col h-screen overflow-hidden bg-white dark:bg-[#141414] border-r border-[#f0f0f0] dark:border-[#262626] transition-all duration-300 flex-shrink-0",
@@ -336,10 +341,10 @@ export function AppSidebar() {
             {/* Section 1 */}
             <div className="py-[4px]">
               {[
-                { label: "WhatsApp Settings", icon: <Image src="/assets/icons/menu-settings.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />, onClick: () => router.push("/settings") },
-                { label: "Account",      icon: <Image src="/assets/icons/menu-profile.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />, onClick: () => router.push("/profile") },
-                { label: "Usage Limit",  icon: <Image src="/assets/icons/menu-settings.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />, onClick: () => {} },
-                { label: "Upgrade Plan", icon: <Image src="/assets/icons/menu-upgrade.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />, onClick: () => {} },
+                { label: "WhatsApp Settings", icon: <Image src="/assets/icons/menu-settings.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />, onClick: () => { setAccountDefaultTab("whatsapp"); setAccountOpen(true); } },
+                { label: "Account",      icon: <Image src="/assets/icons/menu-profile.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />, onClick: () => { setAccountDefaultTab("account"); setAccountOpen(true); } },
+                { label: "Usage Limit",  icon: <Image src="/assets/icons/menu-settings.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />, onClick: () => { setAccountDefaultTab("usage"); setAccountOpen(true); } },
+                { label: "Upgrade Plan", icon: <Image src="/assets/icons/menu-upgrade.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />, onClick: () => { setAccountDefaultTab("upgrade"); setAccountOpen(true); } },
               ].map(({ label, icon, onClick }) => (
                 <button key={label} type="button" onClick={onClick}
                   className="w-full flex items-center gap-[4px] px-[12px] h-[36px] hover:bg-black/[0.03] dark:hover:bg-white/[0.04] transition-colors">
@@ -383,6 +388,35 @@ export function AppSidebar() {
         )}
       </div>
     </aside>
+
+    {/* Account Settings popup */}
+    <AnimatePresence>
+      {accountOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.15 }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/20 backdrop-blur-sm"
+          onClick={(e) => { if (e.target === e.currentTarget) setAccountOpen(false); }}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96, y: 8 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: 8 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            className="bg-[#f8f8f7] dark:bg-[#1a1a1a] border border-black/[0.12] dark:border-white/[0.08] rounded-[18px] drop-shadow-[0px_8px_16px_rgba(0,0,0,0.08)] w-full max-w-[900px] h-[580px] flex overflow-hidden"
+          >
+            <AccountSettings
+              onClose={() => setAccountOpen(false)}
+              defaultTab={accountDefaultTab}
+            />
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+
+    </>
     </TooltipProvider>
   );
 }

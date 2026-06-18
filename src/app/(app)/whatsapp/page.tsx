@@ -34,10 +34,9 @@ export default function WhatsAppPage() {
         historyTo={s.historyTo} setHistoryTo={s.setHistoryTo}
         handleHistoryContinue={s.handleHistoryContinue} />
       <GroupsModal groupsModal={s.groupsModal} setGroupsModal={s.setGroupsModal}
-        syncing={s.syncing} setSyncing={s.setSyncing}
         groupSearch={s.groupSearch} setGroupSearch={s.setGroupSearch}
         pendingGroups={s.pendingGroups} setPendingGroups={s.setPendingGroups}
-        slotsLeft={s.slotsLeft} filteredAvailable={s.filteredAvailable}
+        filteredAvailable={s.filteredAvailable}
         togglePending={s.togglePending} handleSyncGroups={s.handleSyncGroups} />
       <DisconnectDialog disconnectModal={s.disconnectModal} setDisconnectModal={s.setDisconnectModal}
         handleDisconnect={s.handleDisconnect} />
