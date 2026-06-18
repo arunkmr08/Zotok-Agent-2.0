@@ -9,8 +9,8 @@ export function useWhatsapp() {
   const [historyModal, setHistoryModal] = useState(false);
   const [groupsModal, setGroupsModal] = useState(false);
   const [disconnectModal, setDisconnectModal] = useState(false);
-  const [syncing, setSyncing] = useState(false);
   const [resyncing, setResyncing] = useState(false);
+  const [syncingGroups, setSyncingGroups] = useState<Record<string, "syncing" | "synced">>({});
 
   const [selectedHistory, setSelectedHistory] = useState<number | "custom">(7);
   const [historyFrom, setHistoryFrom] = useState("");
@@ -47,19 +47,37 @@ export function useWhatsapp() {
     setPendingGroups((prev) => {
       const next = new Set(prev);
       if (next.has(name)) next.delete(name);
-      else if (syncedGroups.length + next.size < MAX_FREE) next.add(name);
+      else next.add(name);
       return next;
     });
   }
 
   function handleSyncGroups() {
-    setSyncing(true);
+    const newGroups = Array.from(pendingGroups).filter((g) => !syncedGroups.includes(g));
+    setSyncedGroups((prev) => [...newGroups, ...prev]);
+    setPendingGroups(new Set());
+    setGroupsModal(false);
+
+    setSyncingGroups((prev) => {
+      const next = { ...prev };
+      newGroups.forEach((g) => { next[g] = "syncing"; });
+      return next;
+    });
+
     setTimeout(() => {
-      setSyncedGroups((prev) => [...prev, ...Array.from(pendingGroups).filter((g) => !prev.includes(g))]);
-      setPendingGroups(new Set());
-      setSyncing(false);
-      setGroupsModal(false);
-    }, 1800);
+      setSyncingGroups((prev) => {
+        const next = { ...prev };
+        newGroups.forEach((g) => { if (next[g]) next[g] = "synced"; });
+        return next;
+      });
+      setTimeout(() => {
+        setSyncingGroups((prev) => {
+          const next = { ...prev };
+          newGroups.forEach((g) => { delete next[g]; });
+          return next;
+        });
+      }, 1500);
+    }, 3000);
   }
 
   function removeGroup(name: string) {
@@ -83,8 +101,8 @@ export function useWhatsapp() {
     historyModal, setHistoryModal,
     groupsModal, setGroupsModal,
     disconnectModal, setDisconnectModal,
-    syncing, setSyncing,
     resyncing,
+    syncingGroups,
     selectedHistory, setSelectedHistory,
     historyFrom, setHistoryFrom,
     historyTo, setHistoryTo,
