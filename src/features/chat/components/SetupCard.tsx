@@ -107,7 +107,7 @@ export function SetupCard({ onClose }: { onClose: () => void }) {
             href="/agents"
             className="px-4 py-2.5 rounded-lg bg-[#0067ff] text-white text-[14px] font-semibold flex items-center gap-2 hover:bg-[#0055d4] transition-colors"
           >
-            <Image src="/assets/icons/deploy.svg" alt="" width={18} height={18} className="brightness-0 invert flex-shrink-0" />
+            <Image src="/assets/icons/Deploy.svg" alt="" width={18} height={18} className="brightness-0 invert flex-shrink-0" />
             Deploy Now
           </MotionLink>
         </div>
