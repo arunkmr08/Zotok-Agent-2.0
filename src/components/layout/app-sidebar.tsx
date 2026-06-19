@@ -332,17 +332,22 @@ export function AppSidebar() {
       <div className="border-t border-[rgba(0,0,0,0.06)] dark:border-[#262626] flex items-center gap-[8px] px-[8px] py-[12px]">
         <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
           <DropdownMenuTrigger render={
-            <button type="button" className="flex items-center gap-[8px] w-full min-w-0 rounded-[10px] px-[4px] py-[4px] hover:bg-black/[0.04] dark:hover:bg-white/[0.05] transition-colors focus:outline-none">
+            <button type="button" className={cn(
+              "flex items-center gap-[8px] w-full min-w-0 rounded-[10px] px-[4px] py-[4px] hover:bg-black/[0.04] dark:hover:bg-white/[0.05] transition-colors focus:outline-none",
+              collapsed && "justify-center"
+            )}>
               <div className="w-[36px] h-[36px] rounded-full bg-[#0067ff] dark:bg-[#003b91] flex items-center justify-center text-white dark:text-[#d9d9d9] text-[16px] font-semibold overflow-hidden flex-shrink-0">
                 {avatarSrc ? <img src={avatarSrc} alt="Avatar" className="w-full h-full object-cover" /> : "P"}
               </div>
-              <div className="flex flex-col min-w-0 flex-1 text-left">
-                <p className="font-semibold text-[13px] text-[#34322d] dark:text-[#f0f0f0] tracking-[-0.18px] leading-[18px] truncate">{bizName}</p>
-                <div className="flex items-center gap-[5px]">
-                  <p className="font-normal text-[12px] text-[#858481] dark:text-[#8c8c8c] tracking-[-0.09px] leading-[16px] truncate">{whatsappPhone}</p>
-                  <span className="text-[10px] font-semibold px-[5px] py-[1px] rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400 flex-shrink-0">Free</span>
+              {!collapsed && (
+                <div className="flex flex-col min-w-0 flex-1 text-left">
+                  <p className="font-semibold text-[13px] text-[#34322d] dark:text-[#f0f0f0] tracking-[-0.18px] leading-[18px] truncate">{bizName}</p>
+                  <div className="flex items-center gap-[5px]">
+                    <p className="font-normal text-[12px] text-[#858481] dark:text-[#8c8c8c] tracking-[-0.09px] leading-[16px] truncate">{whatsappPhone}</p>
+                    <span className="text-[10px] font-semibold px-[5px] py-[1px] rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400 flex-shrink-0">Free</span>
+                  </div>
                 </div>
-              </div>
+              )}
             </button>
           } />
           <DropdownMenuContent side="top" align="start" sideOffset={8}
@@ -364,10 +369,10 @@ export function AppSidebar() {
             {/* Section 1 */}
             <div className="py-[4px]">
               {[
-                { label: "WhatsApp Settings", icon: <Image src="/assets/icons/menu-settings.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />, onClick: () => openAccount("whatsapp") },
-                { label: "Account",      icon: <Image src="/assets/icons/menu-profile.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />, onClick: () => openAccount("account") },
-                { label: "Usage Limit",  icon: <Image src="/assets/icons/settings-usage.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />, onClick: () => openAccount("usage") },
-                { label: "Upgrade Plan", icon: <Image src="/assets/icons/menu-upgrade.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />, onClick: () => openAccount("upgrade") },
+                { label: "WhatsApp Settings", icon: <Image src="/assets/icons/menu-settings.svg" alt="" width={18} height={18} className="dark:invert" unoptimized priority />, onClick: () => openAccount("whatsapp") },
+                { label: "Account",      icon: <Image src="/assets/icons/menu-profile.svg" alt="" width={18} height={18} className="dark:invert" unoptimized priority />, onClick: () => openAccount("account") },
+                { label: "Usage Limit",  icon: <Image src="/assets/icons/settings-usage.svg" alt="" width={18} height={18} className="dark:invert" unoptimized priority />, onClick: () => openAccount("usage") },
+                { label: "Upgrade Plan", icon: <Image src="/assets/icons/menu-upgrade.svg" alt="" width={18} height={18} className="dark:invert" unoptimized priority />, onClick: () => openAccount("upgrade") },
               ].map(({ label, icon, onClick }) => (
                 <button key={label} type="button" onClick={onClick}
                   className="w-full flex items-center gap-[4px] px-[12px] h-[36px] hover:bg-black/[0.03] dark:hover:bg-white/[0.04] transition-colors">
@@ -380,8 +385,7 @@ export function AppSidebar() {
             {/* Section 2 */}
             <div className="py-[4px]">
               {[
-                { label: "Help",   icon: <Image src="/assets/icons/menu-help.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />, onClick: () => {} },
-                { label: "Logout", icon: <Image src="/assets/icons/menu-logout.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />, onClick: () => router.push("/login") },
+                { label: "Logout", icon: <Image src="/assets/icons/menu-logout.svg" alt="" width={18} height={18} className="dark:invert" unoptimized priority />, onClick: () => router.push("/login") },
               ].map(({ label, icon, onClick }) => (
                 <button key={label} type="button" onClick={onClick}
                   className="w-full flex items-center gap-[4px] px-[12px] h-[36px] hover:bg-black/[0.03] dark:hover:bg-white/[0.04] transition-colors">

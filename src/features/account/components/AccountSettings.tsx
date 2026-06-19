@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import type React from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import { Popover } from "@base-ui/react/popover";
@@ -21,8 +22,6 @@ const NAV_ITEMS = [
   { key: "usage", label: "Usage Limit", icon: "settings-usage.svg" },
   { key: "billing", label: "Billing", icon: "settings-billing.svg" },
   { key: "upgrade", label: "Upgrade Plan", icon: "settings-upgrade.svg" },
-  { key: "data", label: "Data Control", icon: "settings-data.svg" },
-  { key: "help", label: "Help", icon: "settings-help.svg" },
 ];
 
 function WhatsAppSettingsPanel() {
@@ -426,7 +425,7 @@ function AccountPanel({ onSave }: { onSave: () => void }) {
         <div className="flex-1 min-w-0 flex flex-col gap-[2px]">
           <p className="text-[16px] font-semibold text-[#34322d] dark:text-[#f0f0f0] tracking-[-0.18px] leading-[22px]">Delete Account</p>
           <p className="text-[14px] text-[#858481] tracking-[-0.09px] leading-[20px]">
-            This will permanently delete your account and all your previous conversations with ZoCOZ.
+            This will permanently delete your account and all your previous conversations with ZöChief.
           </p>
         </div>
         <button
@@ -480,7 +479,7 @@ function formatCompact(n: number): string {
 function ModelIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
-      <path d="M37.532 16.87a9.963 9.963 0 00-.856-8.184 10.078 10.078 0 00-10.855-4.835 9.952 9.952 0 00-7.485-3.348 10.079 10.079 0 00-9.614 6.977 9.967 9.967 0 00-6.664 4.834 10.08 10.08 0 001.24 11.817 9.965 9.965 0 00.856 8.185 10.079 10.079 0 0010.855 4.835 9.965 9.965 0 007.485 3.348 10.078 10.078 0 009.617-6.981 9.967 9.967 0 006.663-4.834 10.079 10.079 0 00-1.243-11.814zM22.498 37.886a7.474 7.474 0 01-4.799-1.735c.061-.033.168-.091.237-.134l7.964-4.6a1.294 1.294 0 00.655-1.134V19.054l3.366 1.944a.12.12 0 01.066.092v9.299a7.505 7.505 0 01-7.49 7.496zM6.392 31.006a7.471 7.471 0 01-.894-5.023c.06.036.162.099.237.141l7.964 4.6a1.297 1.297 0 001.308 0l9.724-5.614v3.888a.12.12 0 01-.048.103L16.628 33.95a7.504 7.504 0 01-10.237-2.944zM4.297 13.62A7.469 7.469 0 018.2 10.333c0 .068-.004.19-.004.274v9.201a1.294 1.294 0 00.654 1.132l9.723 5.614-3.366 1.944a.12.12 0 01-.114.012L7.044 23.86a7.504 7.504 0 01-2.747-10.24zm27.658 6.437l-9.724-5.615 3.367-1.943a.121.121 0 01.114-.012l8.048 4.648a7.498 7.498 0 01-1.158 13.528v-9.476a1.293 1.293 0 00-.647-1.13zm3.35-5.043c-.059-.037-.162-.099-.236-.141l-7.965-4.6a1.298 1.298 0 00-1.308 0l-9.723 5.614v-3.888a.12.12 0 01.048-.103l8.05-4.645a7.497 7.497 0 0111.135 7.763zm-21.063 6.929l-3.367-1.944a.12.12 0 01-.065-.092v-9.299a7.497 7.497 0 0112.293-5.756 6.94 6.94 0 00-.236.134l-7.965 4.6a1.294 1.294 0 00-.654 1.132l-.006 11.225zm1.829-3.943l4.33-2.501 4.332 2.497v4.994l-4.331 2.5-4.331-2.5V18z" fill="currentColor"/>
+      <path d="M37.532 16.87a9.963 9.963 0 00-.856-8.184 10.078 10.078 0 00-10.855-4.835 9.952 9.952 0 00-7.485-3.348 10.079 10.079 0 00-9.614 6.977 9.967 9.967 0 00-6.664 4.834 10.08 10.08 0 001.24 11.817 9.965 9.965 0 00.856 8.185 10.079 10.079 0 0010.855 4.835 9.965 9.965 0 007.485 3.348 10.078 10.078 0 009.617-6.981 9.967 9.967 0 006.663-4.834 10.079 10.079 0 00-1.243-11.814zM22.498 37.886a7.474 7.474 0 01-4.799-1.735c.061-.033.168-.091.237-.134l7.964-4.6a1.294 1.294 0 00.655-1.134V19.054l3.366 1.944a.12.12 0 01.066.092v9.299a7.505 7.505 0 01-7.49 7.496zM6.392 31.006a7.471 7.471 0 01-.894-5.023c.06.036.162.099.237.141l7.964 4.6a1.297 1.297 0 001.308 0l9.724-5.614v3.888a.12.12 0 01-.048.103L16.628 33.95a7.504 7.504 0 01-10.237-2.944zM4.297 13.62A7.469 7.469 0 018.2 10.333c0 .068-.004.19-.004.274v9.201a1.294 1.294 0 00.654 1.132l9.723 5.614-3.366 1.944a.12.12 0 01-.114.012L7.044 23.86a7.504 7.504 0 01-2.747-10.24zm27.658 6.437l-9.724-5.615 3.367-1.943a.121.121 0 01.114-.012l8.048 4.648a7.498 7.498 0 01-1.158 13.528v-9.476a1.293 1.293 0 00-.647-1.13zm3.35-5.043c-.059-.037-.162-.099-.236-.141l-7.965-4.6a1.298 1.298 0 00-1.308 0l-9.723 5.614v-3.888a.12.12 0 01.048-.103l8.05-4.645a7.497 7.497 0 0111.135 7.763zm-21.063 6.929l-3.367-1.944a.12.12 0 01-.065-.092v-9.299a7.497 7.497 0 0112.293-5.756 6.94 6.94 0 00-.236.134l-7.965 4.6a1.294 1.294 0 00-.654 1.132l-.006 11.225zm1.829-3.943l4.33-2.501 4.332 2.497v4.994l-4.331 2.5-4.331-2.5V18z" fill="currentColor" />
     </svg>
   );
 }
@@ -503,7 +502,7 @@ function UpgradeCard({ onUpgrade }: { onUpgrade: () => void }) {
       <div className="flex-1 min-w-0 flex flex-col gap-[2px]">
         <p className="text-[14px] font-semibold text-[#34322d] dark:text-[#f0f0f0] tracking-[-0.18px] leading-[22px]">Upgrade to Pro</p>
         <p className="text-[14px] text-[#858481] tracking-[-0.09px] leading-[20px]">
-          Top up usage credits to keep using ZoCOZ uninterrupted if you hit a limit.
+          Top up usage credits to keep using ZöChief uninterrupted if you hit a limit.
         </p>
       </div>
       <button
@@ -531,7 +530,7 @@ function UsageLimitPanel({ onNavigate, onBuyCredits }: { onNavigate: (tab: strin
         {/* Plan label */}
         <div className="flex items-center justify-between">
           <p className="text-[16px] font-semibold text-[#34322d] dark:text-[#f0f0f0] tracking-[-0.18px] leading-[22px]">
-            Plan: ZoCOS {u.plan === "pro" ? "Pro" : "Free"} Plan
+            Plan: ZöChief {u.plan === "pro" ? "Pro" : "Free"} Plan
           </p>
           <div className="flex items-center gap-[12px]">
             <button type="button" onClick={u.forceMax} className="text-[13px] font-medium text-[#0067ff] hover:underline">
@@ -716,9 +715,9 @@ function BuyCreditsPanel({ onBack, onClose, onSuccess }: { onBack: () => void; o
   }
 
   const summaryRows = [
-    { label: "Amount",          value: formatINR(amount) },
-    { label: "Discount",        value: formatINR(discount) },
-    { label: "Service fees",    value: formatINR(SERVICE_FEE) },
+    { label: "Amount", value: formatINR(amount) },
+    { label: "Discount", value: formatINR(discount) },
+    { label: "Service fees", value: formatINR(SERVICE_FEE) },
     { label: "Sales Tax / VAT", value: formatINR(tax) },
   ];
 
@@ -745,7 +744,7 @@ function BuyCreditsPanel({ onBack, onClose, onSuccess }: { onBack: () => void; o
           className="w-[28px] h-[28px] flex items-center justify-center rounded-[6px] hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors"
           aria-label="Close"
         >
-          <Image src="/assets/icons/settings-close.svg" alt="" width={20} height={20} className="dark:invert" unoptimized />
+          <Image src="/assets/icons/settings-close.svg" alt="" width={20} height={20} className="dark:invert" unoptimized priority />
         </button>
       </div>
 
@@ -893,10 +892,10 @@ function UpgradePlanPanel({ onUpgraded }: { onUpgraded: () => void }) {
 
       <Tabs value={billing} onValueChange={(v) => setBilling(v as "monthly" | "yearly")}>
         <TabsList>
-          <TabsTrigger value="monthly" className="px-[16px] data-active:bg-[#0067ff] data-active:text-white">
+          <TabsTrigger value="monthly" className="px-[16px] data-active:bg-[#0067ff] data-active:text-white data-active:hover:text-white">
             Monthly
           </TabsTrigger>
-          <TabsTrigger value="yearly" className="px-[16px]">
+          <TabsTrigger value="yearly" className="px-[16px] data-active:bg-[#0067ff] data-active:text-white data-active:hover:text-white">
             Yearly{" "}
             <span className={cn(billing === "yearly" ? "text-white" : "text-[#0067ff]")}>• Save 17%</span>
           </TabsTrigger>
@@ -909,7 +908,7 @@ function UpgradePlanPanel({ onUpgraded }: { onUpgraded: () => void }) {
           <Sparkle size={24} className="text-[#34322d] dark:text-[#d9d9d9]" />
           <div className="flex flex-col gap-[2px]">
             <p className="text-[20px] font-bold text-[#34322d] dark:text-[#f0f0f0] tracking-[-0.18px] leading-[22px]">Free</p>
-            <p className="text-[14px] text-[#858481] tracking-[-0.09px] leading-[20px]">Meet ZoCOS</p>
+            <p className="text-[14px] text-[#858481] tracking-[-0.09px] leading-[20px]">Meet ZöChief</p>
             <p className="text-[36px] font-semibold text-[#34322d] dark:text-[#f0f0f0] tracking-[-0.18px] mt-[8px]">₹0</p>
           </div>
 
@@ -974,6 +973,201 @@ function UpgradePlanPanel({ onUpgraded }: { onUpgraded: () => void }) {
   );
 }
 
+interface BillingInvoice {
+  date: string;
+  amount: string;
+  status: "Paid";
+}
+
+const SEED_INVOICES: BillingInvoice[] = [
+  { date: "Jun 10, 2026", amount: "₹5,000", status: "Paid" },
+  { date: "May 10, 2026", amount: "₹5,000", status: "Paid" },
+];
+
+function loadBilling() {
+  try { return JSON.parse(localStorage.getItem("zotok_billing") ?? "{}"); }
+  catch { return {}; }
+}
+
+function saveBilling(data: { last4: string }) {
+  localStorage.setItem("zotok_billing", JSON.stringify(data));
+}
+
+function nextRenewalLabel(): string {
+  const d = new Date();
+  d.setMonth(d.getMonth() + 1);
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+}
+
+function VisaBadge() {
+  return (
+    <div className="h-[24px] w-[36px] rounded-[4px] bg-[#1434cb] flex items-center justify-center flex-shrink-0">
+      <span className="text-white text-[10px] font-bold italic tracking-[-0.3px]">VISA</span>
+    </div>
+  );
+}
+
+function BillingPanel({ onChanged, onNavigateUpgrade }: { onChanged: () => void; onNavigateUpgrade: () => void }) {
+  const u = useUsage();
+  const isPro = u.plan === "pro";
+
+  const [last4, setLast4] = useState(() => loadBilling().last4 ?? "2574");
+  const [newLast4, setNewLast4] = useState(last4);
+  const [updateOpen, setUpdateOpen] = useState(false);
+  const [cancelConfirm, setCancelConfirm] = useState(false);
+
+  function handleUpdatePayment() {
+    if (!/^\d{4}$/.test(newLast4)) return;
+    setLast4(newLast4);
+    saveBilling({ last4: newLast4 });
+    setUpdateOpen(false);
+    onChanged();
+  }
+
+  function handleCancelPlan() {
+    u.setPlan("free");
+    setCancelConfirm(false);
+    onChanged();
+  }
+
+  return (
+    <div className="flex flex-col gap-[26px]">
+
+      {/* Plan summary */}
+      <div className="bg-[#f4f3ef] dark:bg-[#242424] border border-black/[0.12] dark:border-white/[0.08] rounded-[12px] p-[17px] flex gap-[12px] items-center">
+        <div className="bg-white dark:bg-[#1a1a1a] border border-black/[0.12] dark:border-white/[0.08] rounded-[10px] size-[52px] flex items-center justify-center flex-shrink-0">
+          {isPro ? <Sparkles size={24} className="text-[#0067ff]" /> : <Sparkle size={24} className="text-[#34322d] dark:text-[#d9d9d9]" />}
+        </div>
+        <div className="flex-1 min-w-0 flex flex-col gap-[2px]">
+          <p className="text-[16px] font-semibold text-[#34322d] dark:text-[#f0f0f0] tracking-[-0.18px] leading-[22px]">
+            ZöChief {isPro ? "Pro" : "Free"} Plan
+          </p>
+          <p className="text-[14px] text-[#858481] tracking-[-0.09px] leading-[20px]">
+            {isPro
+              ? `Monthly • Your subscription will auto renew on ${nextRenewalLabel()}.`
+              : "You're on the Free plan. Upgrade to unlock billing & invoices."}
+          </p>
+        </div>
+        {!isPro && (
+          <Button className="bg-[#0067ff] hover:bg-[#0055d4] text-white flex-shrink-0" onClick={onNavigateUpgrade}>
+            View Plans
+          </Button>
+        )}
+      </div>
+
+      {/* Payment */}
+      <div className="flex flex-col gap-[16px]">
+        <p className="text-[16px] font-semibold text-[#34322d] dark:text-[#f0f0f0] tracking-[-0.18px] leading-[22px]">Payment</p>
+        <div className="bg-white dark:bg-[#1f1f1f] border border-black/[0.12] dark:border-white/[0.08] rounded-[12px] p-[17px] flex gap-[12px] items-center">
+          <div className="flex-1 min-w-0 flex flex-col gap-[12px]">
+            <p className="text-[14px] font-semibold text-[#34322d] dark:text-[#f0f0f0] tracking-[-0.18px] leading-[20px]">Payment Method</p>
+            <div className="flex items-center gap-[6px]">
+              <VisaBadge />
+              <p className="text-[14px] text-[#858481] tracking-[-0.09px] leading-[22px]">
+                Visa <span className="font-bold">••••</span> {last4}
+              </p>
+            </div>
+          </div>
+
+          <Popover.Root open={updateOpen} onOpenChange={(open) => { setUpdateOpen(open); if (open) setNewLast4(last4); }}>
+            <Popover.Trigger className="h-[36px] px-[14px] flex items-center justify-center bg-[#0067ff] hover:bg-[#0055d4] text-white text-[14px] font-semibold tracking-[-0.09px] rounded-[8px] transition-colors flex-shrink-0">
+              Update
+            </Popover.Trigger>
+            <Popover.Portal>
+              <Popover.Positioner side="bottom" align="end" sideOffset={8} className="z-[60]">
+                <Popover.Popup className="w-[260px] bg-white dark:bg-[#1f1f1f] rounded-[14px] shadow-[0px_8px_24px_rgba(0,0,0,0.14)] border border-black/[0.12] dark:border-white/[0.1] p-[16px] flex flex-col gap-[12px]">
+                  <p className="font-semibold text-[14px] text-[#34322d] dark:text-[#f0f0f0] tracking-[-0.18px]">Update Card</p>
+                  <div className="flex flex-col gap-[4px]">
+                    <FieldLabel>Last 4 digits</FieldLabel>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={4}
+                      value={newLast4}
+                      onChange={(e) => setNewLast4(e.target.value.replace(/[^0-9]/g, ""))}
+                      className="w-full h-[36px] bg-white dark:bg-[#1a1a1a] border border-black/[0.12] dark:border-white/[0.08] rounded-[8px] px-[12px] text-[14px] text-[#141414] dark:text-[#f0f0f0] tracking-[-0.09px] outline-none focus:ring-1 focus:ring-[#0067ff] transition-shadow"
+                    />
+                  </div>
+                  <Button
+                    className="w-full bg-[#0067ff] hover:bg-[#0055d4] text-white"
+                    disabled={!/^\d{4}$/.test(newLast4)}
+                    onClick={handleUpdatePayment}
+                  >
+                    Save Card
+                  </Button>
+                </Popover.Popup>
+              </Popover.Positioner>
+            </Popover.Portal>
+          </Popover.Root>
+        </div>
+      </div>
+
+      {/* Invoices */}
+      <div className="flex flex-col gap-[16px]">
+        <p className="text-[16px] font-semibold text-[#34322d] dark:text-[#f0f0f0] tracking-[-0.18px] leading-[22px]">Invoices</p>
+        <div className="bg-white dark:bg-[#1f1f1f] border border-black/[0.12] dark:border-white/[0.08] rounded-[12px] overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow className="border-[#d9d9d9] dark:border-white/[0.1] hover:bg-transparent">
+                <TableHead className="px-[16px] text-[14px] font-medium text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.18px]">Date</TableHead>
+                <TableHead className="px-[16px] text-[14px] font-medium text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.18px] w-[100px]">Total</TableHead>
+                <TableHead className="px-[16px] text-[14px] font-medium text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.18px] w-[100px]">Status</TableHead>
+                <TableHead className="px-[16px] text-[14px] font-medium text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.18px] w-[100px]">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {!isPro ? (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center text-[14px] text-[#858481] py-8">No invoices yet.</TableCell>
+                </TableRow>
+              ) : SEED_INVOICES.map((inv, i) => (
+                <TableRow key={i} className="border-[#f0f0f0] dark:border-white/[0.06] hover:bg-black/[0.02] dark:hover:bg-white/[0.02]">
+                  <TableCell className="px-[16px] py-[12px] text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.18px]">{inv.date}</TableCell>
+                  <TableCell className="px-[16px] py-[12px] text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.18px]">{inv.amount}</TableCell>
+                  <TableCell className="px-[16px] py-[12px] text-[14px] text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.18px]">{inv.status}</TableCell>
+                  <TableCell className="px-[16px] py-[12px] text-[14px] tracking-[-0.18px]">
+                    <button type="button" onClick={onChanged} className="text-[#0067ff] underline hover:opacity-80 transition-opacity">View</button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+
+      {/* Cancellation */}
+      <div className="flex flex-col gap-[16px]">
+        <p className="text-[16px] font-semibold text-[#34322d] dark:text-[#f0f0f0] tracking-[-0.18px] leading-[22px]">Cancellation</p>
+        {cancelConfirm ? (
+          <div className="bg-white dark:bg-[#1f1f1f] border border-[#dd360c]/40 rounded-[12px] p-[17px] flex items-center justify-between gap-[16px]">
+            <p className="text-[14px] text-[#34322d] dark:text-[#f0f0f0] tracking-[-0.09px] leading-[20px]">
+              Cancel your Pro plan now? You'll be downgraded to Free immediately.
+            </p>
+            <div className="flex gap-[8px] flex-shrink-0">
+              <Button variant="outline" onClick={() => setCancelConfirm(false)}>Keep Pro</Button>
+              <Button className="bg-[#dd360c] hover:bg-[#c42f0a] text-white" onClick={handleCancelPlan}>Confirm Cancel</Button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between w-full">
+            <p className="text-[14px] font-medium text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.09px] leading-[20px]">
+              {isPro ? "Cancel Plan" : "No active subscription"}
+            </p>
+            <Button
+              className="bg-[#dd360c] hover:bg-[#c42f0a] text-white disabled:opacity-40"
+              disabled={!isPro}
+              onClick={() => setCancelConfirm(true)}
+            >
+              Cancel Plan
+            </Button>
+          </div>
+        )}
+      </div>
+
+    </div>
+  );
+}
+
 function PlaceholderPanel({ label }: { label: string }) {
   return (
     <div className="flex flex-col items-center justify-center h-full gap-3 text-center py-20">
@@ -991,7 +1185,10 @@ export function AccountSettings({ onClose, defaultTab = "whatsapp" }: { onClose:
   const [usageKey, setUsageKey] = useState(0);
   const [toast, setToast] = useState(false);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [mounted, setMounted] = useState(false);
   const { addCredits } = useUsage();
+
+  useEffect(() => { setMounted(true); }, []);
 
   function switchTab(tab: string) {
     setActiveTab(tab);
@@ -1015,23 +1212,26 @@ export function AccountSettings({ onClose, defaultTab = "whatsapp" }: { onClose:
   return (
     <div className="relative flex gap-[12px] p-[17px] w-full h-full">
 
-      {/* Toast — anchored to top-right of the popup */}
-      <AnimatePresence>
-        {toast && (
-          <motion.div
-            initial={{ opacity: 0, y: -8, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -8, scale: 0.95 }}
-            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute top-[14px] right-[14px] z-20 flex items-center gap-[8px] bg-[#111] dark:bg-white text-white dark:text-[#111] px-[14px] py-[9px] rounded-[10px] text-[13px] font-semibold shadow-lg pointer-events-none"
-          >
-            <svg className="w-[14px] h-[14px] text-emerald-400 flex-shrink-0" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M2.5 7l3 3 6-6" />
-            </svg>
-            Changes saved successfully
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Toast — portaled to <body> so it renders above the popup instead of being clipped inside it */}
+      {mounted && createPortal(
+        <AnimatePresence>
+          {toast && (
+            <motion.div
+              initial={{ opacity: 0, y: -8, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.95 }}
+              transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="fixed top-[24px] left-1/2 -translate-x-1/2 z-[300] flex items-center gap-[8px] bg-[#111] dark:bg-white text-white dark:text-[#111] px-[14px] py-[9px] rounded-[10px] text-[13px] font-semibold shadow-lg pointer-events-none"
+            >
+              <svg className="w-[14px] h-[14px] text-emerald-400 flex-shrink-0" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M2.5 7l3 3 6-6" />
+              </svg>
+              Changes saved successfully
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
 
       {/* Left nav */}
       <div className="w-[200px] flex-shrink-0 flex flex-col py-[4px]">
@@ -1056,6 +1256,7 @@ export function AccountSettings({ onClose, defaultTab = "whatsapp" }: { onClose:
                 height={18}
                 className="flex-shrink-0 dark:invert"
                 unoptimized
+                priority
               />
               <span className="text-[14px] font-medium text-[#34322d] dark:text-[#d9d9d9] tracking-[-0.18px] leading-[20px] whitespace-nowrap">
                 {label}
@@ -1082,7 +1283,7 @@ export function AccountSettings({ onClose, defaultTab = "whatsapp" }: { onClose:
                 className="w-[28px] h-[28px] flex items-center justify-center rounded-[6px] hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors"
                 aria-label="Close"
               >
-                <Image src="/assets/icons/settings-close.svg" alt="" width={20} height={20} className="dark:invert" unoptimized />
+                <Image src="/assets/icons/settings-close.svg" alt="" width={20} height={20} className="dark:invert" unoptimized priority />
               </button>
             </div>
 
@@ -1105,7 +1306,16 @@ export function AccountSettings({ onClose, defaultTab = "whatsapp" }: { onClose:
                   }}
                 />
               )}
-              {activeTab !== "whatsapp" && activeTab !== "account" && activeTab !== "usage" && activeTab !== "upgrade" && (
+              {activeTab === "billing" && (
+                <BillingPanel
+                  onChanged={() => {
+                    showToast();
+                    setUsageKey((k) => k + 1);
+                  }}
+                  onNavigateUpgrade={() => switchTab("upgrade")}
+                />
+              )}
+              {activeTab !== "whatsapp" && activeTab !== "account" && activeTab !== "usage" && activeTab !== "upgrade" && activeTab !== "billing" && (
                 <PlaceholderPanel label={activeItem?.label ?? ""} />
               )}
             </div>
