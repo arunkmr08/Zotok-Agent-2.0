@@ -8,6 +8,7 @@ import { cn, toggleDark } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { AccountSettings } from "@/features/account/components/AccountSettings";
+import { useUserAvatar } from "@/features/account/context/UserAvatarContext";
 
 const NAV_DEPLOYED = [
   { key: "category", href: "/category-view",   label: "Category Messages", icon: "nav-category.svg", shortcut: "⌥⌘1" },
@@ -142,6 +143,14 @@ export function AppSidebar() {
   const [sidebarReady, setSidebarReady] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [accountDefaultTab, setAccountDefaultTab] = useState("whatsapp");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  function openAccount(tab: string) {
+    setDropdownOpen(false);
+    setAccountDefaultTab(tab);
+    setAccountOpen(true);
+  }
+  const { avatarSrc, bizName, whatsappPhone } = useUserAvatar();
 
   function refreshDeployed() {
     const active = NAV_DEPLOYED.filter((a) =>
@@ -321,30 +330,44 @@ export function AppSidebar() {
 
       {/* Footer */}
       <div className="border-t border-[rgba(0,0,0,0.06)] dark:border-[#262626] flex items-center gap-[8px] px-[8px] py-[12px]">
-        <DropdownMenu>
+        <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
           <DropdownMenuTrigger render={
-            <button type="button" className="flex-shrink-0 rounded-full focus:outline-none">
-              <div className="w-[36px] h-[36px] rounded-full bg-[#0067ff] dark:bg-[#003b91] flex items-center justify-center text-white dark:text-[#d9d9d9] text-[16px] font-semibold hover:opacity-90 transition-opacity">P</div>
+            <button type="button" className="flex items-center gap-[8px] w-full min-w-0 rounded-[10px] px-[4px] py-[4px] hover:bg-black/[0.04] dark:hover:bg-white/[0.05] transition-colors focus:outline-none">
+              <div className="w-[36px] h-[36px] rounded-full bg-[#0067ff] dark:bg-[#003b91] flex items-center justify-center text-white dark:text-[#d9d9d9] text-[16px] font-semibold overflow-hidden flex-shrink-0">
+                {avatarSrc ? <img src={avatarSrc} alt="Avatar" className="w-full h-full object-cover" /> : "P"}
+              </div>
+              <div className="flex flex-col min-w-0 flex-1 text-left">
+                <p className="font-semibold text-[13px] text-[#34322d] dark:text-[#f0f0f0] tracking-[-0.18px] leading-[18px] truncate">{bizName}</p>
+                <div className="flex items-center gap-[5px]">
+                  <p className="font-normal text-[12px] text-[#858481] dark:text-[#8c8c8c] tracking-[-0.09px] leading-[16px] truncate">{whatsappPhone}</p>
+                  <span className="text-[10px] font-semibold px-[5px] py-[1px] rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400 flex-shrink-0">Free</span>
+                </div>
+              </div>
             </button>
           } />
           <DropdownMenuContent side="top" align="start" sideOffset={8}
             className="w-[260px] !rounded-[14px] !p-0 !shadow-[0px_8px_24px_rgba(0,0,0,0.14)] border border-black/[0.12] dark:border-white/[0.1] bg-white dark:bg-[#1f1f1f] overflow-hidden">
             {/* User info */}
             <div className="flex items-center gap-[8px] px-[12px] py-[12px]">
-              <div className="w-[32px] h-[32px] rounded-full bg-[#0067ff] dark:bg-[#003b91] flex items-center justify-center text-white text-[14px] font-semibold flex-shrink-0">P</div>
+              <div className="w-[32px] h-[32px] rounded-full bg-[#0067ff] dark:bg-[#003b91] flex items-center justify-center text-white text-[14px] font-semibold flex-shrink-0 overflow-hidden">
+                {avatarSrc ? <img src={avatarSrc} alt="Avatar" className="w-full h-full object-cover" /> : "P"}
+              </div>
               <div className="flex flex-col gap-0 min-w-0">
-                <p className="font-semibold text-[14px] text-[#34322d] dark:text-[#f0f0f0] tracking-[-0.18px] leading-[20px] truncate">Prathik Rati</p>
-                <p className="font-normal text-[13px] text-[#858481] dark:text-[#8c8c8c] tracking-[-0.09px] leading-[20px]">Pro Plan</p>
+                <p className="font-semibold text-[14px] text-[#34322d] dark:text-[#f0f0f0] tracking-[-0.18px] leading-[20px] truncate">{bizName}</p>
+                <div className="flex items-center gap-[6px]">
+                  <p className="font-normal text-[13px] text-[#858481] dark:text-[#8c8c8c] tracking-[-0.09px] leading-[20px]">{whatsappPhone}</p>
+                  <span className="text-[11px] font-semibold px-[6px] py-[1px] rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400 flex-shrink-0">Free</span>
+                </div>
               </div>
             </div>
             <DropdownMenuSeparator className="bg-[#f0f0f0] dark:bg-[#2a2a2a]" />
             {/* Section 1 */}
             <div className="py-[4px]">
               {[
-                { label: "WhatsApp Settings", icon: <Image src="/assets/icons/menu-settings.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />, onClick: () => { setAccountDefaultTab("whatsapp"); setAccountOpen(true); } },
-                { label: "Account",      icon: <Image src="/assets/icons/menu-profile.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />, onClick: () => { setAccountDefaultTab("account"); setAccountOpen(true); } },
-                { label: "Usage Limit",  icon: <Image src="/assets/icons/menu-settings.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />, onClick: () => { setAccountDefaultTab("usage"); setAccountOpen(true); } },
-                { label: "Upgrade Plan", icon: <Image src="/assets/icons/menu-upgrade.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />, onClick: () => { setAccountDefaultTab("upgrade"); setAccountOpen(true); } },
+                { label: "WhatsApp Settings", icon: <Image src="/assets/icons/menu-settings.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />, onClick: () => openAccount("whatsapp") },
+                { label: "Account",      icon: <Image src="/assets/icons/menu-profile.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />, onClick: () => openAccount("account") },
+                { label: "Usage Limit",  icon: <Image src="/assets/icons/settings-usage.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />, onClick: () => openAccount("usage") },
+                { label: "Upgrade Plan", icon: <Image src="/assets/icons/menu-upgrade.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />, onClick: () => openAccount("upgrade") },
               ].map(({ label, icon, onClick }) => (
                 <button key={label} type="button" onClick={onClick}
                   className="w-full flex items-center gap-[4px] px-[12px] h-[36px] hover:bg-black/[0.03] dark:hover:bg-white/[0.04] transition-colors">
@@ -397,7 +420,7 @@ export function AppSidebar() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.15 }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/20 backdrop-blur-sm"
+          className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/20 backdrop-blur-sm"
           onClick={(e) => { if (e.target === e.currentTarget) setAccountOpen(false); }}
         >
           <motion.div
@@ -405,7 +428,7 @@ export function AppSidebar() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 8 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="bg-[#f8f8f7] dark:bg-[#1a1a1a] border border-black/[0.12] dark:border-white/[0.08] rounded-[18px] drop-shadow-[0px_8px_16px_rgba(0,0,0,0.08)] w-full max-w-[900px] h-[580px] flex overflow-hidden"
+            className="bg-[#f8f8f7] dark:bg-[#1a1a1a] border border-black/[0.12] dark:border-white/[0.08] rounded-[18px] drop-shadow-[0px_8px_16px_rgba(0,0,0,0.08)] w-full max-w-[1024px] h-[700px] max-h-[800px] flex overflow-hidden"
           >
             <AccountSettings
               onClose={() => setAccountOpen(false)}

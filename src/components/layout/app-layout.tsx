@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { AppSidebar } from "./app-sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { UserAvatarProvider } from "@/features/account/context/UserAvatarContext";
 
 function SidebarSkeleton() {
   return (
@@ -181,6 +182,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   };
 
   return (
+    <UserAvatarProvider>
     <div className="relative flex h-screen overflow-hidden bg-[#f8f8f7] dark:bg-[#1a1a1a]">
       <AnimatePresence mode="wait">
         {showAppSkeleton && (
@@ -221,6 +223,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         </main>
       </motion.div>
     </div>
+    </UserAvatarProvider>
   );
 }
 
