@@ -62,7 +62,7 @@ export default function LoginPage() {
         transition={{ duration: 0.3, ease: "easeOut" }}
         className={cn(
           "relative z-10 bg-white dark:bg-[#1a1a1a] border border-black/[0.08] dark:border-white/[0.08] rounded-[20px] px-8 py-9 w-full flex flex-col justify-between shadow-lg overflow-hidden",
-          step === "wa-connect" ? "max-w-[720px]" : step === "details" || step === "wa-history" || step === "wa-groups" || step === "wa-code" ? "max-w-[520px]" : "max-w-[420px]"
+          step === "wa-connect" ? "max-w-[720px]" : step === "details" || step === "wa-phone" || step === "wa-history" || step === "wa-groups" || step === "wa-code" ? "max-w-[520px]" : "max-w-[420px]"
         )}
         style={{
           boxShadow: "rgba(17,17,17,0.12) 0px 26px 60px -6px, rgba(17,17,17,0.02) 0px 28px 28px -14px",

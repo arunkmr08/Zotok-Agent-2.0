@@ -19,7 +19,6 @@ const NAV_DEPLOYED = [
 const NAV_WORKSPACE = [
   { href: "/agents",     label: "Karamcharis",   icon: "nav-karamchari.svg", shortcut: "⌘⇧K" },
   { href: "/connectors", label: "Connectors",    icon: "nav-connectors.svg", shortcut: "⌘⇧L" },
-  { href: "/whatsapp",   label: "WhatsApp Sync", icon: "nav-whatsapp.svg",   shortcut: "⌘⇧C" },
 ];
 
 // cmd+shift shortcuts
@@ -27,7 +26,6 @@ const SHORTCUT_MAP: Record<string, string> = {
   KeyO:   "/chat",
   KeyK:   "/agents",
   KeyL:   "/connectors",
-  KeyC:   "/whatsapp",
 };
 
 // cmd only shortcuts (no shift, no alt)

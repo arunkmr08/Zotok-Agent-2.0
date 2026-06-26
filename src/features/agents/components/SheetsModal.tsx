@@ -207,7 +207,7 @@ export function SheetsModal({ open, triggerRect, onClose, onDeploy, step = 0, to
                           <path d="M4 7h12M13 4l3 3-3 3M16 13H4M7 16l-3-3 3-3" />
                         </svg>
                         <div className="bg-white dark:bg-[#1a1a1a] border border-black/[0.12] dark:border-white/[0.1] rounded-[10px] shadow-[0px_8px_32px_rgba(0,0,0,0.06)] w-[60px] h-[60px] flex items-center justify-center overflow-hidden">
-                          <Image src="/assets/icons/icon-google-sheets-sm.png" alt="Google Sheets" width={32} height={32} className="!w-[32px] !h-[32px] object-contain" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                          <Image src="/assets/icons/Google Drive icon.svg" alt="Google Sheets" width={32} height={32} className="!w-[32px] !h-[32px] object-contain" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
                         </div>
                       </div>
                       <div className="flex flex-col items-center gap-[2px] text-center">
@@ -333,7 +333,7 @@ export function SheetsModal({ open, triggerRect, onClose, onDeploy, step = 0, to
                           } />
                           <TooltipContent side="top" sideOffset={4}>Back</TooltipContent>
                         </Tooltip>
-                        <Image src="/assets/icons/icon-google-sheets-sm.png" alt="" width={24} height={24} className="!w-[24px] !h-[24px] object-contain flex-shrink-0" />
+                        <Image src="/assets/icons/Google Drive icon.svg" alt="" width={24} height={24} className="!w-[24px] !h-[24px] object-contain flex-shrink-0" />
                         <h2 className="flex-1 min-w-0 font-semibold text-[20px] text-[#34322d] dark:text-white tracking-[-0.33px] leading-normal flex items-center gap-0 min-w-0">
                           <span className="flex-shrink-0">Configure &ldquo;</span>
                           <span className="truncate min-w-0 max-w-[16ch]">{SHEET_OPTIONS.find(s => s.id === selectedSheet)?.label ?? "Sheet"}</span>

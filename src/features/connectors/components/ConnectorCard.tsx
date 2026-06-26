@@ -63,10 +63,7 @@ export function ConnectorCard({ connector, connected, onConnect, onDisconnect }:
               onClick={(e) => onDisconnect(e)}
               className="flex items-center gap-[6px] bg-white dark:bg-transparent border border-[#dd360c] pl-[13px] pr-[15px] h-[34px] rounded-[8px] font-semibold text-[14px] text-[#dd360c] tracking-[-0.09px] leading-[18px] hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
             >
-              <svg className="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-                <path d="M2 2l14 14M16 2 2 16" />
-                <circle cx="9" cy="9" r="7" />
-              </svg>
+              <Image src="/assets/icons/connector-btn-disconnect.svg" alt="" width={18} height={18} className="flex-shrink-0" unoptimized />
               Disconnect
             </button>
           ) : (
