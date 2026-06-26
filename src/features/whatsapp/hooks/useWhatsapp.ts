@@ -33,6 +33,10 @@ export function useWhatsapp() {
     setDisconnectModal(false);
   }
 
+  function restoreGroups(groups: string[]) {
+    setSyncedGroups(groups);
+  }
+
   function handleSimulateConnect() {
     setConnectModal(false);
     setTimeout(() => setHistoryModal(true), 200);
@@ -112,6 +116,7 @@ export function useWhatsapp() {
     slotsLeft,
     handleResync,
     handleDisconnect,
+    restoreGroups,
     handleSimulateConnect,
     handleHistoryContinue,
     togglePending,

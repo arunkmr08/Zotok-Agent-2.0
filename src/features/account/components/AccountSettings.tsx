@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useWhatsapp } from "@/features/whatsapp/hooks/useWhatsapp";
+import { useWhatsappConnection } from "@/features/whatsapp/context/WhatsappConnectionContext";
 import { useUserAvatar } from "@/features/account/context/UserAvatarContext";
 import { useUsage } from "@/features/account/hooks/useUsage";
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
@@ -30,6 +31,20 @@ function WhatsAppSettingsPanel() {
   const groupObjects = syncedGroups
     .map((name) => allGroups.find((g) => g.name === name))
     .filter(Boolean) as typeof allGroups;
+  const { connected, disconnect, setReconnectModalOpen, registerGroupsRestorer } = useWhatsappConnection();
+
+  // Keep the context's restorer pointed at this hook instance so reconnecting
+  // can hand back the groups that were synced right before logout.
+  registerGroupsRestorer(wa.restoreGroups);
+
+  function handleConnectionAction() {
+    if (connected) {
+      disconnect(wa.syncedGroups);
+      wa.handleDisconnect();
+    } else {
+      setReconnectModalOpen(true);
+    }
+  }
 
   return (
     <div className="flex flex-col gap-[22px]">
@@ -40,18 +55,24 @@ function WhatsAppSettingsPanel() {
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-[16px] font-semibold text-[#34322d] dark:text-[#f0f0f0] tracking-[-0.18px] leading-[22px]">
-            Connected to +91 9876543210
+            {connected ? "Connected to +91 9876543210" : "Disconnected"}
           </p>
           <p className="text-[14px] text-[#858481] tracking-[-0.09px] leading-[20px]">
-            Last Sync 12 minutes ago · {slotsUsed} groups
+            {connected ? `Last Sync 12 minutes ago · ${slotsUsed} groups` : "Reconnect to resume syncing groups."}
           </p>
         </div>
         <button
           type="button"
-          className="h-[38px] px-[16px] flex items-center gap-[8px] bg-[#dd360c] hover:bg-[#c42f0a] active:bg-[#b02a09] text-white text-[14px] font-semibold tracking-[-0.09px] rounded-[10px] transition-colors flex-shrink-0"
+          onClick={handleConnectionAction}
+          className={cn(
+            "h-[38px] px-[16px] flex items-center gap-[8px] text-white text-[14px] font-semibold tracking-[-0.09px] rounded-[10px] transition-colors flex-shrink-0",
+            connected
+              ? "bg-[#dd360c] hover:bg-[#c42f0a] active:bg-[#b02a09]"
+              : "bg-[#0067ff] hover:bg-[#0055d4] active:bg-[#004abd]"
+          )}
         >
-          <Image src="/assets/icons/settings-logout-icon.svg" alt="" width={18} height={18} unoptimized />
-          Logout
+          <Image src={connected ? "/assets/icons/settings-logout-icon.svg" : "/assets/icons/settings-add.svg"} alt="" width={18} height={18} className={cn(!connected && "dark:invert")} unoptimized />
+          {connected ? "Logout" : "Reconnect"}
         </button>
       </div>
 
@@ -81,14 +102,14 @@ function WhatsAppSettingsPanel() {
             }}
           >
             <Popover.Trigger
-              disabled={slotsLeft === 0}
+              disabled={slotsLeft === 0 || !connected}
               className="h-[36px] rounded-[8px] flex items-center gap-[6px] px-[12px] text-[14px] font-semibold text-[#34322d] dark:text-[#f0f0f0] tracking-[-0.09px] border border-black/[0.06] dark:border-white/[0.08] bg-white dark:bg-[#1f1f1f] hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <Image src="/assets/icons/settings-add.svg" alt="" width={18} height={18} className="dark:invert" unoptimized />
               Add Groups
             </Popover.Trigger>
             <Popover.Portal>
-              <Popover.Positioner side="bottom" align="end" sideOffset={8} className="z-[60]">
+              <Popover.Positioner side="bottom" align="end" sideOffset={8} className="z-[210]">
                 <Popover.Popup className="w-[300px] bg-white dark:bg-[#1f1f1f] rounded-[14px] shadow-[0px_8px_24px_rgba(0,0,0,0.14)] border border-black/[0.12] dark:border-white/[0.1] p-[16px] flex flex-col gap-[12px]">
                   <p className="font-semibold text-[15px] text-[#34322d] dark:text-[#f0f0f0] tracking-[-0.18px]">Choose Groups to Sync</p>
 
@@ -1074,7 +1095,7 @@ function BillingPanel({ onChanged, onNavigateUpgrade }: { onChanged: () => void;
               Update
             </Popover.Trigger>
             <Popover.Portal>
-              <Popover.Positioner side="bottom" align="end" sideOffset={8} className="z-[60]">
+              <Popover.Positioner side="bottom" align="end" sideOffset={8} className="z-[210]">
                 <Popover.Popup className="w-[260px] bg-white dark:bg-[#1f1f1f] rounded-[14px] shadow-[0px_8px_24px_rgba(0,0,0,0.14)] border border-black/[0.12] dark:border-white/[0.1] p-[16px] flex flex-col gap-[12px]">
                   <p className="font-semibold text-[14px] text-[#34322d] dark:text-[#f0f0f0] tracking-[-0.18px]">Update Card</p>
                   <div className="flex flex-col gap-[4px]">

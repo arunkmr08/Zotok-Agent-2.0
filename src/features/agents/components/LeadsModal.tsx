@@ -16,6 +16,13 @@ interface Props {
   triggerRect?: DOMRect | null;
   onClose: () => void;
   onDeploy: () => void;
+  /** When true, skips the sheet picker/columns/keywords/groups steps and jumps straight to success after connecting. */
+  connectOnly?: boolean;
+  title?: string;
+  desc?: string;
+  ctaLabel?: string;
+  successTitle?: string;
+  successDesc?: string;
 }
 
 function ModalHeader({ title, desc, onClose, onBack }: { title: string; desc?: string; onClose: () => void; onBack?: () => void }) {
@@ -61,7 +68,14 @@ const LEADS_SHEETS = [
   { id: "jun",      label: "June Leads Pipeline.xlsx" },
 ];
 
-export function LeadsModal({ open, triggerRect, onClose, onDeploy }: Props) {
+export function LeadsModal({
+  open, triggerRect, onClose, onDeploy, connectOnly = false,
+  title = "Configure Collect New Leads",
+  desc = "Detect unknown contacts and extract lead information. Configure the columns below.",
+  ctaLabel = "Connect Google Account",
+  successTitle = "Karamchari Deployed!",
+  successDesc = "Collect New Leads is now active and monitoring your selected WhatsApp groups.",
+}: Props) {
   const [view, setView] = useState<LeadsView>("connect");
   const [columns, setColumns] = useState(DEFAULT_COLUMNS.map((c) => ({ name: c })));
   const [newCol, setNewCol] = useState("");
@@ -91,7 +105,7 @@ export function LeadsModal({ open, triggerRect, onClose, onDeploy }: Props) {
 
   function handleConnect() {
     setView("loading");
-    setTimeout(() => setView("picker"), 1200);
+    setTimeout(() => setView(connectOnly ? "success" : "picker"), 1200);
   }
 
   function handleClose() {
@@ -140,7 +154,10 @@ export function LeadsModal({ open, triggerRect, onClose, onDeploy }: Props) {
               animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
               exit={{ opacity: 0, scale: 0.98 }}
               transition={{ duration: 0.14, ease: [0.16, 1, 0.3, 1] }}
-              className="bg-[#f8f8f7] dark:bg-[#1a1a1a] border border-black/[0.12] dark:border-white/[0.08] rounded-[18px] drop-shadow-[0px_8px_16px_rgba(0,0,0,0.06)] w-full max-w-[720px] flex flex-col gap-[20px] p-[21px]"
+              className={cn(
+                "bg-[#f8f8f7] dark:bg-[#1a1a1a] border border-black/[0.12] dark:border-white/[0.08] rounded-[18px] drop-shadow-[0px_8px_16px_rgba(0,0,0,0.06)] w-full flex flex-col gap-[20px] p-[21px]",
+                connectOnly ? "max-w-[520px]" : "max-w-[720px]"
+              )}
             >
 
               <AnimatePresence mode="wait">
@@ -156,8 +173,8 @@ export function LeadsModal({ open, triggerRect, onClose, onDeploy }: Props) {
                     className="flex flex-col gap-[20px] w-full"
                   >
                     <ModalHeader
-                      title="Configure Collect New Leads"
-                      desc="Detect unknown contacts and extract lead information. Configure the columns below."
+                      title={title}
+                      desc={desc}
                       onClose={handleClose}
                     />
 
@@ -170,7 +187,7 @@ export function LeadsModal({ open, triggerRect, onClose, onDeploy }: Props) {
                           <path d="M4 7h12M13 4l3 3-3 3M16 13H4M7 16l-3-3 3-3" />
                         </svg>
                         <div className="bg-white dark:bg-[#1a1a1a] border border-black/[0.12] dark:border-white/[0.1] rounded-[10px] shadow-[0px_8px_32px_rgba(0,0,0,0.06)] w-[60px] h-[60px] flex items-center justify-center p-[1px] overflow-hidden">
-                          <Image src="/assets/icons/icon-google-sheets-sm.png" alt="Google Sheets" width={32} height={32} className="!w-[32px] !h-[32px] object-contain" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                          <Image src="/assets/icons/Google Drive icon.svg" alt="Google Sheets" width={32} height={32} className="!w-[32px] !h-[32px] object-contain" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
                         </div>
                       </div>
                       <div className="flex flex-col items-center gap-[2px] text-center">
@@ -195,7 +212,7 @@ export function LeadsModal({ open, triggerRect, onClose, onDeploy }: Props) {
                           ? <span className="w-[14px] h-[14px] border-2 border-white border-t-transparent rounded-full animate-spin flex-shrink-0" />
                           : <Image src="/assets/icons/google-white-icon.svg" alt="" width={16} height={16} unoptimized />
                         }
-                        {view === "loading" ? "Connecting…" : "Connect Google Account"}
+                        {view === "loading" ? "Connecting…" : ctaLabel}
                       </button>
                     </div>
                   </motion.div>
@@ -366,7 +383,7 @@ export function LeadsModal({ open, triggerRect, onClose, onDeploy }: Props) {
                         } />
                         <TooltipContent side="top" sideOffset={4}>Back</TooltipContent>
                       </Tooltip>
-                      <Image src="/assets/icons/icon-google-sheets-sm.png" alt="" width={24} height={24} className="!w-[24px] !h-[24px] object-contain flex-shrink-0" />
+                      <Image src="/assets/icons/Google Drive icon.svg" alt="" width={24} height={24} className="!w-[24px] !h-[24px] object-contain flex-shrink-0" />
                       <h2 className="flex-1 min-w-0 font-semibold text-[20px] text-[#34322d] dark:text-white tracking-[-0.33px] leading-normal flex items-center gap-0 min-w-0">
                         <span className="flex-shrink-0">Configure &ldquo;</span>
                         <span className="truncate min-w-0 max-w-[16ch]">{LEADS_SHEETS.find(s => s.id === selectedSheet)?.label ?? "Sheet"}</span>
@@ -710,12 +727,12 @@ export function LeadsModal({ open, triggerRect, onClose, onDeploy }: Props) {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.98 }}
                     transition={{ duration: 0.12, ease: [0.16, 1, 0.3, 1] }}
-                    className="flex flex-col items-center gap-[16px] py-[24px] text-center w-full"
+                    className={cn("flex flex-col items-center gap-[16px] py-[24px] text-center w-full", connectOnly && "px-[60px]")}
                   >
                     <DeployedLottie />
                     <div className="flex flex-col gap-[4px]">
-                      <p className="font-semibold text-[18px] text-[#34322d] dark:text-white tracking-[-0.33px]">Karamchari Deployed!</p>
-                      <p className="font-normal text-[14px] text-[#858481] dark:text-[#8c8c8c] tracking-[-0.09px] leading-[22px]">Collect New Leads is now active and monitoring your selected WhatsApp groups.</p>
+                      <p className="font-semibold text-[18px] text-[#34322d] dark:text-white tracking-[-0.33px]">{successTitle}</p>
+                      <p className="font-normal text-[14px] text-[#858481] dark:text-[#8c8c8c] tracking-[-0.09px] leading-[22px]">{successDesc}</p>
                     </div>
                     <button
                       onClick={handleDone}

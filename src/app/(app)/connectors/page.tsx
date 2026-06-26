@@ -6,6 +6,7 @@ import { motion } from "motion/react";
 import { useConnectors } from "@/features/connectors/hooks/useConnectors";
 import { ConnectorCard } from "@/features/connectors/components/ConnectorCard";
 import { ConnectModal } from "@/features/connectors/components/ConnectModal";
+import { LeadsModal } from "@/features/agents/components/LeadsModal";
 import { DisconnectDialog } from "@/features/connectors/components/DisconnectDialog";
 
 const springEnter = (delay: number) => ({
@@ -129,26 +130,17 @@ export default function ConnectorsPage() {
 
       </div>
 
-      <ConnectModal
+      <LeadsModal
         open={state.gsheetsModal}
         triggerRect={triggerRect}
         onClose={() => state.setGsheetsModal(false)}
-        onDone={state.handleGsheetsConnected}
-        title="Configure Collect New Leads"
-        desc="Detect unknown contacts and extract lead information. Configure the columns below."
-        ctaLabel="Continue In Google"
-        leftIcon={
-          <div className="w-10 h-10 rounded-lg bg-blue-50 dark:bg-blue-900 flex items-center justify-center flex-shrink-0">
-            <Image src="/assets/icons/zotok-logo-36.svg" alt="Zotok" width={22} height={22} />
-          </div>
-        }
-        rightIcon={
-          <div className="w-10 h-10 rounded-lg bg-green-50 dark:bg-green-900 flex items-center justify-center flex-shrink-0">
-            <Image src="/assets/icons/icon-google-sheets-sm.png" alt="Sheets" width={22} height={28} onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
-          </div>
-        }
-        successTitle="Google Sheets Connected!"
-        successDesc="Your Google Sheets account is now connected. Lead data will sync automatically to your configured sheet."
+        onDeploy={state.handleGsheetsConnected}
+        connectOnly
+        title="Connect to Google Drive"
+        desc="Connect your Google Drive account to store and manage sheets, docs directly to drive."
+        ctaLabel="Connect to Google Drive"
+        successTitle="Google Drive Connected!"
+        successDesc="Your Google Drive account is now connected. Sheets and docs will sync automatically."
       />
       <ConnectModal
         open={state.zotokModal}

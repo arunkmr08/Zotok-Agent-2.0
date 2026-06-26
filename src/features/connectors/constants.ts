@@ -5,7 +5,7 @@ export const CONNECTORS: Connector[] = [
     key: "gsheets",
     title: "Google Sheets",
     desc: "Send structured data — orders, leads, decisions — directly into a spreadsheet you own.",
-    icon: "connector-google-sheets.png",
+    icon: "Google Drive icon.svg",
     storageKey: "zotok_gsheets_connected",
   },
   {
